@@ -33,18 +33,13 @@ import UpdateOrderStatus from './Admin/UpdateOrderStatus'
 import ReviewList from './Admin/ReviewList'
 import VoucherList from './Admin/VoucherList'
 import CreateVoucher from './Admin/CreateVoucher'
-import Wishlist from './pages/Wishlist'
-import Addresses from './UserAuthentication/Addresses'
-import Contact from './pages/Contact'
-import { fetchCart } from './features/cart/cartSlice'
+
 const App = () => {
   const dispatch = useDispatch()
   const [authChecked, setAuthChecked] = useState(false)
 
   useEffect(() => {
-    dispatch(fetchCart())
-    dispatch(loadUser())
-    .finally(() => setAuthChecked(true))
+    dispatch(loadUser()).finally(() => setAuthChecked(true))
   }, [dispatch])
 
   if (!authChecked) {
@@ -55,42 +50,28 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/contact" element={<Contact />} />
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/products" element={<Products />} />
         <Route path="/products/:keyword" element={<Products />} />
-
-        {/* // Category Routes // */}
-        <Route path="/women" element={<Products categoryProp="women" />} />
-        <Route path="/men" element={<Products categoryProp="men" />} />
-        <Route path="/unisex" element={<Products categoryProp="unisex" />} />
-        <Route path="/essentials" element={<Products categoryProp="essentials" />} />
+        <Route path="/cake" element={<Products categoryProp="cake" />} />
+        <Route path="/pastry" element={<Products categoryProp="pastry" />} />
+        <Route path="/savory" element={<Products categoryProp="savory" />} />
+        <Route path="/combo" element={<Products categoryProp="combo" />} />
         <Route path="/category/:categoryName" element={<Products />} />
-
-        {/* // auth routes */}
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/password/forgot" element={<ForgotPassword />} />
         <Route path="/reset/:token" element={<ResetPassword />} />
-        <Route path="/password/reset/:token" element={<ResetPassword />} />
-
-
         <Route path="/cart" element={<Cart/>} />
-        <Route path="/wishlist" element={<ProtectedRoutes element={<Wishlist />} />} />
-        <Route path="/addresses" element={<ProtectedRoutes element={<Addresses />} />} />
         <Route path="/profile" element={<ProtectedRoutes element={<Profile />} />} />
         <Route path="/profile/update" element={<ProtectedRoutes element={<UpdateProfile />} />} />
         <Route path="/password/update" element={<ProtectedRoutes element={<UpdatePassword />} />} />
         <Route path="/shipping" element={<ProtectedRoutes element={<Shipping />} />} />
-
-        {/* // order routes */}
         <Route path="/order/confirm" element={<ProtectedRoutes element={<ConfirmOrder />} />} />
         <Route path="/order/payment" element={<ProtectedRoutes element={<Payment />} />} />
         <Route path="/orders" element={<ProtectedRoutes element={<MyOrders />} />} />
         <Route path="/paymentSuccess" element={<ProtectedRoutes element={<PaymentSuccess />} />} />
         <Route path="/order/:orderId" element={<ProtectedRoutes element={<OrderDetails />} />} />
-
-        {/* // admin routes  */}
         <Route path="/admin/dashboard" element={<ProtectedRoutes element={<AdminDashboard />} adminOnly={true}/>} />
         <Route path="/admin/products" element={<ProtectedRoutes element={<ProductList />} adminOnly={true}/>} />
         <Route path="/admin/product/create" element={<ProtectedRoutes element={<CreateProduct />} adminOnly={true}/>} />
@@ -102,6 +83,7 @@ const App = () => {
         <Route path="/admin/order/:orderId" element={<ProtectedRoutes element={<UpdateOrderStatus />} adminOnly={true}/>} />
         <Route path="/admin/vouchers" element={<ProtectedRoutes element={<VoucherList />} adminOnly={true}/>} />
         <Route path="/admin/voucher/create" element={<ProtectedRoutes element={<CreateVoucher />} adminOnly={true}/>} />
+
 
       </Routes>
     </Router>

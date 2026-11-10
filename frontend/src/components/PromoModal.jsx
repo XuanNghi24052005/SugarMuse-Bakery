@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import CloseIcon from '@mui/icons-material/Close'
 import '../PromoStyles/PromoStyles.css'
 
-const OFFER_CODE = 'MOCHA30'
+const OFFER_CODE = 'SUGARMUSE20'
 
 const CopyIcon = () => (
   <svg viewBox="0 0 24 24" aria-hidden="true" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2">
@@ -44,13 +44,13 @@ const PromoModal = ({ onClose }) => {
       <section className="promo-modal" role="dialog" aria-modal="true" aria-labelledby="promo-title">
         <div className="promo-hot-tag">HOT</div>
         <button className="promo-close" type="button" onClick={onClose} aria-label="Close offer">
-          <CloseIcon className="promo-close-icon" />
+          <CloseIcon style={{ fontSize: '20px' }} />
         </button>
         <p className="promo-eyebrow">EXCLUSIVE OFFER</p>
         <h2 className="promo-title" id="promo-title">
-          <span>✧</span> MID-SEASON SALE <span>✧</span>
+          <span>✧</span> SWEET DEAL <span>✧</span>
         </h2>
-        <p className="promo-subtitle">Selected essentials available now.</p>
+        <p className="promo-subtitle">Fresh baked treats, baked just for you.</p>
         <div className="promo-details">
           <div className="promo-discount">
             <p className="promo-label">UP TO</p>

@@ -37,12 +37,12 @@ const UpdateProduct = () => {
             reader.readAsDataURL(file)
         })
     }
-    const categories = ['men', 'women', 'unisex', 'essentials']
+    const categories = ['Cake', 'Pastry', 'Savory', 'Combo']
     const subcategoriesMap = {
-        men: ['Tops', 'Bottoms', 'Dresses', 'Outerwear'],
-        women: ['Tops', 'Bottoms', 'Dresses', 'Outerwear'],
-        unisex: ['Tops', 'Bottoms', 'Dresses', 'Outerwear'],
-        essentials: ['Headwear', 'Eyewear', 'Bags', 'Accessories', 'Sport']
+        cake: ['Birthday Cake', 'Wedding Cake', 'Cheesecake', 'Layer Cake', 'Cupcake'],
+        pastry: ['Macaron', 'Eclair', 'Cream Puff', 'Mille-feuille', 'Tart'],
+        savory: ['Croissant', 'Sourdough', 'Cheese Roll', 'Focaccia', 'Baguette'],
+        combo: ['Gift Box', 'Party Set', 'Mini Assortment', 'Seasonal Box']
     }
 
     const handleCategoryChange = (e) => {
@@ -155,7 +155,7 @@ const UpdateProduct = () => {
                             <img src={img.url} key={index} alt="Old product preview" className='update-product-old-image' />
                         ))}
                     </div>
-                    <button className="update-product-submit-btn">{loading ? 'Updating...' : 'Update'}</button>
+                    <button style={{ cursor: 'pointer' }} className="update-product-submit-btn">{loading ? 'Updating...' : 'Update'}</button>
                 </form>
             </div>
             <Footer />
