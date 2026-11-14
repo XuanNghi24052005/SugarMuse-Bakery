@@ -1,257 +1,258 @@
-import React, { useState, useMemo } from 'react'
-import '../componentStyles/Navbar.css'
-import { Link, useNavigate, useLocation } from 'react-router-dom'
-import SearchIcon from '@mui/icons-material/Search'
-import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined'
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined'
-import CloseIcon from '@mui/icons-material/Close'
-import MenuIcon from '@mui/icons-material/Menu'
-import FilterListIcon from '@mui/icons-material/FilterList'
-import { useSelector } from 'react-redux'
-import UserDashBoard from '../UserAuthentication/UserDashBoard'
+import React from "react";
+import { Link } from "react-router-dom";
+
+import "../componentStyles/Navbar.css";
 
 const Navbar = () => {
-    const [isMenuOpen, setIsMenuOpen] = useState(false)
-    const [isSearchOpen, setIsSearchOpen] = useState(false)
-    const [searchQuery, setSearchQuery] = useState('')
-    const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('All')
-    const [selectedPriceFilter, setSelectedPriceFilter] = useState('All')
+  return (
+    <>
+      {/* ===============================
+          TOP BAR
+      ================================ */}
 
-    const { isAuthenticated, user } = useSelector(state => state.user)
-    const { cartItems } = useSelector(state => state.cart)
-    const { products = [] } = useSelector(state => state.product)
+      <div className="sugar-topbar">
+        <span>
+          ♡ Free delivery on orders from 500.000đ
+        </span>
 
-    const location = useLocation()
-    const navigate = useNavigate()
+        <span className="topbar-divider" />
 
-    const searchParams = new URLSearchParams(location.search)
-    const activeCategory = searchParams.get('category')?.toLowerCase() || ''
+        <span>
+          ✦ 10% off your first custom cake order
+        </span>
+      </div>
 
-    const categories = ["All", "Cake", "Pastry", "Savory", "Combo"]
-    const priceRanges = [
-        { label: "All Prices", value: "All" },
-        { label: "Under $30", value: "under30" },
-        { label: "$30 - $60", value: "30to60" },
-        { label: "Over $60", value: "over60" }
-    ]
+      {/* ===============================
+          NAVBAR
+      ================================ */}
 
-    const filteredLiveProducts = useMemo(() => {
-        if (!products) return []
-        let list = [...products]
+      <header className="sugar-navbar">
 
-        if (searchQuery.trim()) {
-            const q = searchQuery.toLowerCase().trim()
-            list = list.filter(p =>
-                p.name?.toLowerCase().includes(q) ||
-                p.category?.toLowerCase().includes(q) ||
-                p.subcategory?.toLowerCase().includes(q) ||
-                p.description?.toLowerCase().includes(q)
-            )
-        }
+        {/* BRAND */}
 
-        if (selectedCategoryFilter !== 'All') {
-            list = list.filter(p =>
-                p.category?.toLowerCase() === selectedCategoryFilter.toLowerCase()
-            )
-        }
+        <Link
+          to="/"
+          className="sugar-brand"
+        >
+          <div className="brand-heart">
+            ♡
+          </div>
 
-        if (selectedPriceFilter === 'under30') {
-            list = list.filter(p => Number(p.price) < 30)
-        } else if (selectedPriceFilter === '30to60') {
-            list = list.filter(p => Number(p.price) >= 30 && Number(p.price) <= 60)
-        } else if (selectedPriceFilter === 'over60') {
-            list = list.filter(p => Number(p.price) > 60)
-        }
+          <div className="brand-copy">
+            <span>
+              Sugar Muse
+            </span>
 
-        return list.slice(0, 6)
-    }, [products, searchQuery, selectedCategoryFilter, selectedPriceFilter])
+            <small>
+              BAKERY
+            </small>
+          </div>
+        </Link>
 
-    const handleSearchSubmit = (e) => {
-        if (e) e.preventDefault()
-        const params = new URLSearchParams()
-        if (searchQuery.trim()) params.set('keyword', searchQuery.trim())
-        if (selectedCategoryFilter !== 'All') params.set('category', selectedCategoryFilter.toLowerCase())
+        {/* NAVIGATION */}
 
-        if (selectedPriceFilter === 'under30') {
-            params.set('maxPrice', '30')
-        } else if (selectedPriceFilter === '30to60') {
-            params.set('minPrice', '30')
-            params.set('maxPrice', '60')
-        } else if (selectedPriceFilter === 'over60') {
-            params.set('minPrice', '60')
-        }
+        <nav className="sugar-nav-menu">
 
-        const queryString = params.toString()
-        navigate(queryString ? `/products?${queryString}` : '/products')
-        setIsSearchOpen(false)
-    }
+          {/* SHOP */}
 
-    const resetFilters = () => {
-        setSearchQuery('')
-        setSelectedCategoryFilter('All')
-        setSelectedPriceFilter('All')
-    }
+          <div className="sugar-dropdown">
 
-    return (
-        <header className="mocha-header navbar-fixed">
-            <Link to="/" className="mocha-logo" onClick={() => setIsMenuOpen(false)}>
-                Sugar Muse
-            </Link>
-            <nav className={`mocha-nav-links ${isMenuOpen ? 'active' : ''}`}>
-                <Link
-                    to="/products?category=cake"
-                    className={activeCategory === 'cake' ? 'active' : ''}
-                    onClick={() => setIsMenuOpen(false)}
-                >
-                    Cake
-                </Link>
-                <Link
-                    to="/products?category=pastry"
-                    className={activeCategory === 'pastry' ? 'active' : ''}
-                    onClick={() => setIsMenuOpen(false)}
-                >
-                    Pastry
-                </Link>
-                <Link
-                    to="/products?category=savory"
-                    className={activeCategory === 'savory' ? 'active' : ''}
-                    onClick={() => setIsMenuOpen(false)}
-                >
-                    Savory
-                </Link>
-                <Link
-                    to="/products?category=combo"
-                    className={activeCategory === 'combo' ? 'active' : ''}
-                    onClick={() => setIsMenuOpen(false)}
-                >
-                    Combo
-                </Link>
-            </nav>
+            <button
+              type="button"
+              className="sugar-nav-link"
+            >
+              SHOP
+              <span className="dropdown-arrow">
+                ⌄
+              </span>
+            </button>
 
-            <div className="mocha-actions">
-                <div className="search-container">
-                    <button onClick={() => setIsSearchOpen(!isSearchOpen)} aria-label="Search">
-                        {isSearchOpen ? <CloseIcon /> : <SearchIcon />}
-                    </button>
-                </div>
+            <div className="sugar-dropdown-menu">
 
-                <Link to="/cart" className="mocha-cart-btn" aria-label="Cart">
-                    <ShoppingCartOutlinedIcon />
-                    {cartItems && cartItems.length > 0 && (
-                        <span className="mocha-cart-badge">{cartItems.length}</span>
-                    )}
-                </Link>
+              <Link to="/products">
+                All Products
+              </Link>
 
-                {isAuthenticated && user ? (
-                    <UserDashBoard user={user} />
-                ) : (
-                    <Link to="/login" aria-label="Log in">
-                        <AccountCircleOutlinedIcon />
-                    </Link>
-                )}
+              <Link to="/products?category=Cake">
+                Cakes
+              </Link>
 
-                <button className="mocha-hamburger" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
-                    {isMenuOpen ? <CloseIcon /> : <MenuIcon />}
-                </button>
+              <Link to="/products?category=Pastry">
+                Pastries
+              </Link>
+
+              <Link to="/products?category=Savory">
+                Savory
+              </Link>
+
+              <Link to="/products?category=Gift Box">
+                Gift Boxes
+              </Link>
+
             </div>
 
-            {/* EXPANDABLE ADVANCED SEARCH & FILTER OVERLAY */}
-            {isSearchOpen && (
-                <div className="search-filter-overlay">
-                    <form className="search-overlay-form" onSubmit={handleSearchSubmit}>
-                        <div className="search-overlay-input-group">
-                            <SearchIcon className="search-overlay-icon" />
-                            <input
-                                type="text"
-                                className="search-overlay-input"
-                                placeholder="Search products by name, category, or description..."
-                                value={searchQuery}
-                                autoFocus
-                                onChange={(e) => setSearchQuery(e.target.value)}
-                            />
-                            {searchQuery && (
-                                <button type="button" className="search-overlay-clear" onClick={() => setSearchQuery('')}>
-                                    ✕
-                                </button>
-                            )}
-                            <button type="submit" className="search-overlay-submit-btn">
-                                Search
-                            </button>
-                        </div>
+          </div>
 
-                        {/* FILTERS SECTION IN OVERLAY */}
-                        <div className="search-overlay-filters">
-                            <div className="filter-group">
-                                <span className="filter-group-title">Category:</span>
-                                <div className="filter-chips">
-                                    {categories.map((cat) => (
-                                        <button
-                                            type="button"
-                                            key={cat}
-                                            className={`filter-chip ${selectedCategoryFilter === cat ? 'active' : ''}`}
-                                            onClick={() => setSelectedCategoryFilter(cat)}
-                                        >
-                                            {cat}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
+          {/* CUSTOM CAKES */}
 
-                            <div className="filter-group">
-                                <span className="filter-group-title">Price Range:</span>
-                                <div className="filter-chips">
-                                    {priceRanges.map((pr) => (
-                                        <button
-                                            type="button"
-                                            key={pr.value}
-                                            className={`filter-chip ${selectedPriceFilter === pr.value ? 'active' : ''}`}
-                                            onClick={() => setSelectedPriceFilter(pr.value)}
-                                        >
-                                            {pr.label}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
+          <Link
+            to="/#custom-cakes"
+            className="sugar-nav-link"
+          >
+            CUSTOM CAKES
+          </Link>
 
-                            {(searchQuery || selectedCategoryFilter !== 'All' || selectedPriceFilter !== 'All') && (
-                                <button type="button" className="reset-overlay-filters-btn" onClick={resetFilters}>
-                                    Reset Filters
-                                </button>
-                            )}
-                        </div>
+          {/* OCCASIONS */}
 
-                        {/* LIVE MATCHING PRODUCT PREVIEW */}
-                        {filteredLiveProducts.length > 0 && (
-                            <div className="search-live-results">
-                                <div className="search-live-header">
-                                    <span>Matching Products ({filteredLiveProducts.length})</span>
-                                    <button type="submit" className="view-all-link-btn">
-                                        View All ({filteredLiveProducts.length}) →
-                                    </button>
-                                </div>
-                                <div className="search-live-grid">
-                                    {filteredLiveProducts.map((p) => (
-                                        <Link
-                                            to={`/product/${p._id}`}
-                                            key={p._id}
-                                            className="search-live-item"
-                                            onClick={() => setIsSearchOpen(false)}
-                                        >
-                                            <img src={p.image?.[0]?.url || '/images/tshirt-white.jpg'} alt={p.name} />
-                                            <div className="search-live-info">
-                                                <h4>{p.name}</h4>
-                                                <p>${Number(p.price).toFixed(2)}</p>
-                                            </div>
-                                        </Link>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-                    </form>
-                </div>
-            )}
-        </header>
-    )
-}
+          <div className="sugar-dropdown">
 
-export default Navbar
+            <button
+              type="button"
+              className="sugar-nav-link"
+            >
+              OCCASIONS
+
+              <span className="dropdown-arrow">
+                ⌄
+              </span>
+            </button>
+
+            <div className="sugar-dropdown-menu">
+
+              <Link to="/products">
+                Birthday
+              </Link>
+
+              <Link to="/products">
+                Anniversary
+              </Link>
+
+              <Link to="/products">
+                Congratulations
+              </Link>
+
+              <Link to="/products">
+                Thank You
+              </Link>
+
+            </div>
+
+          </div>
+
+          {/* GIFTING */}
+
+          <Link
+            to="/products?category=Gift Box"
+            className="sugar-nav-link"
+          >
+            GIFTING
+          </Link>
+
+          {/* OUR BAKERY */}
+
+          <Link
+            to="/#our-bakery"
+            className="sugar-nav-link"
+          >
+            OUR BAKERY
+          </Link>
+
+        </nav>
+
+        {/* ACTIONS */}
+
+        <div className="sugar-nav-actions">
+
+          {/* SEARCH */}
+
+          <button
+            type="button"
+            className="sugar-icon-button"
+            aria-label="Search"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="22"
+              height="22"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            >
+              <circle
+                cx="11"
+                cy="11"
+                r="7"
+              />
+
+              <path d="m20 20-3.8-3.8" />
+            </svg>
+          </button>
+
+          {/* ACCOUNT */}
+
+          <Link
+            to="/login"
+            className="sugar-icon-button"
+            aria-label="Account"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="22"
+              height="22"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            >
+              <circle
+                cx="12"
+                cy="8"
+                r="4"
+              />
+
+              <path d="M4.5 21a7.5 7.5 0 0 1 15 0" />
+            </svg>
+          </Link>
+
+          {/* CART */}
+
+          <Link
+            to="/cart"
+            className="sugar-icon-button cart-icon"
+            aria-label="Cart"
+          >
+            <svg
+              viewBox="0 0 24 24"
+              width="23"
+              height="23"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            >
+              <path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.6L21 7H6" />
+
+              <circle
+                cx="10"
+                cy="20"
+                r="1.2"
+              />
+
+              <circle
+                cx="18"
+                cy="20"
+                r="1.2"
+              />
+            </svg>
+
+            <span className="cart-number">
+              2
+            </span>
+          </Link>
+
+        </div>
+
+      </header>
+    </>
+  );
+};
+
+export default Navbar;

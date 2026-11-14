@@ -1,401 +1,542 @@
-.mocha-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 75px;
-  background: #ffffff;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  align-items: center;
-  padding: 0 40px;
-  border-bottom: 1px solid #e4e0d8;
-  z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  font-family: Arial, Helvetica, sans-serif !important;
-}
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito:wght@400;500;600;700;800;900&display=swap");
 
-.mocha-logo {
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: 2px;
-  color: #111;
-  text-decoration: none !important;
-  font-family: Arial Black, "Arial Bold", Arial, sans-serif !important;
-}
+/* ==========================================
+   TOP BAR
+========================================== */
 
-.mocha-nav-links {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 32px;
-  font-family: Arial, Helvetica, sans-serif !important;
-}
+.sugar-topbar {
+  width: 100%;
+  min-height: 34px;
 
-.mocha-nav-links a {
-  position: relative;
-  font-size: 14px;
-  font-weight: 700;
-  color: #111;
-  text-decoration: none !important;
-  text-transform: uppercase;
-  letter-spacing: 1.5px;
-  white-space: nowrap;
-  transition: color 0.2s ease;
-  font-family: Arial, Helvetica, sans-serif !important;
-}
+  padding:
+    0 6%;
 
-.mocha-nav-links a::after {
-  position: absolute;
-  right: 50%;
-  bottom: -27px;
-  left: 50%;
-  height: 3px;
-  content: '';
-  background: #caa98d;
-  transition: right 0.2s ease, left 0.2s ease;
-}
-
-.mocha-nav-links a:hover::after,
-.mocha-nav-links a.active::after {
-  right: 0%;
-  left: 0%;
-}
-
-.mocha-actions {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
-  gap: 24px;
-}
-
-.mocha-actions a,
-.mocha-actions button {
-  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #111;
-  background: none;
-  border: 0;
-  cursor: pointer;
-  padding: 0;
-}
 
-.mocha-actions svg {
-  font-size: 28px !important;
-}
+  gap: 45px;
 
-.mocha-cart-btn {
-  position: relative;
-  display: flex;
-  align-items: center;
-  color: #111;
-}
+  background:
+    linear-gradient(
+      90deg,
+      #efb8b3,
+      #f8dbd6,
+      #efb8b3
+    );
 
-.mocha-cart-badge {
-  position: absolute;
-  top: -8px;
-  right: -12px;
-  background: #111;
-  color: #fff;
+  color: #6c3028;
+
+  font-family:
+    "Nunito",
+    sans-serif;
+
   font-size: 11px;
+  font-weight: 800;
+
+  letter-spacing: 0.2px;
+}
+
+.topbar-divider {
+  width: 1px;
+  height: 17px;
+
+  background:
+    rgba(
+      92,
+      41,
+      32,
+      0.25
+    );
+}
+
+
+/* ==========================================
+   NAVBAR
+========================================== */
+
+.sugar-navbar {
+  width: 100%;
+
+  min-height: 76px;
+
+  padding:
+    0
+    clamp(
+      35px,
+      5vw,
+      90px
+    );
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content:
+    space-between;
+
+  gap: 30px;
+
+  position: sticky;
+
+  top: 0;
+
+  z-index: 1000;
+
+  background:
+    rgba(
+      255,
+      248,
+      244,
+      0.97
+    );
+
+  border-bottom:
+    1px solid
+    rgba(
+      103,
+      47,
+      37,
+      0.08
+    );
+
+  backdrop-filter:
+    blur(12px);
+}
+
+
+/* ==========================================
+   BRAND
+========================================== */
+
+.sugar-brand {
+  min-width: 220px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 11px;
+
+  color: #54241d;
+
+  text-decoration: none;
+}
+
+.brand-heart {
+  color: #d26863;
+
+  font-family:
+    "DM Serif Display",
+    serif;
+
+  font-size: 39px;
+
+  line-height: 1;
+}
+
+.brand-copy {
+  display: flex;
+
+  flex-direction: column;
+
+  line-height: 1;
+}
+
+.brand-copy span {
+  color: #54241d;
+
+  font-family:
+    "DM Serif Display",
+    serif;
+
+  font-size: 27px;
+
+  font-weight: 400;
+}
+
+.brand-copy small {
+  margin-top: 6px;
+
+  margin-left: 2px;
+
+  color: #d26863;
+
+  font-family:
+    "Nunito",
+    sans-serif;
+
+  font-size: 8px;
+
   font-weight: 900;
-  min-width: 20px;
-  height: 20px;
-  border-radius: 50%;
+
+  letter-spacing: 5px;
+}
+
+
+/* ==========================================
+   MENU
+========================================== */
+
+.sugar-nav-menu {
+  flex: 1;
+
   display: flex;
+
   align-items: center;
+
   justify-content: center;
-  border: 2px solid #fff;
+
+  gap:
+    clamp(
+      17px,
+      2vw,
+      31px
+    );
 }
 
-.mocha-hamburger {
-  display: none !important;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #111;
-}
+.sugar-nav-link {
+  padding:
+    28px 0;
 
-/* SEARCH & FILTER OVERLAY */
-.search-filter-overlay {
-  position: absolute;
-  top: 75px;
-  left: 0;
-  right: 0;
-  background: #ffffff;
-  border-bottom: 1px solid #e4e0d8;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
-  padding: 24px 40px;
-  z-index: 999;
-  animation: slideDown 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-@keyframes slideDown {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.search-overlay-form {
-  max-width: 1000px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.search-overlay-input-group {
   position: relative;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
 
-.search-overlay-icon {
-  position: absolute;
-  left: 16px;
-  color: #666;
-  font-size: 22px !important;
-}
-
-.search-overlay-input {
-  width: 100%;
-  padding: 14px 46px 14px 48px;
-  font-size: 15px;
-  border: 1px solid #dcd8d0;
-  border-radius: 30px;
-  background: #faf8f5;
-  outline: none;
-  transition: all 0.2s ease;
-  color: #111;
-}
-
-.search-overlay-input:focus {
-  border-color: #111;
-  background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.06);
-}
-
-.search-overlay-clear {
-  position: absolute;
-  right: 110px;
-  background: none;
   border: none;
-  font-size: 14px;
-  color: #777;
-  cursor: pointer;
-  padding: 4px 8px;
-}
 
-.search-overlay-submit-btn {
-  padding: 12px 24px;
-  background: #111111;
-  color: #ffffff;
-  border: none;
-  border-radius: 30px;
-  font-weight: 700;
-  font-size: 14px;
-  cursor: pointer;
+  background: transparent;
+
+  color: #54241d;
+
+  font-family:
+    "Nunito",
+    sans-serif;
+
+  font-size: 11px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.7px;
+
   white-space: nowrap;
-  transition: background 0.2s ease;
+
+  text-decoration: none;
+
+  cursor: pointer;
 }
 
-.search-overlay-submit-btn:hover {
-  background: #333333;
+.sugar-nav-link::after {
+  content: "";
+
+  width: 0;
+  height: 2px;
+
+  position: absolute;
+
+  bottom: 20px;
+  left: 50%;
+
+  transform:
+    translateX(-50%);
+
+  background: #d26863;
+
+  transition:
+    width 0.25s ease;
 }
 
-.search-overlay-filters {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  flex-wrap: wrap;
-  padding: 10px 0;
-  border-top: 1px solid #f0ede6;
+.sugar-nav-link:hover {
+  color: #c05b57;
 }
 
-.filter-group {
-  display: flex;
-  align-items: center;
-  gap: 10px;
+.sugar-nav-link:hover::after {
+  width: 100%;
 }
 
-.filter-group-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: #444;
-}
+.dropdown-arrow {
+  margin-left: 5px;
 
-.filter-chips {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.filter-chip {
-  padding: 6px 14px;
   font-size: 12px;
-  font-weight: 600;
-  border: 1px solid #dcd8d0;
-  border-radius: 20px;
-  background: #ffffff;
-  color: #444444;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
-.filter-chip:hover {
-  border-color: #111111;
-  color: #111111;
+
+/* ==========================================
+   DROPDOWN
+========================================== */
+
+.sugar-dropdown {
+  position: relative;
 }
 
-.filter-chip.active {
-  background: #111111;
-  color: #ffffff;
-  border-color: #111111;
-}
+.sugar-dropdown-menu {
+  width: 205px;
 
-.reset-overlay-filters-btn {
-  background: none;
-  border: none;
-  font-size: 12px;
-  font-weight: 700;
-  color: #888888;
-  text-decoration: underline;
-  cursor: pointer;
-  margin-left: auto;
-}
+  padding: 10px;
 
-.reset-overlay-filters-btn:hover {
-  color: #111111;
-}
+  position: absolute;
 
-/* LIVE PRODUCT PREVIEW RESULTS */
-.search-live-results {
-  border-top: 1px solid #f0ede6;
-  padding-top: 16px;
-}
+  top: calc(100% - 6px);
 
-.search-live-header {
+  left: 50%;
+
+  transform:
+    translateX(-50%)
+    translateY(8px);
+
+  border:
+    1px solid
+    #f0dad5;
+
+  border-radius: 14px;
+
+  background:
+    rgba(
+      255,
+      255,
+      255,
+      0.99
+    );
+
+  box-shadow:
+    0 15px 40px
+    rgba(
+      81,
+      43,
+      35,
+      0.12
+    );
+
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #555;
-}
 
-.view-all-link-btn {
-  background: none;
-  border: none;
-  color: #111;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.search-live-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-  gap: 12px;
-}
-
-.search-live-item {
-  display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 8px;
-  border-radius: 8px;
-  text-decoration: none !important;
-  color: #111;
-  background: #faf8f5;
-  border: 1px solid #eee9e0;
-  transition: all 0.2s ease;
+
+  opacity: 0;
+
+  visibility: hidden;
+
+  pointer-events: none;
+
+  transition:
+    all 0.2s ease;
 }
 
-.search-live-item:hover {
-  transform: translateY(-2px);
-  border-color: #111;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+.sugar-dropdown:hover
+.sugar-dropdown-menu {
+  opacity: 1;
+
+  visibility: visible;
+
+  pointer-events: auto;
+
+  transform:
+    translateX(-50%)
+    translateY(0);
 }
 
-.search-live-item img {
-  width: 100%;
-  height: 90px;
-  object-fit: cover;
-  border-radius: 6px;
-  margin-bottom: 6px;
-}
+.sugar-dropdown-menu a {
+  padding:
+    10px 13px;
 
-.search-live-info h4 {
+  border-radius: 9px;
+
+  color: #745047;
+
+  font-family:
+    "Nunito",
+    sans-serif;
+
   font-size: 12px;
-  font-weight: 600;
-  margin: 0;
-  color: #111;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 120px;
-}
 
-.search-live-info p {
-  font-size: 12px;
   font-weight: 700;
-  margin: 2px 0 0 0;
-  color: #555;
+
+  text-decoration: none;
+
+  transition:
+    0.2s;
 }
 
-@media (max-width: 900px) {
-  .mocha-header {
-    padding: 0 24px;
-    grid-template-columns: auto 1fr auto;
-    gap: 16px;
+.sugar-dropdown-menu a:hover {
+  background: #fff0ec;
+
+  color: #c65d59;
+}
+
+
+/* ==========================================
+   ACTION ICONS
+========================================== */
+
+.sugar-nav-actions {
+  min-width: 145px;
+
+  display: flex;
+
+  justify-content:
+    flex-end;
+
+  align-items: center;
+
+  gap: 7px;
+}
+
+.sugar-icon-button {
+  width: 39px;
+  height: 39px;
+
+  padding: 0;
+
+  position: relative;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: transparent;
+
+  color: #54241d;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-decoration: none;
+
+  cursor: pointer;
+
+  transition:
+    all 0.2s ease;
+}
+
+.sugar-icon-button:hover {
+  background: #f9dfda;
+
+  color: #bb514d;
+}
+
+
+/* CART NUMBER */
+
+.cart-number {
+  min-width: 17px;
+  height: 17px;
+
+  padding:
+    0 4px;
+
+  position: absolute;
+
+  top: 0;
+  right: 0;
+
+  border-radius: 50px;
+
+  background: #c85f5a;
+
+  color: white;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  font-size: 9px;
+
+  font-weight: 900;
+}
+
+
+/* ==========================================
+   RESPONSIVE
+========================================== */
+
+@media (
+  max-width: 1100px
+) {
+
+  .sugar-nav-menu {
+    gap: 13px;
   }
-  .mocha-nav-links {
+
+  .sugar-nav-link {
+    font-size: 9px;
+  }
+
+  .sugar-brand {
+    min-width: 185px;
+  }
+
+}
+
+
+@media (
+  max-width: 850px
+) {
+
+  .sugar-nav-menu {
     display: none;
   }
-  .mocha-nav-links.active {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 65px;
-    left: 0;
-    right: 0;
-    background: #fff;
-    padding: 20px;
-    border-bottom: 1px solid #e4e0d8;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    gap: 16px;
+
+  .sugar-navbar {
+    min-height: 70px;
   }
-  .mocha-hamburger {
-    display: flex !important;
+
+  .sugar-brand {
+    min-width: unset;
   }
-  .search-filter-overlay {
-    padding: 16px 20px;
+
+  .sugar-nav-actions {
+    min-width: unset;
   }
-  .search-overlay-clear {
-    right: 90px;
-  }
+
 }
 
-@media (max-width: 600px) {
-  .mocha-header {
-    height: 64px;
-    padding: 0 18px;
+
+@media (
+  max-width: 550px
+) {
+
+  .sugar-topbar {
+    min-height: 30px;
+
+    padding: 5px 12px;
+
+    gap: 9px;
+
+    font-size: 8px;
   }
-  .mocha-logo {
-    font-size: 19px;
+
+  .topbar-divider {
+    display: none;
   }
-  .search-filter-overlay {
-    top: 64px;
+
+  .sugar-navbar {
+    padding:
+      0 18px;
   }
+
+  .brand-heart {
+    font-size: 29px;
+  }
+
+  .brand-copy span {
+    font-size: 21px;
+  }
+
+  .brand-copy small {
+    font-size: 6px;
+
+    letter-spacing: 3px;
+  }
+
+  .sugar-nav-actions {
+    gap: 2px;
+  }
+
+  .sugar-icon-button {
+    width: 34px;
+    height: 34px;
+  }
+
 }

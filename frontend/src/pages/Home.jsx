@@ -1,613 +1,794 @@
-import React from "react";
-import "../pageStyles/Home.css";
+          import React, { useEffect, useState } from "react";
+          import "../pageStyles/Home.css";
 
-const categories = [
-    {
-        name: "Cakes",
-        icon: "🎂",
-        className: "category-pink",
-        link: "/products?category=Cake",
-    },
-    {
-        name: "Pastries",
-        icon: "🥐",
-        className: "category-yellow",
-        link: "/products?category=Pastry",
-    },
-    {
-        name: "Savory",
-        icon: "🥧",
-        className: "category-green",
-        link: "/products?category=Savory",
-    },
-    {
-        name: "Combos",
-        icon: "🎁",
-        className: "category-purple",
-        link: "/products?category=Combo",
-    },
-];
+          /* =====================================================
+            HERO SLIDER
+          ===================================================== */
 
-const bestSellers = [
-    {
-        id: 1,
-        name: "Chocolate Cake",
-        price: 350000,
-        image: "/images/products/chocolate-cake.jpg",
-    },
-    {
-        id: 2,
-        name: "Strawberry Cake",
-        price: 320000,
-        image: "/images/products/strawberry-cake.jpg",
-    },
-    {
-        id: 3,
-        name: "Croissant",
-        price: 45000,
-        image: "/images/products/croissant.jpg",
-    },
-    {
-        id: 4,
-        name: "Tiramisu",
-        price: 180000,
-        image: "/images/products/tiramisu.jpg",
-    },
-];
+          const heroSlides = [
+            {
+              id: 1,
+              image: "/images/hero/hero-strawberry-cake.jpg",
+              eyebrow: "ARTISAN BAKERY",
+              title: "Sweet Moments Made for You",
+              description:
+                "Handcrafted cakes, delicate pastries and savory favorites made fresh with quality ingredients and a passion for baking.",
+            },
 
-const freshProducts = [
-    {
-        id: 1,
-        name: "Cookies",
-        image: "/images/products/cookies.jpg",
-    },
-    {
-        id: 2,
-        name: "Cupcake",
-        image: "/images/products/cupcake.jpg",
-    },
-    {
-        id: 3,
-        name: "Fruit Tart",
-        image: "/images/products/fruit-tart.jpg",
-    },
-    {
-        id: 4,
-        name: "Cinnamon Roll",
-        image: "/images/products/cinnamon-roll.jpg",
-    },
-];
+            {
+              id: 2,
+              image: "/images/products/chocolate-cake.jpg",
+              eyebrow: "OUR SIGNATURE BAKES",
+              title: "Made Fresh, Made Beautiful",
+              description:
+                "From rich chocolate cakes to buttery pastries, every Sugar Muse creation is prepared with care.",
+            },
 
-const formatPrice = (price) => {
-    return price.toLocaleString("vi-VN") + "đ";
-};
+            {
+              id: 3,
+              image: "/images/banners/birthday-banner.jpg",
+              eyebrow: "CELEBRATE YOUR WAY",
+              title: "Cakes for Every Special Moment",
+              description:
+                "Birthdays, anniversaries and memorable celebrations deserve a cake designed especially for you.",
+            },
+          ];
 
-function SearchIcon() {
-    return (
-        <svg
-            viewBox="0 0 24 24"
-            width="25"
-            height="25"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-        >
-            <circle cx="11" cy="11" r="7" />
-            <path d="m20 20-3.7-3.7" />
-        </svg>
-    );
-}
+          /* =====================================================
+            CATEGORY
+          ===================================================== */
 
-function CartIcon() {
-    return (
-        <svg
-            viewBox="0 0 24 24"
-            width="26"
-            height="26"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-        >
-            <path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.6L21 7H6" />
-            <circle cx="10" cy="20" r="1.2" />
-            <circle cx="18" cy="20" r="1.2" />
-        </svg>
-    );
-}
+                  const categories = [
+          {
+            id: 1,
+            name: "Cakes",
+            image: "/images/products/cake-category.jpg",
+            link: "/products?category=Cake",
+          },
 
-function UserIcon() {
-    return (
-        <svg
-            viewBox="0 0 24 24"
-            width="26"
-            height="26"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-        >
-            <circle cx="12" cy="8" r="4" />
-            <path d="M4.5 21a7.5 7.5 0 0 1 15 0" />
-        </svg>
-    );
-}
+          {
+            id: 2,
+            name: "Pastries",
+            image: "/images/products/pastry-category.jpg",
+            link: "/products?category=Pastry",
+          },
 
-function HeartIcon() {
-    return (
-        <svg
-            viewBox="0 0 24 24"
-            width="21"
-            height="21"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-        >
-            <path d="M20.8 4.6a5.4 5.4 0 0 0-7.6 0L12 5.8l-1.2-1.2a5.4 5.4 0 0 0-7.6 7.6L12 21l8.8-8.8a5.4 5.4 0 0 0 0-7.6Z" />
-        </svg>
-    );
-}
+          {
+            id: 3,
+            name: "Savory",
+            image: "/images/products/savory-category.jpg",
+            link: "/products?category=Savory",
+          },
 
-const Home = () => {
-    return (
-        <div className="sugar-muse-page">
+          {
+            id: 4,
+            name: "Gift Boxes",
+            image: "/images/products/gift-box-category.jpg",
+            link: "/products?category=Gift Box",
+          },
+        ];
+          /* =====================================================
+            BEST SELLERS
+          ===================================================== */
 
-            {/* =========================
-                DECORATIVE STRIP
-            ========================== */}
-            <div className="bakery-awning" />
+                const bestSellers = [
+        {
+          id: 1,
+          name: "Chocolate Cake",
+          price: 35,
+          label: "Best Seller",
+          image: "/images/products/chocolate-cake.jpg",
+        },
+        {
+          id: 2,
+          name: "Strawberry Cake",
+          price: 32,
+          label: "Popular",
+          image: "/images/products/strawberry-cake.jpg",
+        },
+        {
+          id: 3,
+          name: "Croissant",
+          price: 4.5,
+          label: "Fresh Daily",
+          image: "/images/products/croissant.jpg",
+        },
+        {
+          id: 4,
+          name: "Tiramisu",
+          price: 18,
+          label: "Staff Pick",
+          image: "/images/products/tiramisu.jpg",
+        },
+      ];
 
-            {/* =========================
-                NAVBAR
-            ========================== */}
-            <header className="main-header">
-                <a href="/" className="brand">
-                    <div className="brand-icon">🎂</div>
+          const bakeryImage =
+            "/images/banners/birthday-banner.jpg";
 
-                    <div className="brand-text">
-                        <span>Sugar Muse</span>
-                        <small>BAKERY</small>
-                    </div>
-                </a>
+          /* =====================================================
+            HELPERS
+          ===================================================== */
 
-                <nav className="main-nav">
-                    <a href="/" className="nav-item active">
-                        <span className="nav-icon">⌂</span>
-                        Home
-                    </a>
+          const formatPrice = (price) => {
+            return `$${Number(price).toFixed(2)}`;
+          };
 
-                    <a
-                        href="/products?category=Cake"
-                        className="nav-item"
-                    >
-                        <span className="nav-icon">🎂</span>
-                        Cakes
-                    </a>
+          /* =====================================================
+            CART ICON
+          ===================================================== */
 
-                    <a
-                        href="/products?category=Pastry"
-                        className="nav-item"
-                    >
-                        <span className="nav-icon">🥐</span>
-                        Pastries
-                    </a>
+          function CartIcon() {
+            return (
+              <svg
+                viewBox="0 0 24 24"
+                width="24"
+                height="24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+              >
+                <path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.6L21 7H6" />
+                <circle cx="10" cy="20" r="1.2" />
+                <circle cx="18" cy="20" r="1.2" />
+              </svg>
+            );
+          }
 
-                    <a
-                        href="/products?category=Savory"
-                        className="nav-item"
-                    >
-                        <span className="nav-icon">🥧</span>
-                        Savory
-                    </a>
+          /* =====================================================
+            HOME
+          ===================================================== */
 
-                    <a
-                        href="/products?category=Combo"
-                        className="nav-item"
-                    >
-                        <span className="nav-icon">🎁</span>
-                        Combos
-                    </a>
+          const Home = () => {
+            const [currentSlide, setCurrentSlide] =
+              useState(0);
 
-                    <span className="nav-divider" />
+            const [favorites, setFavorites] =
+              useState([]);
 
-                    <a href="#about" className="nav-simple">
-                        About
-                    </a>
+            /* AUTO SLIDER */
 
-                    <a href="#footer" className="nav-simple">
-                        Contact
-                    </a>
-                </nav>
+            useEffect(() => {
+              const interval = setInterval(() => {
+                setCurrentSlide((prev) =>
+                  prev === heroSlides.length - 1
+                    ? 0
+                    : prev + 1
+                );
+              }, 4500);
 
-                <div className="nav-actions">
-                    <button
-                        type="button"
-                        className="nav-action-btn"
-                        aria-label="Search"
-                    >
-                        <SearchIcon />
-                    </button>
+              return () => clearInterval(interval);
+            }, []);
 
-                    <a
-                        href="/cart"
-                        className="nav-action-btn cart-button"
-                        aria-label="Cart"
-                    >
-                        <CartIcon />
+            const currentHero =
+              heroSlides[currentSlide];
 
-                        <span className="cart-count">
-                            2
-                        </span>
-                    </a>
+            const nextSlide = () => {
+              setCurrentSlide((prev) =>
+                prev === heroSlides.length - 1
+                  ? 0
+                  : prev + 1
+              );
+            };
 
-                    <a
-                        href="/login"
-                        className="nav-action-btn"
-                        aria-label="Account"
-                    >
-                        <UserIcon />
-                    </a>
-                </div>
-            </header>
+            const previousSlide = () => {
+              setCurrentSlide((prev) =>
+                prev === 0
+                  ? heroSlides.length - 1
+                  : prev - 1
+              );
+            };
 
-            {/* =========================
-                HERO
-            ========================== */}
-            <section className="hero-section">
-                <div className="hero-content">
+            const toggleFavorite = (id) => {
+              setFavorites((prev) =>
+                prev.includes(id)
+                  ? prev.filter(
+                      (item) => item !== id
+                    )
+                  : [...prev, id]
+              );
+            };
 
-                    <div className="hero-label">
-                        FRESHLY BAKED · EVERY DAY
-                    </div>
+            return (
+              <main className="sugar-muse-page">
+
+                {/* =================================================
+                    HERO
+                ================================================== */}
+
+                <section className="hero-section">
+
+                  {/* LEFT CONTENT */}
+
+                  <div className="hero-text">
+
+                    <span className="hero-eyebrow">
+                      {currentHero.eyebrow}
+                    </span>
 
                     <h1>
-                        Sweet moments,
-                        <br />
-                        made from scratch.
+                      {currentHero.title}
                     </h1>
 
                     <p>
-                        Handcrafted cakes, pastries and savory treats
-                        made fresh with carefully selected ingredients.
+                      {currentHero.description}
                     </p>
 
-                    <div className="hero-buttons">
-                        <a
-                            href="/products?category=Cake"
-                            className="hero-btn primary"
-                        >
-                            <span>🛒</span>
-                            Shop Cakes
-                        </a>
+                    <div className="hero-actions">
 
-                        <a
-                            href="#categories"
-                            className="hero-btn secondary"
-                        >
-                            <span>▤</span>
-                            Explore Menu
-                        </a>
+                      <a
+                        href="/products"
+                        className="primary-button"
+                      >
+                        Shop Now
+                        <span>→</span>
+                      </a>
+
+                      <a
+                        href="#custom-cakes"
+                        className="outline-button"
+                      >
+                        Custom Cakes
+                      </a>
+
                     </div>
+
+                    {/* SLIDER DOTS */}
 
                     <div className="hero-dots">
-                        <span className="dot active" />
-                        <span className="dot" />
-                        <span className="dot" />
+
+                      {heroSlides.map(
+                        (slide, index) => (
+                          <button
+                            key={slide.id}
+                            type="button"
+                            className={`hero-dot ${
+                              currentSlide === index
+                                ? "active"
+                                : ""
+                            }`}
+                            onClick={() =>
+                              setCurrentSlide(index)
+                            }
+                            aria-label={`Slide ${
+                              index + 1
+                            }`}
+                          />
+                        )
+                      )}
+
                     </div>
-                </div>
 
-                <div className="hero-image-wrapper">
-                    <img
-                        src="/images/hero/hero-strawberry-cake.jpg"
-                        alt="Sugar Muse strawberry cake"
-                        className="hero-image"
-                    />
+                  </div>
 
-                    <span className="hero-heart">
-                        ♡
-                    </span>
-                </div>
-            </section>
+                  {/* RIGHT IMAGE */}
 
-            {/* =========================
-                CATEGORY
-            ========================== */}
-            <section
-                className="section category-section"
-                id="categories"
-            >
-                <div className="section-title">
-                    <span className="title-line" />
-                    <h2>Shop by Category</h2>
-                    <span className="title-line" />
-                </div>
+                  <div className="hero-visual">
 
-                <div className="category-grid">
-                    {categories.map((category) => (
-                        <a
-                            href={category.link}
-                            key={category.name}
-                            className={`category-card ${category.className}`}
+                    {heroSlides.map(
+                      (slide, index) => (
+                        <div
+                          key={slide.id}
+                          className={`hero-slide ${
+                            currentSlide === index
+                              ? "active"
+                              : ""
+                          }`}
                         >
-                            <span className="category-icon">
-                                {category.icon}
+                          <img
+                            src={slide.image}
+                            alt={slide.title}
+                            className="hero-image"
+                          />
+                        </div>
+                      )
+                    )}
+
+                    <button
+                      type="button"
+                      className="hero-arrow hero-arrow-left"
+                      onClick={previousSlide}
+                      aria-label="Previous slide"
+                    >
+                      ‹
+                    </button>
+
+                    <button
+                      type="button"
+                      className="hero-arrow hero-arrow-right"
+                      onClick={nextSlide}
+                      aria-label="Next slide"
+                    >
+                      ›
+                    </button>
+
+                  </div>
+
+                </section>
+
+                {/* =================================================
+                    BENEFITS
+                ================================================== */}
+
+                <section className="benefit-strip">
+
+                  <div className="benefit-item">
+
+                    <span className="benefit-icon">
+                      🌿
+                    </span>
+
+                    <div>
+                      <h4>
+                        Quality Ingredients
+                      </h4>
+
+                      <p>
+                        Fresh & carefully selected
+                      </p>
+                    </div>
+
+                  </div>
+
+                  <div className="benefit-item">
+
+                    <span className="benefit-icon">
+                      ♨
+                    </span>
+
+                    <div>
+                      <h4>
+                        Handmade Daily
+                      </h4>
+
+                      <p>
+                        Baked with love every day
+                      </p>
+                    </div>
+
+                  </div>
+
+                  <div className="benefit-item">
+
+                    <span className="benefit-icon">
+                      🎁
+                    </span>
+
+                    <div>
+                      <h4>
+                        Perfect for Any Occasion
+                      </h4>
+
+                      <p>
+                        Birthdays, celebrations & more
+                      </p>
+                    </div>
+
+                  </div>
+
+                  <div className="benefit-item">
+
+                    <span className="benefit-icon">
+                      🚚
+                    </span>
+
+                    <div>
+                      <h4>
+                        Fast & Reliable Delivery
+                      </h4>
+
+                      <p>
+                        Fresh to your doorstep
+                      </p>
+                    </div>
+
+                  </div>
+
+                </section>
+
+                {/* =================================================
+                    CATEGORY
+                ================================================== */}
+
+                <section className="home-section category-section">
+
+                  <div className="section-heading">
+
+                    <span className="heading-line" />
+
+                    <h2>
+                      Shop by Category
+                    </h2>
+
+                    <span className="heading-line" />
+
+                  </div>
+
+                  <div className="category-grid">
+
+                    {categories.map(
+                      (category) => (
+                        <a
+                          href={category.link}
+                          key={category.id}
+                          className="category-card"
+                        >
+
+                          <div className="category-image-wrap">
+
+                            <img
+                              src={category.image}
+                              alt={category.name}
+                            />
+
+                          </div>
+
+                          <div className="category-bottom">
+
+                            <h3>
+                              {category.name}
+                            </h3>
+
+                            <span>
+                              →
                             </span>
 
-                            <span className="category-name">
-                                {category.name}
-                            </span>
+                          </div>
+
                         </a>
-                    ))}
-                </div>
-            </section>
+                      )
+                    )}
 
-            {/* =========================
-                BEST SELLERS
-            ========================== */}
-            <section className="section best-seller-section">
-                <div className="section-title">
-                    <span className="title-decoration">
-                        ❧
-                    </span>
+                  </div>
 
-                    <h2>Our Best Sellers</h2>
+                </section>
 
-                    <span className="title-decoration right">
-                        ❧
-                    </span>
-                </div>
+                {/* =================================================
+                    BEST SELLERS
+                ================================================== */}
 
-                <div className="product-grid">
-                    {bestSellers.map((product) => (
-                        <article
+                <section
+                  className="home-section best-section"
+                  id="best-sellers"
+                >
+
+                  <div className="section-heading">
+
+                    <span className="heading-line" />
+
+                    <div>
+
+                      <span className="mini-heading">
+                        CUSTOMER FAVORITES
+                      </span>
+
+                      <h2>
+                        Our Best Sellers
+                      </h2>
+
+                    </div>
+
+                    <span className="heading-line" />
+
+                  </div>
+
+                  <div className="product-grid">
+
+                    {bestSellers.map(
+                      (product) => {
+                        const liked =
+                          favorites.includes(
+                            product.id
+                          );
+
+                        return (
+                          <article
                             className="product-card"
                             key={product.id}
-                        >
-                            <div className="product-image-wrapper">
-                                <img
-                                    src={product.image}
-                                    alt={product.name}
-                                    className="product-image"
-                                />
+                          >
 
-                                <button
-                                    className="favorite-button"
-                                    type="button"
-                                    aria-label="Add to favourites"
-                                >
-                                    <HeartIcon />
-                                </button>
+                            {/* IMAGE */}
+
+                            <div className="product-image-wrap">
+
+                              <img
+                                src={product.image}
+                                alt={product.name}
+                              />
+
+                              <span className="product-label">
+                                {product.label}
+                              </span>
+
+                              <button
+                                type="button"
+                                className={`favorite-button ${
+                                  liked
+                                    ? "liked"
+                                    : ""
+                                }`}
+                                onClick={() =>
+                                  toggleFavorite(
+                                    product.id
+                                  )
+                                }
+                                aria-label="Favorite"
+                              >
+                                {liked
+                                  ? "♥"
+                                  : "♡"}
+                              </button>
+
                             </div>
 
-                            <div className="product-info">
-                                <div>
-                                    <h3>{product.name}</h3>
+                            {/* PRODUCT INFO */}
 
-                                    <p>
-                                        {formatPrice(product.price)}
-                                    </p>
-                                </div>
+                            <div className="product-content">
 
-                                <button
-                                    type="button"
-                                    className="small-cart-button"
-                                    aria-label={`Add ${product.name} to cart`}
-                                >
-                                    <CartIcon />
-                                </button>
+                              <div>
+
+                                <h3>
+                                  {product.name}
+                                </h3>
+
+                                <p>
+                                  {formatPrice(
+                                    product.price
+                                  )}
+                                </p>
+
+                              </div>
+
+                              <button
+                                type="button"
+                                className="product-cart-button"
+                                aria-label="Add to cart"
+                              >
+                                <CartIcon />
+                              </button>
+
                             </div>
-                        </article>
-                    ))}
-                </div>
-            </section>
 
-            {/* =========================
-                PROMO BANNER
-            ========================== */}
-            <section className="promo-section">
-                <img
-                    src="/images/banners/birthday-banner.jpg"
-                    alt="Birthday celebration cake"
-                />
+                          </article>
+                        );
+                      }
+                    )}
 
-                <div className="promo-overlay" />
+                  </div>
 
-                <div className="promo-content">
-                    <span>
-                        BAKED FOR YOUR
+                </section>
+
+                {/* =================================================
+                    CUSTOM CAKES
+                ================================================== */}
+
+                <section
+                  className="custom-cake-section"
+                  id="custom-cakes"
+                >
+
+                  <div className="custom-cake-image">
+
+                    <img
+                      src="/images/products/strawberry-cake.jpg"
+                      alt="Custom strawberry cake"
+                    />
+
+                  </div>
+
+                  <div className="custom-cake-content">
+
+                    <span className="mini-heading">
+                      CUSTOM CAKES
                     </span>
 
                     <h2>
-                        Special Moments
+                      Create Your
+                      <br />
+                      Dream Cake
                     </h2>
 
                     <p>
-                        Birthday cakes, celebration boxes
-                        <br />
-                        and handcrafted treats for every occasion.
+                      Personalized cakes for your
+                      special moments, made just the
+                      way you imagine.
                     </p>
 
-                    <a href="/products" className="promo-btn">
-                        Order Now
-                        <span>→</span>
+                    <a
+                      href="/products"
+                      className="primary-button"
+                    >
+                      Design Your Cake
+                      <span>→</span>
                     </a>
-                </div>
-            </section>
 
-            {/* =========================
-                FRESH FROM OVEN
-            ========================== */}
-            <section className="section fresh-section">
-                <div className="section-title">
-                    <span className="title-line" />
+                  </div>
+
+                  <div className="custom-decoration">
+                    ♡
+                  </div>
+
+                </section>
+
+                {/* =================================================
+                    OUR BAKERY
+                ================================================== */}
+
+                <section
+                  className="story-section"
+                  id="our-bakery"
+                >
+
+                  <div className="story-image">
+
+                    <img
+                      src={bakeryImage}
+                      alt="Sugar Muse bakery"
+                    />
+
+                  </div>
+
+                  <div className="story-content">
+
+                    <span className="mini-heading">
+                      OUR BAKERY
+                    </span>
 
                     <h2>
-                        <span className="chef-icon">
-                            ♨
-                        </span>
-                        Fresh From The Oven
+                      Baked Fresh Every Morning
                     </h2>
 
-                    <span className="title-line" />
-                </div>
+                    <p>
+                      Every cake and pastry at Sugar
+                      Muse is made in small batches
+                      with quality ingredients, so
+                      each bite tastes as good as it
+                      looks.
+                    </p>
 
-                <p className="section-subtitle">
-                    Newly baked pastries and treats,
-                    prepared fresh every morning.
-                </p>
+                    <a
+                      href="/products"
+                      className="story-link"
+                    >
+                      Explore Our Bakes
+                      <span>→</span>
+                    </a>
 
-                <div className="fresh-grid">
-                    {freshProducts.map((product) => (
-                        <a
-                            href="/products"
-                            className="fresh-card"
-                            key={product.id}
-                        >
-                            <img
-                                src={product.image}
-                                alt={product.name}
-                            />
+                  </div>
 
-                            <h3>
-                                {product.name}
-                            </h3>
-                        </a>
-                    ))}
-                </div>
-            </section>
+                </section>
 
-            {/* =========================
-                ABOUT
-            ========================== */}
-            <section className="about-section" id="about">
-                <div className="about-intro">
-                    <div className="about-illustration">
-                        ♡
-                    </div>
+                {/* =================================================
+                    FOOTER
+                ================================================== */}
 
-                    <div>
-                        <h2>
-                            About Sugar Muse
-                        </h2>
+                <footer
+                  className="footer"
+                  id="footer"
+                >
 
-                        <p>
-                            A bakery where every treat is crafted
-                            with passion, quality ingredients and
-                            a little extra love.
-                        </p>
-                    </div>
-                </div>
+                  <div className="footer-wave" />
 
-                <div className="about-features">
-                    <div className="feature">
-                        <span>🌿</span>
-                        <p>
-                            Fresh
-                            <br />
-                            Ingredients
-                        </p>
-                    </div>
+                  <div className="footer-main">
 
-                    <div className="feature">
-                        <span>👩‍🍳</span>
-                        <p>
-                            Handcrafted
-                            <br />
-                            Daily
-                        </p>
-                    </div>
-
-                    <div className="feature">
-                        <span>♡</span>
-                        <p>
-                            Made
-                            <br />
-                            with Love
-                        </p>
-                    </div>
-                </div>
-            </section>
-
-            {/* =========================
-                FOOTER
-            ========================== */}
-            <footer className="footer" id="footer">
-                <div className="footer-main">
+                    {/* BRAND */}
 
                     <div className="footer-brand">
-                        <div className="footer-logo-row">
-                            <span className="footer-logo-icon">
-                                🎂
-                            </span>
 
-                            <div>
-                                <h2>
-                                    Sugar Muse
-                                </h2>
+                      <div className="footer-brand-name">
 
-                                <span>
-                                    BAKERY
-                                </span>
-                            </div>
+                        <span className="footer-bow">
+                          ♡
+                        </span>
+
+                        <div>
+
+                          <h2>
+                            Sugar Muse
+                          </h2>
+
+                          <small>
+                            BAKERY
+                          </small>
+
                         </div>
 
-                        <p>
-                            Freshly baked with love. ♡
-                        </p>
+                      </div>
+
+                      <p>
+                        Freshly baked, always with love ♡
+                      </p>
+
                     </div>
 
-                    <div className="footer-column">
-                        <h3>Shop</h3>
-                        <a href="/products?category=Cake">
-                            Cakes
-                        </a>
-                        <a href="/products?category=Pastry">
-                            Pastries
-                        </a>
-                        <a href="/products?category=Savory">
-                            Savory
-                        </a>
-                        <a href="/products?category=Combo">
-                            Combos
-                        </a>
-                    </div>
+                    {/* SHOP */}
 
                     <div className="footer-column">
-                        <h3>Help</h3>
-                        <a href="#footer">FAQs</a>
-                        <a href="#footer">Delivery</a>
+
+                      <h4>
+                        Shop
+                      </h4>
+
+                      <a href="/products?category=Cake">
+                        Cakes
+                      </a>
+
+                      <a href="/products?category=Pastry">
+                        Pastries
+                      </a>
+
+                      <a href="/products?category=Savory">
+                        Savory
+                      </a>
+
+                      <a href="/products?category=Gift Box">
+                        Gift Boxes
+                      </a>
+
+                    </div>
+
+                    {/* COMPANY */}
+
+                    <div className="footer-column">
+
+                      <h4>
+                        Company
+                      </h4>
+
+                      <a href="#our-bakery">
+                        Our Bakery
+                      </a>
+
+                      <a href="#footer">
+                        Contact
+                      </a>
+
+                      <a href="#footer">
+                        FAQs
+                      </a>
+
+                    </div>
+
+                    {/* SOCIAL */}
+
+                    <div className="footer-column">
+
+                      <h4>
+                        Follow Us
+                      </h4>
+
+                      <div className="social-links">
+
                         <a href="#footer">
-                            Return & Refund
+                          IG
                         </a>
+
                         <a href="#footer">
-                            Contact Us
+                          f
                         </a>
+
+                        <a href="#footer">
+                          ♪
+                        </a>
+
+                        <a href="#footer">
+                          ▶
+                        </a>
+
+                      </div>
+
                     </div>
 
-                    <div className="footer-column">
-                        <h3>Follow Us</h3>
+                  </div>
 
-                        <div className="social-links">
-                            <a href="#footer">
-                                IG
-                            </a>
-
-                            <a href="#footer">
-                                f
-                            </a>
-
-                            <a href="#footer">
-                                ♪
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="footer-bottom">
+                  <div className="footer-bottom">
                     © 2026 Sugar Muse Bakery.
                     All rights reserved.
-                </div>
-            </footer>
-        </div>
-    );
-};
+                  </div>
 
-export default Home;
+                </footer>
+
+              </main>
+            );
+          };
+
+          export default Home;

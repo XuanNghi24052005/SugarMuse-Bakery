@@ -1,98 +1,276 @@
-import React, { useState } from 'react'
-import '../componentStyles/Product.css'
-import { Link } from 'react-router-dom'
-import Rating from '../components/Rating'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import { useDispatch, useSelector } from 'react-redux'
-import { addToWishlist, removeFromWishlist } from '../features/wishlist/wishlistSlice'
-import { showToast } from '../utils/showToast'
+import React from "react";
+import "../componentStyles/Product.css";
+
+import { Link } from "react-router-dom";
+
+import Rating from "./Rating";
+
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
+
+import { useDispatch, useSelector } from "react-redux";
+
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../features/wishlist/wishlistSlice";
+
+import { showToast } from "../utils/showToast";
 
 const Product = ({ product }) => {
-  const dispatch = useDispatch()
-  const { isAuthenticated } = useSelector((state) => state.user)
-  const { wishlist } = useSelector((state) => state.wishlist)
+  const dispatch = useDispatch();
+
+  const { isAuthenticated } =
+    useSelector((state) => state.user);
+
+  const { wishlist } =
+    useSelector((state) => state.wishlist);
+
+  /* =====================================================
+     CHECK WISHLIST
+  ===================================================== */
 
   const isWishlisted = Boolean(
     wishlist?.products?.some((item) => {
-      const pId = item.product?._id || item.product || item._id || item
-      return pId?.toString() === product?._id?.toString()
+      const productId =
+        item.product?._id ||
+        item.product ||
+        item._id ||
+        item;
+
+      return (
+        productId?.toString() ===
+        product?._id?.toString()
+      );
     })
-  )
+  );
 
-  const handleWishlistToggle = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
+  /* =====================================================
+     WISHLIST
+  ===================================================== */
+
+  const handleWishlistToggle = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+
     if (!isAuthenticated) {
-      showToast.error('Please login to add items to wishlist')
-      return
-    }
-    if (isWishlisted) {
-      dispatch(removeFromWishlist(product._id))
-        .unwrap()
-        .then(() => showToast.success('Removed from wishlist'))
-        .catch((err) => showToast.error(err || 'Failed to remove from wishlist'))
-    } else {
-      dispatch(addToWishlist(product._id))
-        .unwrap()
-        .then(() => showToast.success('Added to wishlist'))
-        .catch((err) => showToast.error(err || 'Failed to add to wishlist'))
-    }
-  }
+      showToast.error(
+        "Please login to add items to your wishlist."
+      );
 
-  const [rating, setRating] = useState(0)
-  const handleRatingChange = (newRating) => {
-    setRating(newRating)
-  }
+      return;
+    }
+
+    if (isWishlisted) {
+      dispatch(
+        removeFromWishlist(product._id)
+      )
+        .unwrap()
+        .then(() =>
+          showToast.success(
+            "Removed from wishlist."
+          )
+        )
+        .catch((error) =>
+          showToast.error(
+            error ||
+              "Failed to remove from wishlist."
+          )
+        );
+
+      return;
+    }
+
+    dispatch(
+      addToWishlist(product._id)
+    )
+      .unwrap()
+      .then(() =>
+        showToast.success(
+          "Added to wishlist."
+        )
+      )
+      .catch((error) =>
+        showToast.error(
+          error ||
+            "Failed to add to wishlist."
+        )
+      );
+  };
+
+  /* =====================================================
+     IMAGE
+  ===================================================== */
+
+  const productImage =
+    product?.image?.[0]?.url ||
+    "/images/products/strawberry-cake.jpg";
+
+  /* =====================================================
+     PRICE
+  ===================================================== */
+
+  const formattedPrice = `$${Number(
+    product?.price || 0
+  ).toFixed(2)}`;
+
+  /* =====================================================
+     REVIEWS
+  ===================================================== */
+
+  const reviewCount =
+    product?.numReviews ||
+    product?.numOfReviews ||
+    0;
 
   return (
-    <Link to={`/product/${product._id}`} className='product_id'>
-      <div className="product-card">
+    <article className="bakery-product-card">
+
+      {/* ===============================================
+          PRODUCT IMAGE
+      ================================================ */}
+
+      <div className="bakery-product-image-wrapper">
+
+        <Link
+          to={`/product/${product._id}`}
+          className="bakery-product-image-link"
+        >
+          <img
+            src={productImage}
+            alt={product.name}
+            className="bakery-product-image"
+          />
+        </Link>
+
+        {/* CATEGORY */}
+
+        {product.category && (
+          <span className="bakery-product-category-badge">
+            {product.category}
+          </span>
+        )}
+
+        {/* FEATURED */}
+
+        {product.featured && (
+          <span className="bakery-featured-badge">
+            Best Seller
+          </span>
+        )}
+
+        {/* WISHLIST */}
+
         <button
           type="button"
-          className={`product-wishlist-btn ${isWishlisted ? 'active' : ''}`}
-          onClick={handleWishlistToggle}
-          title={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
-          aria-label="Wishlist"
+          className={`bakery-wishlist-button ${
+            isWishlisted
+              ? "active"
+              : ""
+          }`}
+          onClick={
+            handleWishlistToggle
+          }
+          title={
+            isWishlisted
+              ? "Remove from wishlist"
+              : "Add to wishlist"
+          }
+          aria-label={
+            isWishlisted
+              ? "Remove from wishlist"
+              : "Add to wishlist"
+          }
         >
           {isWishlisted ? (
-            <FavoriteIcon className="wishlist-card-icon-filled" />
+            <FavoriteIcon />
           ) : (
-            <FavoriteBorderIcon className="wishlist-card-icon-empty" />
+            <FavoriteBorderIcon />
           )}
         </button>
 
-        <img
-          src={product.image?.[0]?.url || '/images/tshirt-white.jpg'}
-          alt={product.name}
-          className='product-image-card'
-        />
-        <div className="product-details">
-          <h3 className="product-title">{product.name}</h3>
-          {product.subcategory && (
-            <p className="product-subcategory">{product.subcategory}</p>
-          )}
-          <p className="product-price">${Number(product.price).toFixed(2)}</p>
-          <div className="rating_container">
-            <Rating
-              value={product.ratings || 0}
-              onRatingChange={handleRatingChange}
-              disabled={true}
-            />
-          </div>
-          <span className="productCardSpan">
-            ({product.numOfReviews || product.numReviews || 0}{' '}
-            {(product.numOfReviews || product.numReviews) === 1
-              ? 'Review'
-              : 'Reviews'}
+      </div>
+
+      {/* ===============================================
+          PRODUCT INFORMATION
+      ================================================ */}
+
+      <div className="bakery-product-details">
+
+        {/* SUBCATEGORY */}
+
+        {product.subcategory && (
+          <span className="bakery-product-subcategory">
+            {product.subcategory}
+          </span>
+        )}
+
+        {/* PRODUCT NAME */}
+
+        <Link
+          to={`/product/${product._id}`}
+          className="bakery-product-name-link"
+        >
+          <h3 className="bakery-product-title">
+            {product.name}
+          </h3>
+        </Link>
+
+        {/* DESCRIPTION */}
+
+        {product.description && (
+          <p className="bakery-product-description">
+            {product.description}
+          </p>
+        )}
+
+        {/* RATING */}
+
+        <div className="bakery-product-rating">
+
+          <Rating
+            value={
+              product.ratings || 0
+            }
+            disabled={true}
+          />
+
+          <span>
+            ({reviewCount}{" "}
+            {reviewCount === 1
+              ? "Review"
+              : "Reviews"}
             )
           </span>
 
-          <button className="add-to-cart">View Details</button>
         </div>
-      </div>
-    </Link>
-  )
-}
 
-export default Product
+        {/* BOTTOM */}
+
+        <div className="bakery-product-footer">
+
+          <div className="bakery-product-price">
+            {formattedPrice}
+          </div>
+
+          <Link
+            to={`/product/${product._id}`}
+            className="bakery-view-product-button"
+          >
+            View Details
+
+            <ArrowForwardIcon
+              fontSize="small"
+            />
+          </Link>
+
+        </div>
+
+      </div>
+
+    </article>
+  );
+};
+
+export default Product;
