@@ -1,58 +1,31 @@
-@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Nunito:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Nunito:wght@400;500;600;700;800&display=swap");
 
 :root {
-  --bakery-cream:
-    #fffaf6;
-
-  --bakery-soft:
-    #fff1eb;
-
-  --bakery-blush:
-    #f6d8d2;
-
-  --bakery-pink:
-    #d46964;
-
-  --bakery-pink-dark:
-    #b64f4b;
-
-  --bakery-brown:
-    #54241d;
-
-  --bakery-muted:
-    #89675f;
-
-  --bakery-line:
-    #ead6cf;
-
-  --bakery-white:
-    #ffffff;
-
-  --bakery-shadow:
-    0 12px 35px
-    rgba(
-      91,
-      48,
-      39,
-      0.08
-    );
+  --sugar-bg: #fffaf7;
+  --sugar-cream: #fff5f0;
+  --sugar-blush: #fbe5df;
+  --sugar-soft-pink: #f6cbc3;
+  --sugar-rose: #d76560;
+  --sugar-dark-rose: #bd514d;
+  --sugar-brown: #57261f;
+  --sugar-text: #805b53;
+  --sugar-border: #efd7d1;
 }
 
 
-/* ============================================
+/* ==========================
    PAGE
-============================================ */
+========================== */
 
-.bakery-products-page {
+.sugar-products-page {
   width: 100%;
-
   min-height: 100vh;
 
   background:
-    var(--bakery-cream);
+    var(--sugar-bg);
 
   color:
-    var(--bakery-brown);
+    var(--sugar-brown);
 
   font-family:
     "Nunito",
@@ -60,137 +33,79 @@
 }
 
 
-/* ============================================
-   MENU HERO
-============================================ */
+/* ==========================
+   HERO
+========================== */
 
-.menu-hero {
+.bakery-menu-hero {
   width: 100%;
 
-  min-height:
-    270px;
+  min-height: 350px;
 
   padding:
-    50px
+    30px
     clamp(
-      30px,
-      7vw,
-      130px
-    );
+      55px,
+      6vw,
+      115px
+    )
+    0;
 
+  display: grid;
+
+  grid-template-columns:
+    40% 60%;
+
+  align-items: center;
+
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      100deg,
+      #fffaf7 0%,
+      #fff7f3 43%,
+      #fae2dc 100%
+    );
+}
+
+
+/* LEFT */
+
+.menu-hero-copy {
+  padding-bottom: 30px;
+}
+
+.menu-eyebrow-row {
   display: flex;
 
   align-items: center;
 
-  background:
-    linear-gradient(
-      105deg,
-      #fff5ee 0%,
-      #fce4df 55%,
-      #f4cbc4 100%
-    );
+  gap: 18px;
 
-  position: relative;
-
-  overflow: hidden;
+  margin-bottom: 18px;
 }
 
-
-/* decorative circles */
-
-.menu-hero::before {
-  content: "";
-
-  width: 300px;
-
-  height: 300px;
-
-  position:
-    absolute;
-
-  right:
-    6%;
-
-  top:
-    -110px;
-
-  border:
-    1px solid
-    rgba(
-      185,
-      92,
-      83,
-      0.15
-    );
-
-  border-radius:
-    50%;
-}
-
-
-.menu-hero::after {
-  content: "";
-
-  width: 200px;
-
-  height: 200px;
-
-  position:
-    absolute;
-
-  right:
-    13%;
-
-  bottom:
-    -120px;
-
-  border:
-    1px solid
-    rgba(
-      185,
-      92,
-      83,
-      0.12
-    );
-
-  border-radius:
-    50%;
-}
-
-
-.menu-hero-content {
-  position:
-    relative;
-
-  z-index:
-    2;
-}
-
-
-.menu-eyebrow {
-  display:
-    block;
-
-  margin-bottom:
-    10px;
-
+.menu-eyebrow-row span:first-child {
   color:
-    var(
-      --bakery-pink-dark
-    );
+    var(--sugar-rose);
 
-  font-size:
-    11px;
+  font-size: 12px;
 
-  font-weight:
-    900;
+  font-weight: 800;
 
-  letter-spacing:
-    3px;
+  letter-spacing: 4px;
 }
 
+.eyebrow-line {
+  width: 60px;
+  height: 1px;
 
-.menu-hero h1 {
+  background:
+    var(--sugar-soft-pink);
+}
+
+.menu-hero-copy h1 {
   margin: 0;
 
   font-family:
@@ -199,398 +114,415 @@
 
   font-size:
     clamp(
-      44px,
-      5vw,
-      65px
+      48px,
+      4vw,
+      72px
     );
 
-  font-weight:
-    400;
+  font-weight: 400;
 
-  line-height:
-    1;
+  line-height: 1;
 
   color:
-    var(
-      --bakery-brown
-    );
+    var(--sugar-brown);
 }
 
-
-.menu-hero p {
-  max-width:
-    580px;
+.menu-hero-copy p {
+  max-width: 550px;
 
   margin:
-    16px 0 0;
+    22px 0 0;
 
   color:
-    var(
-      --bakery-muted
-    );
+    var(--sugar-text);
 
-  font-size:
-    15px;
+  font-size: 17px;
 
-  line-height:
-    1.7;
+  line-height: 1.7;
+}
+
+.menu-ribbon-line {
+  margin-top: 22px;
+
+  color:
+    #efc9c2;
+
+  font-size: 34px;
 }
 
 
-/* ============================================
-   CATEGORY FILTER
-============================================ */
+/* RIGHT */
 
-.menu-category-section {
+.menu-hero-visual {
+  height: 100%;
+
+  position: relative;
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: center;
+}
+
+.hero-arch {
+  width:
+    min(
+      720px,
+      88%
+    );
+
+  height: 310px;
+
+  overflow: hidden;
+
+  border-radius:
+    50% 50%
+    0 0 /
+    34% 34%
+    0 0;
+
+  position: relative;
+}
+
+.hero-arch img {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+
+  object-position:
+    center 50%;
+}
+
+.hero-round-label {
+  width: 135px;
+  height: 135px;
+
+  position: absolute;
+
+  right: 4%;
+  top: 40px;
+
+  border-radius: 50%;
+
+  background:
+    rgba(
+      255,
+      247,
+      244,
+      0.94
+    );
+
+  border:
+    1px solid
+    #f1d6d0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 7px;
+
+  color:
+    var(--sugar-rose);
+
+  text-align: center;
+
+  box-shadow:
+    0 12px 30px
+    rgba(
+      116,
+      61,
+      50,
+      0.08
+    );
+}
+
+.hero-round-label span {
+  font-size: 8px;
+
+  font-weight: 800;
+
+  letter-spacing: 2px;
+}
+
+.hero-round-label strong {
+  font-size: 28px;
+
+  font-weight: 400;
+}
+
+
+/* ==========================
+   FILTER AREA
+========================== */
+
+.menu-controls {
   width: 100%;
 
   padding:
-    27px
+    28px
     clamp(
-      25px,
-      5vw,
-      90px
-    )
-    18px;
-
-  background:
-    var(
-      --bakery-cream
+      55px,
+      6vw,
+      115px
     );
-}
 
-
-.menu-category-list {
   display: flex;
 
-  justify-content:
-    center;
+  align-items: center;
 
-  align-items:
-    center;
+  gap: 20px;
 
-  flex-wrap:
-    wrap;
-
-  gap:
-    10px;
+  background:
+    var(--sugar-bg);
 }
 
+.category-tabs {
+  display: flex;
 
-.menu-category-button {
-  min-width:
-    105px;
+  align-items: center;
 
-  min-height:
-    42px;
+  gap: 10px;
+}
+
+.category-tab {
+  height: 48px;
 
   padding:
     0 20px;
 
   border:
     1px solid
-    var(
-      --bakery-line
-    );
+    var(--sugar-border);
 
-  border-radius:
-    30px;
+  border-radius: 50px;
 
   background:
     transparent;
 
   color:
-    var(
-      --bakery-brown
-    );
-
-  font-size:
-    12px;
-
-  font-weight:
-    800;
-
-  cursor:
-    pointer;
-
-  transition:
-    0.2s ease;
-}
-
-
-.menu-category-button:hover {
-  border-color:
-    var(
-      --bakery-pink
-    );
-
-  color:
-    var(
-      --bakery-pink-dark
-    );
-}
-
-
-.menu-category-button.active {
-  border-color:
-    var(
-      --bakery-pink
-    );
-
-  background:
-    var(
-      --bakery-pink
-    );
-
-  color:
-    white;
-
-  box-shadow:
-    0 6px 15px
-    rgba(
-      188,
-      87,
-      80,
-      0.18
-    );
-}
-
-
-/* ============================================
-   TOOLBAR
-============================================ */
-
-.menu-toolbar {
-  width: 100%;
-
-  padding:
-    10px
-    clamp(
-      30px,
-      5vw,
-      90px
-    )
-    25px;
+    var(--sugar-brown);
 
   display: flex;
 
-  align-items:
-    center;
+  align-items: center;
 
-  justify-content:
-    space-between;
+  gap: 8px;
 
-  gap:
-    25px;
+  font-family:
+    "Nunito",
+    sans-serif;
+
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    0.25s ease;
+}
+
+.category-tab:hover {
+  border-color:
+    var(--sugar-rose);
+
+  color:
+    var(--sugar-rose);
+}
+
+.category-tab.active {
+  border-color:
+    var(--sugar-rose);
+
+  background:
+    var(--sugar-rose);
+
+  color: white;
+
+  box-shadow:
+    0 10px 24px
+    rgba(
+      215,
+      101,
+      96,
+      0.2
+    );
+}
+
+.category-tab-icon {
+  font-size: 16px;
+}
+
+.menu-controls-divider {
+  width: 1px;
+  height: 36px;
+
+  margin:
+    0 4px;
+
+  background:
+    var(--sugar-border);
 }
 
 
 /* SEARCH */
 
 .menu-search {
-  width:
-    min(
-      520px,
-      50%
-    );
+  height: 48px;
 
-  height:
-    47px;
+  flex: 1;
+
+  max-width: 420px;
+
+  margin-left: auto;
+
+  padding:
+    0 18px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  border:
+    1px solid
+    var(--sugar-border);
+
+  border-radius: 50px;
+
+  background: white;
+
+  color:
+    #9c7169;
+}
+
+.menu-search input {
+  width: 100%;
+
+  border: none;
+
+  outline: none;
+
+  background:
+    transparent;
+
+  color:
+    var(--sugar-brown);
+
+  font-family:
+    "Nunito",
+    sans-serif;
+
+  font-size: 13px;
+}
+
+.menu-search input::placeholder {
+  color:
+    #b5958e;
+}
+
+
+/* SORT */
+
+.menu-sort {
+  height: 48px;
+
+  min-width: 160px;
 
   padding:
     0 17px;
 
   border:
     1px solid
-    var(
-      --bakery-line
-    );
+    var(--sugar-border);
 
-  border-radius:
-    25px;
+  border-radius: 50px;
 
-  background:
-    white;
+  outline: none;
 
-  display: flex;
-
-  align-items:
-    center;
-
-  gap:
-    10px;
-}
-
-
-.menu-search svg {
-  width:
-    19px;
-
-  height:
-    19px;
-
-  flex-shrink:
-    0;
+  background: white;
 
   color:
-    #9a746a;
-}
-
-
-.menu-search input {
-  width:
-    100%;
-
-  border:
-    none;
-
-  outline:
-    none;
-
-  background:
-    transparent;
-
-  color:
-    var(
-      --bakery-brown
-    );
+    var(--sugar-brown);
 
   font-family:
-    inherit;
+    "Nunito",
+    sans-serif;
 
-  font-size:
-    13px;
+  font-size: 13px;
+
+  font-weight: 700;
+
+  cursor: pointer;
 }
 
 
-.menu-search input::placeholder {
-  color:
-    #b49a94;
-}
+/* ==========================
+   PRODUCTS
+========================== */
 
-
-/* RIGHT */
-
-.menu-toolbar-right {
-  display: flex;
-
-  align-items:
-    center;
-
-  gap:
-    25px;
-}
-
-
-.product-result-count {
-  color:
-    var(
-      --bakery-muted
-    );
-
-  font-size:
-    12px;
-
-  font-weight:
-    600;
-
-  white-space:
-    nowrap;
-}
-
-
-.sort-container {
-  display: flex;
-
-  align-items:
-    center;
-
-  gap:
-    9px;
-}
-
-
-.sort-container span {
-  color:
-    var(
-      --bakery-muted
-    );
-
-  font-size:
-    12px;
-
-  white-space:
-    nowrap;
-}
-
-
-.sort-container select {
-  min-width:
-    155px;
-
-  height:
-    42px;
-
-  padding:
-    0 14px;
-
-  border:
-    1px solid
-    var(
-      --bakery-line
-    );
-
-  border-radius:
-    22px;
-
-  outline:
-    none;
-
-  background:
-    white;
-
-  color:
-    var(
-      --bakery-brown
-    );
-
-  font-family:
-    inherit;
-
-  font-size:
-    12px;
-
-  font-weight:
-    700;
-
-  cursor:
-    pointer;
-}
-
-
-/* ============================================
-   PRODUCTS AREA
-============================================ */
-
-.menu-products-section {
+.bakery-products-section {
   width: 100%;
 
   padding:
-    0
+    18px
     clamp(
-      30px,
-      5vw,
-      90px
+      55px,
+      6vw,
+      115px
     )
-    35px;
+    70px;
+
+  position: relative;
 }
 
 
-/* ============================================
-   PRODUCT GRID
-============================================ */
+/* SUMMARY */
 
-.bakery-product-grid {
+.products-summary {
+  margin-bottom: 24px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content:
+    space-between;
+}
+
+.products-summary span {
+  font-family:
+    "DM Serif Display",
+    serif;
+
+  font-size: 30px;
+}
+
+.products-summary small {
+  color:
+    #a37970;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  letter-spacing: 1px;
+}
+
+
+/* ==========================
+   GRID
+========================== */
+
+.boutique-product-grid {
   width: 100%;
 
   display: grid;
@@ -598,1029 +530,519 @@
   grid-template-columns:
     repeat(
       4,
-      minmax(
-        0,
-        1fr
-      )
+      minmax(0, 1fr)
     );
 
-  gap:
-    clamp(
-      18px,
-      1.5vw,
-      28px
-    );
+  gap: 30px;
 }
 
 
 /* CARD */
 
-.bakery-product-card {
+.boutique-product-card {
   min-width: 0;
-
-  overflow:
-    hidden;
-
-  border:
-    1px solid
-    rgba(
-      128,
-      75,
-      64,
-      0.08
-    );
-
-  border-radius:
-    18px;
-
-  background:
-    var(
-      --bakery-white
-    );
-
-  box-shadow:
-    var(
-      --bakery-shadow
-    );
-
-  transition:
-    transform
-      0.25s ease,
-    box-shadow
-      0.25s ease;
-}
-
-
-.bakery-product-card:hover {
-  transform:
-    translateY(
-      -6px
-    );
-
-  box-shadow:
-    0 18px 40px
-    rgba(
-      91,
-      48,
-      39,
-      0.13
-    );
 }
 
 
 /* IMAGE */
 
-.bakery-product-image {
+.boutique-image-wrap {
   width: 100%;
 
-  aspect-ratio:
-    1.15 / 1;
+  aspect-ratio: 1 / 0.93;
 
-  position:
-    relative;
+  position: relative;
 
-  overflow:
-    hidden;
+  overflow: hidden;
+
+  border-radius:
+    48% 48%
+    12px 12px /
+    26% 26%
+    12px 12px;
 
   background:
-    #f7e7e1;
+    var(--sugar-blush);
 }
 
+.boutique-image-wrap > a {
+  display: block;
 
-.bakery-product-image
-a {
   width: 100%;
-
   height: 100%;
-
-  display:
-    block;
 }
 
-
-.bakery-product-image
-img {
+.boutique-image-wrap img {
   width: 100%;
-
   height: 100%;
 
-  display:
-    block;
+  object-fit: cover;
 
-  object-fit:
-    cover;
+  display: block;
 
   transition:
     transform
-      0.45s ease;
+    0.45s ease;
 }
 
-
-.bakery-product-card:hover
-.bakery-product-image
-img {
+.boutique-product-card:hover
+.boutique-image-wrap img {
   transform:
-    scale(
-      1.04
-    );
+    scale(1.035);
 }
 
 
-/* BADGE */
+/* HEART */
 
-.bakery-product-badge {
-  padding:
-    6px 11px;
+.boutique-heart {
+  width: 42px;
+  height: 42px;
 
-  position:
-    absolute;
+  position: absolute;
 
-  top:
-    12px;
+  top: 15px;
+  right: 15px;
 
-  left:
-    12px;
+  border: none;
 
-  border-radius:
-    20px;
-
-  background:
-    var(
-      --bakery-pink
-    );
-
-  color:
-    white;
-
-  font-size:
-    9px;
-
-  font-weight:
-    900;
-
-  text-transform:
-    uppercase;
-
-  letter-spacing:
-    0.4px;
-}
-
-
-/* FAVORITE */
-
-.bakery-favorite-button {
-  width:
-    39px;
-
-  height:
-    39px;
-
-  padding: 0;
-
-  position:
-    absolute;
-
-  top:
-    11px;
-
-  right:
-    11px;
-
-  border:
-    none;
-
-  border-radius:
-    50%;
+  border-radius: 50%;
 
   background:
     rgba(
       255,
-      255,
-      255,
+      250,
+      247,
       0.94
     );
 
   color:
-    var(
-      --bakery-pink-dark
-    );
-
-  box-shadow:
-    0 4px 12px
-    rgba(
-      70,
-      30,
-      20,
-      0.12
-    );
+    var(--sugar-rose);
 
   display: flex;
 
-  align-items:
-    center;
+  align-items: center;
 
-  justify-content:
-    center;
+  justify-content: center;
 
-  font-family:
-    Arial,
-    sans-serif;
+  font-size: 24px;
 
-  font-size:
-    25px;
+  cursor: pointer;
 
-  line-height: 1;
-
-  cursor:
-    pointer;
-
-  transition:
-    0.2s;
-}
-
-
-.bakery-favorite-button:hover {
-  transform:
-    scale(
-      1.08
+  box-shadow:
+    0 8px 20px
+    rgba(
+      75,
+      38,
+      31,
+      0.08
     );
 }
 
 
-.bakery-favorite-button.liked {
-  background:
-    #ffe5e2;
+/* PRODUCT INFO */
 
-  color:
-    #d74e58;
-}
-
-
-/* INFO */
-
-.bakery-product-info {
+.boutique-product-info {
   padding:
-    15px
-    16px
-    17px;
+    17px 5px 0;
 }
 
-
-.bakery-product-category {
-  display:
-    block;
-
-  margin-bottom:
-    5px;
-
-  color:
-    var(
-      --bakery-pink-dark
-    );
-
-  font-size:
-    9px;
-
-  font-weight:
-    900;
-
-  letter-spacing:
-    1.3px;
-
-  text-transform:
-    uppercase;
+.boutique-product-info > div:first-child {
+  min-height: 69px;
 }
 
-
-.bakery-product-info h3 {
-  margin:
-    0 0 7px;
-
+.boutique-product-name {
   color:
-    var(
-      --bakery-brown
-    );
+    var(--sugar-brown);
 
   font-family:
     "DM Serif Display",
     serif;
 
-  font-size:
-    20px;
+  font-size: 21px;
 
-  font-weight:
-    400;
+  text-decoration: none;
 
-  line-height:
-    1.15;
+  line-height: 1.25;
+}
 
-  transition:
-    0.2s;
+.boutique-product-name:hover {
+  color:
+    var(--sugar-rose);
 }
 
 
-.bakery-product-info
-a:hover h3 {
-  color:
-    var(
-      --bakery-pink-dark
-    );
+/* RATING */
+
+.boutique-rating {
+  margin-top: 8px;
+
+  display: flex;
+
+  align-items: center;
+
+  gap: 5px;
 }
 
-
-.bakery-product-description {
-  min-height:
-    40px;
-
-  margin:
-    0 0 14px;
-
-  display:
-    -webkit-box;
-
-  overflow:
-    hidden;
-
-  -webkit-box-orient:
-    vertical;
-
-  -webkit-line-clamp:
-    2;
-
+.boutique-rating span {
   color:
-    var(
-      --bakery-muted
-    );
+    #e4a725;
 
-  font-size:
-    11px;
+  font-size: 16px;
+}
 
-  line-height:
-    1.55;
+.boutique-rating strong {
+  color:
+    #79554d;
+
+  font-size: 12px;
+
+  font-weight: 700;
+}
+
+.boutique-rating small {
+  color:
+    #aa8b84;
+
+  font-size: 11px;
 }
 
 
 /* BOTTOM */
 
-.bakery-product-bottom {
-  padding-top:
-    12px;
-
-  border-top:
-    1px solid
-    #f1e3de;
+.boutique-product-bottom {
+  margin-top: 14px;
 
   display: flex;
 
-  align-items:
-    center;
+  align-items: center;
 
   justify-content:
     space-between;
-
-  gap:
-    10px;
 }
 
-
-.bakery-product-bottom
-strong {
+.boutique-product-bottom > strong {
   color:
-    var(
-      --bakery-pink-dark
-    );
+    var(--sugar-brown);
 
-  font-size:
-    15px;
+  font-size: 20px;
 
-  font-weight:
-    900;
+  font-weight: 800;
 }
 
+.boutique-add-button {
+  width: 42px;
+  height: 42px;
 
-.view-product-button {
-  min-height:
-    35px;
-
-  padding:
-    0 14px;
-
-  border-radius:
-    20px;
+  border-radius: 50%;
 
   background:
-    #fff0ec;
+    var(--sugar-blush);
 
   color:
-    var(
-      --bakery-brown
-    );
-
-  display:
-    inline-flex;
-
-  align-items:
-    center;
-
-  gap:
-    7px;
-
-  font-size:
-    10px;
-
-  font-weight:
-    900;
-
-  transition:
-    0.2s;
-}
-
-
-.view-product-button:hover {
-  background:
-    var(
-      --bakery-pink
-    );
-
-  color:
-    white;
-}
-
-
-/* ============================================
-   STATUS
-============================================ */
-
-.menu-status {
-  min-height:
-    350px;
+    var(--sugar-brown);
 
   display: flex;
 
-  flex-direction:
-    column;
+  align-items: center;
 
-  align-items:
-    center;
-
-  justify-content:
-    center;
-
-  text-align:
-    center;
-}
-
-
-.status-icon {
-  margin-bottom:
-    12px;
-
-  color:
-    var(
-      --bakery-pink
-    );
-
-  font-size:
-    50px;
-}
-
-
-.menu-status h3 {
-  margin:
-    0 0 7px;
+  justify-content: center;
 
   font-family:
     "DM Serif Display",
     serif;
 
-  font-size:
-    27px;
+  font-size: 26px;
 
-  font-weight:
-    400;
-}
+  line-height: 1;
 
-
-.menu-status p {
-  margin: 0;
-
-  color:
-    var(
-      --bakery-muted
-    );
-
-  font-size:
-    13px;
-}
-
-
-.clear-filter-button {
-  margin-top:
-    18px;
-
-  padding:
-    11px
-    22px;
-
-  border:
-    none;
-
-  border-radius:
-    24px;
-
-  background:
-    var(
-      --bakery-pink
-    );
-
-  color:
-    white;
-
-  font-weight:
-    800;
-
-  cursor:
-    pointer;
-}
-
-
-/* LOADER */
-
-.bakery-loader {
-  width:
-    40px;
-
-  height:
-    40px;
-
-  margin-bottom:
-    16px;
-
-  border:
-    3px solid
-    #f4d9d3;
-
-  border-top-color:
-    var(
-      --bakery-pink
-    );
-
-  border-radius:
-    50%;
-
-  animation:
-    bakery-spin
-    0.8s linear
-    infinite;
-}
-
-
-@keyframes bakery-spin {
-  to {
-    transform:
-      rotate(
-        360deg
-      );
-  }
-}
-
-
-/* ============================================
-   PAGINATION
-============================================ */
-
-.bakery-pagination {
-  width: 100%;
-
-  padding:
-    5px 5%
-    45px;
-
-  display: flex;
-
-  align-items:
-    center;
-
-  justify-content:
-    center;
-
-  gap:
-    8px;
-}
-
-
-.bakery-pagination
-button {
-  width:
-    39px;
-
-  height:
-    39px;
-
-  padding: 0;
-
-  border:
-    1px solid
-    var(
-      --bakery-line
-    );
-
-  border-radius:
-    50%;
-
-  background:
-    white;
-
-  color:
-    var(
-      --bakery-brown
-    );
-
-  font-family:
-    inherit;
-
-  font-size:
-    12px;
-
-  font-weight:
-    800;
-
-  cursor:
-    pointer;
+  text-decoration: none;
 
   transition:
-    0.2s;
+    0.25s ease;
 }
 
-
-.bakery-pagination
-button:hover:not(:disabled) {
-  border-color:
-    var(
-      --bakery-pink
-    );
-
-  color:
-    var(
-      --bakery-pink-dark
-    );
-}
-
-
-.bakery-pagination
-button.active {
-  border-color:
-    var(
-      --bakery-pink
-    );
-
+.boutique-add-button:hover {
   background:
-    var(
-      --bakery-pink
-    );
+    var(--sugar-rose);
 
-  color:
-    white;
-}
-
-
-.bakery-pagination
-button:disabled {
-  opacity:
-    0.35;
-
-  cursor:
-    default;
-}
-
-
-/* ============================================
-   CUSTOM CAKE BANNER
-============================================ */
-
-.menu-custom-banner {
-  width:
-    calc(
-      100% - 10%
-    );
-
-  margin:
-    15px auto
-    55px;
-
-  padding:
-    40px
-    clamp(
-      30px,
-      5vw,
-      70px
-    );
-
-  border-radius:
-    24px;
-
-  background:
-    linear-gradient(
-      110deg,
-      #f8d9d3,
-      #fff0eb
-    );
-
-  display: flex;
-
-  align-items:
-    center;
-
-  justify-content:
-    space-between;
-
-  gap:
-    30px;
-}
-
-
-.menu-custom-banner
-> div {
-  max-width:
-    650px;
-}
-
-
-.menu-custom-banner
-> div > span {
-  color:
-    var(
-      --bakery-pink-dark
-    );
-
-  font-size:
-    10px;
-
-  font-weight:
-    900;
-
-  letter-spacing:
-    2px;
-}
-
-
-.menu-custom-banner h2 {
-  margin:
-    6px 0 7px;
-
-  font-family:
-    "DM Serif Display",
-    serif;
-
-  color:
-    var(
-      --bakery-brown
-    );
-
-  font-size:
-    34px;
-
-  font-weight:
-    400;
-}
-
-
-.menu-custom-banner p {
-  margin: 0;
-
-  color:
-    var(
-      --bakery-muted
-    );
-
-  font-size:
-    13px;
-
-  line-height:
-    1.6;
-}
-
-
-.menu-custom-banner
-> a {
-  min-width:
-    180px;
-
-  min-height:
-    47px;
-
-  padding:
-    0 21px;
-
-  border-radius:
-    25px;
-
-  background:
-    var(
-      --bakery-pink
-    );
-
-  color:
-    white;
-
-  display:
-    flex;
-
-  align-items:
-    center;
-
-  justify-content:
-    center;
-
-  gap:
-    10px;
-
-  font-size:
-    12px;
-
-  font-weight:
-    900;
-
-  white-space:
-    nowrap;
-
-  transition:
-    0.2s;
-}
-
-
-.menu-custom-banner
-> a:hover {
-  background:
-    var(
-      --bakery-pink-dark
-    );
+  color: white;
 
   transform:
-    translateY(
-      -2px
+    translateY(-2px);
+}
+
+
+/* ==========================
+   PAGINATION
+========================== */
+
+.boutique-pagination {
+  margin-top: 42px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  gap: 10px;
+}
+
+.boutique-pagination button {
+  width: 43px;
+  height: 43px;
+
+  border:
+    1px solid
+    var(--sugar-border);
+
+  border-radius: 50%;
+
+  background:
+    transparent;
+
+  color:
+    var(--sugar-brown);
+
+  font-family:
+    "Nunito",
+    sans-serif;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition:
+    0.2s ease;
+}
+
+.boutique-pagination button:hover:not(:disabled) {
+  border-color:
+    var(--sugar-rose);
+
+  color:
+    var(--sugar-rose);
+}
+
+.boutique-pagination button.active {
+  border-color:
+    var(--sugar-rose);
+
+  background:
+    var(--sugar-rose);
+
+  color: white;
+
+  box-shadow:
+    0 8px 18px
+    rgba(
+      215,
+      101,
+      96,
+      0.2
     );
 }
 
+.boutique-pagination button:disabled {
+  opacity: 0.3;
 
-/* ============================================
-   RESPONSIVE
-============================================ */
-
-@media (
-  max-width:
-  1100px
-) {
-
-  .bakery-product-grid {
-    grid-template-columns:
-      repeat(
-        3,
-        1fr
-      );
-  }
-
+  cursor:
+    not-allowed;
 }
 
 
+/* ==========================
+   EMPTY
+========================== */
+
+.menu-empty-state {
+  min-height: 320px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+
+  text-align: center;
+}
+
+.menu-empty-state > div {
+  color:
+    var(--sugar-rose);
+
+  font-size: 40px;
+}
+
+.menu-empty-state h3 {
+  margin:
+    12px 0 6px;
+
+  font-family:
+    "DM Serif Display",
+    serif;
+
+  font-size: 27px;
+
+  font-weight: 400;
+}
+
+.menu-empty-state p {
+  margin: 0;
+
+  color:
+    var(--sugar-text);
+
+  font-size: 13px;
+}
+
+
+/* ==========================
+   RESPONSIVE
+========================== */
+
 @media (
-  max-width:
-  850px
+  max-width: 1200px
 ) {
 
-  .menu-toolbar {
-    flex-direction:
-      column;
-
-    align-items:
-      stretch;
+  .bakery-menu-hero {
+    grid-template-columns:
+      43% 57%;
   }
 
+  .hero-round-label {
+    display: none;
+  }
+
+  .menu-controls {
+    flex-wrap: wrap;
+  }
+
+  .category-tabs {
+    width: 100%;
+
+    justify-content: center;
+  }
+
+  .menu-controls-divider {
+    display: none;
+  }
 
   .menu-search {
-    width:
-      100%;
-  }
-
-
-  .menu-toolbar-right {
-    justify-content:
-      space-between;
-  }
-
-
-  .bakery-product-grid {
-    grid-template-columns:
-      repeat(
-        2,
-        1fr
-      );
-  }
-
-
-  .menu-custom-banner {
-    flex-direction:
-      column;
-
-    align-items:
-      flex-start;
+    margin-left: 0;
   }
 
 }
 
 
 @media (
-  max-width:
-  550px
+  max-width: 980px
 ) {
 
-  .menu-hero {
-    min-height:
-      220px;
+  .bakery-menu-hero {
+    min-height: unset;
 
-    padding:
-      35px 22px;
-  }
+    padding-top: 55px;
 
-
-  .menu-hero h1 {
-    font-size:
-      43px;
-  }
-
-
-  .menu-category-section {
-    padding-left:
-      15px;
-
-    padding-right:
-      15px;
-  }
-
-
-  .menu-category-list {
-    justify-content:
-      flex-start;
-
-    flex-wrap:
-      nowrap;
-
-    overflow-x:
-      auto;
-
-    padding-bottom:
-      5px;
-  }
-
-
-  .menu-category-button {
-    flex-shrink:
-      0;
-  }
-
-
-  .menu-toolbar,
-  .menu-products-section {
-    padding-left:
-      18px;
-
-    padding-right:
-      18px;
-  }
-
-
-  .menu-toolbar-right {
-    align-items:
-      flex-start;
-
-    flex-direction:
-      column;
-
-    gap:
-      12px;
-  }
-
-
-  .bakery-product-grid {
     grid-template-columns:
       1fr;
   }
 
+  .menu-hero-copy {
+    padding-bottom: 45px;
 
-  .bakery-product-image {
-    aspect-ratio:
-      1.35 / 1;
+    text-align: center;
   }
 
+  .menu-eyebrow-row {
+    justify-content: center;
+  }
 
-  .menu-custom-banner {
-    width:
-      calc(
-        100% - 36px
+  .menu-hero-copy p {
+    margin:
+      20px auto 0;
+  }
+
+  .hero-arch {
+    height: 300px;
+  }
+
+  .boutique-product-grid {
+    grid-template-columns:
+      repeat(
+        2,
+        minmax(0, 1fr)
       );
+  }
+
+}
+
+
+@media (
+  max-width: 700px
+) {
+
+  .bakery-menu-hero {
+    padding:
+      45px 20px 0;
+  }
+
+  .menu-controls {
+    padding:
+      22px 20px;
+  }
+
+  .category-tabs {
+    flex-wrap: wrap;
+  }
+
+  .category-tab {
+    height: 42px;
 
     padding:
-      30px 24px;
+      0 15px;
+  }
+
+  .menu-search {
+    width: 100%;
+    max-width: none;
+  }
+
+  .menu-sort {
+    flex: 1;
+  }
+
+  .bakery-products-section {
+    padding:
+      10px
+      20px
+      55px;
+  }
+
+}
+
+
+@media (
+  max-width: 520px
+) {
+
+  .menu-hero-copy h1 {
+    font-size: 42px;
+  }
+
+  .hero-arch {
+    height: 230px;
+  }
+
+  .boutique-product-grid {
+    grid-template-columns:
+      1fr;
+  }
+
+  .products-summary span {
+    font-size: 25px;
   }
 
 }
