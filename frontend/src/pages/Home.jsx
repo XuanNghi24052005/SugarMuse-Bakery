@@ -569,7 +569,7 @@
                   <div className="custom-cake-image">
 
                     <img
-                      src="/images/products/strawberry-cake.jpg"
+                      src="/images/products/custom-cake-section.jpg"
                       alt="Custom strawberry cake"
                     />
 
@@ -621,7 +621,7 @@
                   <div className="story-image">
 
                     <img
-                      src={bakeryImage}
+                      src="/images/products/our-bakery-section.jpg"
                       alt="Sugar Muse bakery"
                     />
 
