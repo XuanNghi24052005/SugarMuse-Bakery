@@ -569,7 +569,7 @@
                   <div className="custom-cake-image">
 
                     <img
-                      src="/images/products/custom-cake-section.jpg"
+                      src="/images/products/custom-bakery.jpg"
                       alt="Custom strawberry cake"
                     />
 

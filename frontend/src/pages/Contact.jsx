@@ -285,7 +285,7 @@ const Contact = () => {
           <div className="contact-visual-side">
             <div className="contact-image-frame">
               <img
-                src="/images/contact/contact-bakery.jpg"
+                src="/images/contact/custom-bakery.jpg"
                 alt="Sugar Muse Bakery"
               />
 
