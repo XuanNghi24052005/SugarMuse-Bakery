@@ -6,10 +6,6 @@ import "../componentStyles/Navbar.css";
 const Navbar = () => {
   return (
     <>
-      {/* ===============================
-          TOP BAR
-      ================================ */}
-
       <div className="sugar-topbar">
         <span>
           ♡ Free delivery on orders from 500.000đ
@@ -22,14 +18,7 @@ const Navbar = () => {
         </span>
       </div>
 
-      {/* ===============================
-          NAVBAR
-      ================================ */}
-
       <header className="sugar-navbar">
-
-        {/* BRAND */}
-
         <Link
           to="/"
           className="sugar-brand"
@@ -49,26 +38,20 @@ const Navbar = () => {
           </div>
         </Link>
 
-        {/* NAVIGATION */}
-
         <nav className="sugar-nav-menu">
-
-          {/* SHOP */}
-
           <div className="sugar-dropdown">
-
             <button
               type="button"
               className="sugar-nav-link"
             >
               SHOP
+
               <span className="dropdown-arrow">
                 ⌄
               </span>
             </button>
 
             <div className="sugar-dropdown-menu">
-
               <Link to="/products">
                 All Products
               </Link>
@@ -88,58 +71,15 @@ const Navbar = () => {
               <Link to="/products?category=Gift Box">
                 Gift Boxes
               </Link>
-
             </div>
-
           </div>
 
-          {/* CUSTOM CAKES */}
-
           <Link
-            to="/#custom-cakes"
+            to="/custom-cakes"
             className="sugar-nav-link"
           >
             CUSTOM CAKES
           </Link>
-
-          {/* OCCASIONS */}
-
-          <div className="sugar-dropdown">
-
-            <button
-              type="button"
-              className="sugar-nav-link"
-            >
-              OCCASIONS
-
-              <span className="dropdown-arrow">
-                ⌄
-              </span>
-            </button>
-
-            <div className="sugar-dropdown-menu">
-
-              <Link to="/products">
-                Birthday
-              </Link>
-
-              <Link to="/products">
-                Anniversary
-              </Link>
-
-              <Link to="/products">
-                Congratulations
-              </Link>
-
-              <Link to="/products">
-                Thank You
-              </Link>
-
-            </div>
-
-          </div>
-
-          {/* GIFTING */}
 
           <Link
             to="/products?category=Gift Box"
@@ -148,8 +88,6 @@ const Navbar = () => {
             GIFTING
           </Link>
 
-          {/* OUR BAKERY */}
-
           <Link
             to="/#our-bakery"
             className="sugar-nav-link"
@@ -157,14 +95,15 @@ const Navbar = () => {
             OUR BAKERY
           </Link>
 
+          <Link
+            to="/contact"
+            className="sugar-nav-link"
+          >
+            CONTACT
+          </Link>
         </nav>
 
-        {/* ACTIONS */}
-
         <div className="sugar-nav-actions">
-
-          {/* SEARCH */}
-
           <button
             type="button"
             className="sugar-icon-button"
@@ -188,8 +127,6 @@ const Navbar = () => {
             </svg>
           </button>
 
-          {/* ACCOUNT */}
-
           <Link
             to="/login"
             className="sugar-icon-button"
@@ -212,8 +149,6 @@ const Navbar = () => {
               <path d="M4.5 21a7.5 7.5 0 0 1 15 0" />
             </svg>
           </Link>
-
-          {/* CART */}
 
           <Link
             to="/cart"
@@ -247,9 +182,7 @@ const Navbar = () => {
               2
             </span>
           </Link>
-
         </div>
-
       </header>
     </>
   );

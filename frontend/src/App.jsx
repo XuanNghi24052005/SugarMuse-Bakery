@@ -6,7 +6,7 @@ import {
 } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-
+import Contact from "./pages/Contact";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
@@ -32,6 +32,10 @@ function App() {
           path="/product/:id"
           element={<ProductDetails />}
         />
+
+        <Route 
+          path="/contact" 
+          element={<Contact />} />
 
       </Routes>
     </>

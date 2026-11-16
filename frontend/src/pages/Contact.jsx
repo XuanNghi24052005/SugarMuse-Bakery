@@ -1,117 +1,360 @@
-import React, { useState, useEffect } from 'react'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
-import PageTitle from '../components/PageTitle'
-import LocationOnIcon from '@mui/icons-material/LocationOn'
-import PhoneIphoneIcon from '@mui/icons-material/PhoneIphone'
-import EmailIcon from '@mui/icons-material/Email'
-import '../pageStyles/Contact.css'
-import { useDispatch, useSelector } from 'react-redux'
-import { createContact, clearContactErrors, clearContactMessage } from '../features/contact/contactSlice'
-import { showToast } from '../utils/showToast'
+import React, { useState } from "react";
+import "../pageStyles/Contact.css";
+
+const MailIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M3 5h18v14H3V5Z" />
+    <path d="m3 6 9 7 9-7" />
+  </svg>
+);
+
+const PhoneIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M7.2 3H4.5A1.5 1.5 0 0 0 3 4.5C3 13.6 10.4 21 19.5 21a1.5 1.5 0 0 0 1.5-1.5v-2.7l-5-1-1.2 3a16.4 16.4 0 0 1-9.6-9.6l3-1.2-1-5Z" />
+  </svg>
+);
+
+const LocationIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" />
+    <circle cx="12" cy="9" r="2.5" />
+  </svg>
+);
+
+const ClockIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <circle cx="12" cy="12" r="9" />
+    <path d="M12 7v5l3 2" />
+  </svg>
+);
+
+const ArrowIcon = () => (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M5 12h14" />
+    <path d="m14 7 5 5-5 5" />
+  </svg>
+);
 
 const Contact = () => {
-  const dispatch = useDispatch()
-  const { loading, error, successMessage } = useSelector((state) => state.contact)
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
 
-  const [name, setName] = useState('')
-  const [email, setEmail] = useState('')
-  const [message, setMessage] = useState('')
+  const [submitted, setSubmitted] = useState(false);
 
-  useEffect(() => {
-    if (error) {
-      showToast.error(error)
-      dispatch(clearContactErrors())
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+
+    setFormData((current) => ({
+      ...current,
+      [name]: value,
+    }));
+
+    if (submitted) {
+      setSubmitted(false);
     }
-    if (successMessage) {
-      showToast.success(successMessage)
-      dispatch(clearContactMessage())
-      setName('')
-      setEmail('')
-      setMessage('')
-    }
-  }, [dispatch, error, successMessage])
+  };
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    dispatch(createContact({ name, email, message }))
-  }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setSubmitted(true);
+  };
 
   return (
-    <div className="contact-page-layout">
-      <PageTitle title="Contact | MOCHA" />
-      <Navbar />
-      
-      <main className="contact-main-hero">
-        <div className="contact-page-wrapper">
-          <div className="contact-section-header">
-            <h2 className="contact-main-title">CONTACT</h2>
-            <p className="contact-sub-title">Need support? Contact Us!</p>
+    <main className="contact-page">
+      <section className="contact-hero">
+        <div className="contact-hero-decoration contact-hero-decoration-one" />
+        <div className="contact-hero-decoration contact-hero-decoration-two" />
+
+        <div className="contact-container contact-hero-inner">
+          <span className="contact-eyebrow">WE'D LOVE TO HEAR FROM YOU</span>
+
+          <h1>
+            Let&apos;s Make Something
+            <span>Sweet Together</span>
+          </h1>
+
+          <p>
+            Have a question, need help with an order, or simply want to say
+            hello? Our Sugar Muse team is always happy to help.
+          </p>
+        </div>
+      </section>
+
+      <section className="contact-info-section">
+        <div className="contact-container">
+          <div className="contact-info-grid">
+            <article className="contact-info-card">
+              <div className="contact-info-icon">
+                <LocationIcon />
+              </div>
+
+              <h3>Visit Our Bakery</h3>
+
+              <p>
+                123 Sweet Street
+                <br />
+                Ho Chi Minh City, Vietnam
+              </p>
+
+              <a href="#contact-map">
+                Get Directions
+                <ArrowIcon />
+              </a>
+            </article>
+
+            <article className="contact-info-card">
+              <div className="contact-info-icon">
+                <PhoneIcon />
+              </div>
+
+              <h3>Call Us</h3>
+
+              <p>
+                Need a quick answer?
+                <br />
+                We&apos;re happy to chat.
+              </p>
+
+              <a href="tel:+84123456789">
+                +84 123 456 789
+                <ArrowIcon />
+              </a>
+            </article>
+
+            <article className="contact-info-card">
+              <div className="contact-info-icon">
+                <MailIcon />
+              </div>
+
+              <h3>Email Us</h3>
+
+              <p>
+                Send us a message anytime
+                <br />
+                and we&apos;ll get back to you.
+              </p>
+
+              <a href="mailto:hello@sugarmusebakery.com">
+                hello@sugarmusebakery.com
+                <ArrowIcon />
+              </a>
+            </article>
+
+            <article className="contact-info-card">
+              <div className="contact-info-icon">
+                <ClockIcon />
+              </div>
+
+              <h3>Opening Hours</h3>
+
+              <p>
+                Mon – Fri: 8:00 AM – 7:00 PM
+                <br />
+                Sat – Sun: 8:00 AM – 8:00 PM
+              </p>
+
+              <span className="contact-open-label">Open Daily</span>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section className="contact-main-section">
+        <div className="contact-container contact-main-grid">
+          <div className="contact-form-side">
+            <span className="contact-section-eyebrow">GET IN TOUCH</span>
+
+            <h2>Send Us a Message</h2>
+
+            <p className="contact-section-copy">
+              Tell us how we can help. For custom cake enquiries, you can also
+              visit our Custom Cakes page and submit a detailed request.
+            </p>
+
+            <form className="contact-form" onSubmit={handleSubmit}>
+              <div className="contact-form-row">
+                <div className="contact-field">
+                  <label htmlFor="firstName">First Name</label>
+                  <input
+                    id="firstName"
+                    name="firstName"
+                    type="text"
+                    placeholder="Your first name"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="contact-field">
+                  <label htmlFor="lastName">Last Name</label>
+                  <input
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    placeholder="Your last name"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="contact-form-row">
+                <div className="contact-field">
+                  <label htmlFor="email">Email Address</label>
+                  <input
+                    id="email"
+                    name="email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                  />
+                </div>
+
+                <div className="contact-field">
+                  <label htmlFor="phone">Phone Number</label>
+                  <input
+                    id="phone"
+                    name="phone"
+                    type="tel"
+                    placeholder="+84 ..."
+                    value={formData.phone}
+                    onChange={handleChange}
+                  />
+                </div>
+              </div>
+
+              <div className="contact-field">
+                <label htmlFor="subject">What can we help with?</label>
+
+                <select
+                  id="subject"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  required
+                >
+                  <option value="" disabled>
+                    Select a topic
+                  </option>
+                  <option value="general">General Enquiry</option>
+                  <option value="order">Order Support</option>
+                  <option value="custom-cake">Custom Cake</option>
+                  <option value="gifting">Gifting</option>
+                  <option value="delivery">Pickup & Delivery</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div className="contact-field">
+                <label htmlFor="message">Your Message</label>
+
+                <textarea
+                  id="message"
+                  name="message"
+                  rows="6"
+                  placeholder="Tell us a little more..."
+                  value={formData.message}
+                  onChange={handleChange}
+                  required
+                />
+              </div>
+
+              <button type="submit" className="contact-submit-button">
+                Send Message
+                <ArrowIcon />
+              </button>
+
+              {submitted && (
+                <p className="contact-success-message">
+                  Thank you! Your message has been received.
+                </p>
+              )}
+            </form>
           </div>
 
-          <div className="contact-content-grid">
-            {/* Left Column: Contact Info */}
-            <div className="contact-info-list">
-              <div className="contact-info-item">
-                <LocationOnIcon className="contact-icon" />
-                <span>Chicago, US</span>
-              </div>
-              <div className="contact-info-item">
-                <PhoneIphoneIcon className="contact-icon" />
-                <span>Phone: +00 151515</span>
-              </div>
-              <div className="contact-info-item">
-                <EmailIcon className="contact-icon" />
-                <span>Email: mail@mail.com</span>
+          <div className="contact-visual-side">
+            <div className="contact-image-frame">
+              <img
+                src="/images/contact/contact-bakery.jpg"
+                alt="Sugar Muse Bakery"
+              />
+
+              <div className="contact-image-badge">
+                <span>SUGAR MUSE</span>
+                <strong>BAKERY</strong>
               </div>
             </div>
 
-            {/* Right Column: Contact Form */}
-            <div className="contact-form-wrapper">
-              <form onSubmit={handleSubmit} className="contact-w3-form">
-                <div className="contact-row-two-inputs">
-                  <input
-                    type="text"
-                    className="contact-w3-input"
-                    placeholder="Name"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                  />
-                  <input
-                    type="email"
-                    className="contact-w3-input"
-                    placeholder="Email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
+            <div className="contact-note-card">
+              <span className="contact-note-script">A little note</span>
 
-                <div className="contact-row-single-input">
-                  <textarea
-                    className="contact-w3-input contact-w3-textarea"
-                    placeholder="Message"
-                    required
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                  />
-                </div>
+              <h3>Planning a custom cake?</h3>
 
-                <div className="contact-button-row">
-                  <button type="submit" className="contact-send-btn" disabled={loading}>
-                    {loading ? 'SENDING...' : 'SEND'}
-                  </button>
-                </div>
-              </form>
+              <p>
+                For bespoke cakes, please send your request at least several
+                days in advance so our bakers have enough time to create
+                something special for your celebration.
+              </p>
+
+              <a href="/custom-cakes">
+                Explore Custom Cakes
+                <ArrowIcon />
+              </a>
             </div>
           </div>
         </div>
-      </main>
+      </section>
 
-      <Footer />
-    </div>
-  )
-}
+      <section className="contact-map-section" id="contact-map">
+        <div className="contact-container">
+          <div className="contact-map-heading">
+            <div>
+              <span className="contact-section-eyebrow">COME SAY HELLO</span>
+              <h2>Find Sugar Muse</h2>
+            </div>
 
-export default Contact
+            <p>
+              Stop by for freshly baked cakes, pastries and a little something
+              sweet.
+            </p>
+          </div>
+
+          <div className="contact-map-placeholder">
+            <div className="contact-map-pattern" />
+
+            <div className="contact-map-pin">
+              <LocationIcon />
+            </div>
+
+            <div className="contact-map-card">
+              <span>SUGAR MUSE BAKERY</span>
+              <strong>123 Sweet Street</strong>
+              <p>Ho Chi Minh City, Vietnam</p>
+
+              <a
+                href="https://maps.google.com"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Open in Maps
+                <ArrowIcon />
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+};
+
+export default Contact;
