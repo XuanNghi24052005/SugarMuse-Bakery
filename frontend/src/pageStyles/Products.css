@@ -2,927 +2,854 @@
 
 :root {
   --sugar-bg: #fffaf7;
-  --sugar-cream: #fff5f0;
-  --sugar-blush: #fbe5df;
-  --sugar-soft-pink: #f6cbc3;
-  --sugar-rose: #d76560;
-  --sugar-dark-rose: #bd514d;
-  --sugar-brown: #57261f;
-  --sugar-text: #805b53;
-  --sugar-border: #efd7d1;
+  --sugar-blush: #f9dfd9;
+  --sugar-soft-pink: #f2d1cb;
+
+  --sugar-rose: #d96560;
+  --sugar-dark-rose: #c75450;
+
+  --sugar-brown: #58231d;
+  --sugar-deep-brown: #481611;
+  --sugar-text: #765c55;
+
+  --sugar-border: #edd4cf;
+
+  /* một độ rộng chung cho hero, hàng lọc và lưới sản phẩm => các lề luôn thẳng hàng */
+  --sugar-content-width: min(88%, 1480px);
 }
 
+.sugar-products-page,
+.sugar-products-page *,
+.sugar-products-page *::before,
+.sugar-products-page *::after {
+  box-sizing: border-box;
+}
 
-/* ==========================
+/* ------------------------------------------------------------------
    PAGE
-========================== */
-
+   overflow: clip (thay cho overflow-x: hidden) => không tạo thanh cuộn thứ 2
+   và vẫn cắt các phần trang trí tràn ra ngoài mép trang
+------------------------------------------------------------------- */
 .sugar-products-page {
   width: 100%;
+  max-width: 100%;
   min-height: 100vh;
 
-  background:
-    var(--sugar-bg);
+  position: relative;
+  overflow: clip;
 
-  color:
-    var(--sugar-brown);
+  background: linear-gradient(180deg, #fffaf7 0%, #fff9f5 70%, #fff7f4 100%);
 
-  font-family:
-    "Nunito",
-    sans-serif;
+  color: var(--sugar-brown);
+  font-family: "Nunito", sans-serif;
 }
 
+.sugar-products-page::before {
+  content: "";
+  width: 760px;
+  height: 240px;
 
-/* ==========================
+  position: absolute;
+  right: -120px;
+  bottom: -130px;
+  z-index: 0;
+
+  border-radius: 55% 45% 0 0;
+  background: linear-gradient(
+    155deg,
+    rgba(255, 232, 227, 0.4),
+    rgba(248, 196, 187, 0.28)
+  );
+  transform: rotate(-7deg);
+  pointer-events: none;
+}
+
+.sugar-products-page::after {
+  content: "";
+  width: 620px;
+  height: 180px;
+
+  position: absolute;
+  right: -30px;
+  bottom: -130px;
+  z-index: 0;
+
+  border-radius: 50% 50% 0 0;
+  background: rgba(248, 190, 182, 0.18);
+  transform: rotate(7deg);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------
+   HOA TRANG TRÍ
+------------------------------------------------------------------- */
+.page-flower {
+  position: absolute;
+  z-index: 7;
+  height: auto;
+  pointer-events: none;
+}
+
+/* cành bên phải: thân xuất phát từ mép phải, hoa hướng lên trái */
+.page-flower-right {
+  width: 170px;
+  top: 175px;
+  right: -28px;
+  transform: scaleX(-1) rotate(-4deg);
+}
+
+/* cành góc dưới trái */
+.page-flower-left {
+  width: 170px;
+  left: -14px;
+  bottom: -6px;
+}
+
+/* cành nhỏ cạnh thẻ sản phẩm đầu tiên */
+.page-flower-card {
+  width: 90px;
+  left: 1.5%;
+  top: 600px;
+  transform: rotate(-6deg);
+}
+
+/* ------------------------------------------------------------------
    HERO
-========================== */
-
+------------------------------------------------------------------- */
 .bakery-menu-hero {
   width: 100%;
+  position: relative;
+  z-index: 2;
+  padding: 24px 0 8px;
 
-  min-height: 350px;
-
-  padding:
-    30px
-    clamp(
-      55px,
-      6vw,
-      115px
-    )
-    0;
-
-  display: grid;
-
-  grid-template-columns:
-    40% 60%;
-
-  align-items: center;
-
-  overflow: hidden;
-
-  background:
-    linear-gradient(
-      100deg,
-      #fffaf7 0%,
-      #fff7f3 43%,
-      #fae2dc 100%
-    );
+  /* nền liền mạch, không còn đường ngang cứng ở đáy */
+  background: radial-gradient(
+    ellipse 55% 90% at 78% 40%,
+    rgba(250, 225, 218, 0.55),
+    rgba(250, 225, 218, 0) 70%
+  );
 }
 
+.bakery-menu-hero-inner {
+  width: var(--sugar-content-width);
+  margin: 0 auto;
 
-/* LEFT */
+  display: grid;
+  grid-template-columns: minmax(0, 45%) minmax(0, 55%);
+  align-items: center;
+}
 
 .menu-hero-copy {
-  padding-bottom: 30px;
+  width: 100%;
+  min-width: 0;
+  position: relative;
+  z-index: 5;
+  padding: 24px 24px 12px 0;
 }
 
 .menu-eyebrow-row {
   display: flex;
-
   align-items: center;
-
   gap: 18px;
-
   margin-bottom: 18px;
 }
 
 .menu-eyebrow-row span:first-child {
-  color:
-    var(--sugar-rose);
-
+  color: var(--sugar-rose);
   font-size: 12px;
-
   font-weight: 800;
-
-  letter-spacing: 4px;
+  letter-spacing: 4.5px;
 }
 
 .eyebrow-line {
-  width: 60px;
+  display: block;
+  width: 58px;
   height: 1px;
-
-  background:
-    var(--sugar-soft-pink);
+  flex: 0 0 58px;
+  background: #e7aaa2;
 }
 
 .menu-hero-copy h1 {
   margin: 0;
+  max-width: none;
 
-  font-family:
-    "DM Serif Display",
-    serif;
-
-  font-size:
-    clamp(
-      48px,
-      4vw,
-      72px
-    );
-
+  color: var(--sugar-brown);
+  font-family: "DM Serif Display", serif;
+  font-size: clamp(50px, 4.2vw, 70px);
   font-weight: 400;
-
-  line-height: 1;
-
-  color:
-    var(--sugar-brown);
+  line-height: 0.98;
+  letter-spacing: -1px;
+  white-space: nowrap;
 }
 
 .menu-hero-copy p {
-  max-width: 550px;
+  max-width: 480px;
+  margin: 20px 0 0;
 
-  margin:
-    22px 0 0;
-
-  color:
-    var(--sugar-text);
-
-  font-size: 17px;
-
-  line-height: 1.7;
+  color: var(--sugar-text);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.6;
 }
 
-.menu-ribbon-line {
-  margin-top: 22px;
+/* ribbon nằm cuối đoạn mô tả, kéo dài sang phải và chui ra sau ảnh */
+.menu-ribbon {
+  display: block;
+  width: 380px;
+  max-width: none;
+  height: auto;
 
-  color:
-    #efc9c2;
-
-  font-size: 34px;
+  margin: 4px 0 0 52%;
+  overflow: visible;
 }
 
-
-/* RIGHT */
+.menu-ribbon path {
+  fill: none;
+  stroke: var(--sugar-soft-pink);
+  stroke-width: 4;
+  stroke-linecap: round;
+}
 
 .menu-hero-visual {
-  height: 100%;
-
+  width: 100%;
+  min-width: 0;
   position: relative;
-
-  display: flex;
-
-  align-items: flex-end;
-
-  justify-content: center;
+  z-index: 6;
+  overflow: visible;
 }
 
+/* khung vòm bất đối xứng: trái cong lớn, phải cong vừa, đáy phẳng */
 .hero-arch {
-  width:
-    min(
-      720px,
-      88%
-    );
-
-  height: 310px;
-
-  overflow: hidden;
-
-  border-radius:
-    50% 50%
-    0 0 /
-    34% 34%
-    0 0;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2.3 / 1;
+  margin: 0 0 0 auto;
 
   position: relative;
+  overflow: hidden;
+
+  border-radius: 55% 22% 0 0 / 100% 62% 0 0;
+  background: linear-gradient(100deg, #f4cbc7 0%, #efb7b3 50%, #f2bdb9 100%);
 }
 
 .hero-arch img {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  display: block;
+}
+
+/* ảnh nét hiện trọn bánh, rộng theo đúng tỉ lệ ảnh và nằm giữa khung.
+   Hai bên mờ dần vào nền hồng của khung vòm.
+   top/height hơi lớn hơn khung để mép trên và dưới bị cắt, không lộ đường viền */
+.hero-arch .hero-arch-img {
+  top: -4%;
+  left: 50%;
+  width: auto;
+  max-width: none;
+  height: 108%;
+  transform: translateX(-50%);
+
+  -webkit-mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    rgba(0, 0, 0, 0.55) 9%,
+    #000 24%,
+    #000 76%,
+    rgba(0, 0, 0, 0.55) 91%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    90deg,
+    transparent 0,
+    rgba(0, 0, 0, 0.55) 9%,
+    #000 24%,
+    #000 76%,
+    rgba(0, 0, 0, 0.55) 91%,
+    transparent 100%
+  );
+}
+
+/* nếu dùng ảnh hero ngang riêng (HERO_IMAGE_IS_WIDE = true) thì phủ kín khung */
+.hero-arch.is-wide .hero-arch-img {
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-
+  transform: none;
   object-fit: cover;
-
-  object-position:
-    center 50%;
+  object-position: center bottom;
+  -webkit-mask-image: none;
+  mask-image: none;
 }
 
+/* huy hiệu nhô ra ngoài mép phải của ảnh */
 .hero-round-label {
-  width: 135px;
-  height: 135px;
+  width: 150px;
+  height: 150px;
 
   position: absolute;
+  top: 24px;
+  right: -20px;
+  z-index: 20;
 
-  right: 4%;
-  top: 40px;
-
-  border-radius: 50%;
-
-  background:
-    rgba(
-      255,
-      247,
-      244,
-      0.94
-    );
-
-  border:
-    1px solid
-    #f1d6d0;
-
-  display: flex;
-
-  flex-direction: column;
-
-  align-items: center;
-
-  justify-content: center;
-
-  gap: 7px;
-
-  color:
-    var(--sugar-rose);
-
-  text-align: center;
-
-  box-shadow:
-    0 12px 30px
-    rgba(
-      116,
-      61,
-      50,
-      0.08
-    );
+  filter: drop-shadow(0 8px 18px rgba(86, 35, 29, 0.08));
 }
 
-.hero-round-label span {
-  font-size: 8px;
+.hero-round-label svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
 
+.badge-bg {
+  fill: #fff8f5;
+}
+
+.badge-circle-text {
+  fill: var(--sugar-rose);
+  font-family: "Nunito", sans-serif;
+  font-size: 8.5px;
   font-weight: 800;
-
   letter-spacing: 2px;
 }
 
-.hero-round-label strong {
-  font-size: 28px;
-
-  font-weight: 400;
+.badge-heart {
+  fill: none;
+  stroke: var(--sugar-rose);
+  stroke-width: 2;
+  stroke-linejoin: round;
 }
 
-
-/* ==========================
-   FILTER AREA
-========================== */
-
+/* ------------------------------------------------------------------
+   HÀNG LỌC
+------------------------------------------------------------------- */
 .menu-controls {
   width: 100%;
+  position: relative;
+  z-index: 3;
+}
 
-  padding:
-    28px
-    clamp(
-      55px,
-      6vw,
-      115px
-    );
+.menu-controls-inner {
+  width: var(--sugar-content-width);
+  min-width: 0;
+  min-height: 112px;
+  margin: 0 auto;
 
   display: flex;
-
   align-items: center;
-
   gap: 20px;
-
-  background:
-    var(--sugar-bg);
 }
 
 .category-tabs {
   display: flex;
-
   align-items: center;
-
-  gap: 10px;
+  gap: 20px;
+  flex: 0 0 auto;
+  min-width: 0;
 }
 
 .category-tab {
-  height: 48px;
+  height: 50px;
+  padding: 0 24px 0 20px;
 
-  padding:
-    0 20px;
+  border: 1px solid var(--sugar-border);
+  border-radius: 999px;
+  outline: none;
 
-  border:
-    1px solid
-    var(--sugar-border);
-
-  border-radius: 50px;
-
-  background:
-    transparent;
-
-  color:
-    var(--sugar-brown);
+  background: rgba(255, 252, 249, 0.68);
+  color: var(--sugar-brown);
 
   display: flex;
-
   align-items: center;
+  justify-content: center;
+  gap: 10px;
 
-  gap: 8px;
-
-  font-family:
-    "Nunito",
-    sans-serif;
-
-  font-size: 13px;
-
-  font-weight: 700;
-
+  font-family: "Nunito", sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  white-space: nowrap;
   cursor: pointer;
 
   transition:
-    0.25s ease;
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.category-tab svg {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 28px;
 }
 
 .category-tab:hover {
-  border-color:
-    var(--sugar-rose);
-
-  color:
-    var(--sugar-rose);
+  border-color: #df8e86;
+  color: var(--sugar-rose);
 }
 
 .category-tab.active {
-  border-color:
-    var(--sugar-rose);
-
-  background:
-    var(--sugar-rose);
-
-  color: white;
-
-  box-shadow:
-    0 10px 24px
-    rgba(
-      215,
-      101,
-      96,
-      0.2
-    );
-}
-
-.category-tab-icon {
-  font-size: 16px;
+  border-color: var(--sugar-rose);
+  background: linear-gradient(135deg, #de706a, #d35b57);
+  color: #fff;
+  box-shadow: 0 9px 22px rgba(211, 91, 87, 0.22);
 }
 
 .menu-controls-divider {
   width: 1px;
-  height: 36px;
-
-  margin:
-    0 4px;
-
-  background:
-    var(--sugar-border);
+  height: 46px;
+  margin: 0 6px;
+  flex: 0 0 1px;
+  background: #e2bab3;
 }
 
-
-/* SEARCH */
-
+/* ô tìm kiếm giãn đầy khoảng trống giữa đường kẻ và dropdown */
 .menu-search {
-  height: 48px;
-
-  flex: 1;
-
-  max-width: 420px;
-
-  margin-left: auto;
-
-  padding:
-    0 18px;
+  min-width: 0;
+  height: 50px;
+  flex: 1 1 auto;
+  max-width: none;
+  margin-left: 0;
+  padding: 0 22px;
 
   display: flex;
-
   align-items: center;
+  gap: 12px;
 
-  gap: 10px;
+  border: 1px solid var(--sugar-border);
+  border-radius: 999px;
+  background: rgba(255, 252, 249, 0.68);
+  color: var(--sugar-brown);
+}
 
-  border:
-    1px solid
-    var(--sugar-border);
-
-  border-radius: 50px;
-
-  background: white;
-
-  color:
-    #9c7169;
+.menu-search svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
 }
 
 .menu-search input {
   width: 100%;
-
-  border: none;
-
-  outline: none;
-
-  background:
-    transparent;
-
-  color:
-    var(--sugar-brown);
-
-  font-family:
-    "Nunito",
-    sans-serif;
-
-  font-size: 13px;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--sugar-brown);
+  font-family: "Nunito", sans-serif;
+  font-size: 15px;
 }
 
 .menu-search input::placeholder {
-  color:
-    #b5958e;
+  color: #9d7e77;
 }
 
-
-/* SORT */
-
-.menu-sort {
-  height: 48px;
-
-  min-width: 160px;
-
-  padding:
-    0 17px;
-
-  border:
-    1px solid
-    var(--sugar-border);
-
-  border-radius: 50px;
-
-  outline: none;
-
-  background: white;
-
-  color:
-    var(--sugar-brown);
-
-  font-family:
-    "Nunito",
-    sans-serif;
-
-  font-size: 13px;
-
-  font-weight: 700;
-
-  cursor: pointer;
-}
-
-
-/* ==========================
-   PRODUCTS
-========================== */
-
-.bakery-products-section {
-  width: 100%;
-
-  padding:
-    18px
-    clamp(
-      55px,
-      6vw,
-      115px
-    )
-    70px;
-
+/* dropdown có chevron tự vẽ */
+.menu-sort-wrap {
+  width: 150px;
+  height: 50px;
+  flex: 0 0 150px;
   position: relative;
 }
 
+.menu-sort {
+  width: 100%;
+  height: 100%;
+  padding: 0 40px 0 20px;
 
-/* SUMMARY */
+  border: 1px solid var(--sugar-border);
+  border-radius: 999px;
+  outline: none;
 
-.products-summary {
-  margin-bottom: 24px;
+  background: rgba(255, 252, 249, 0.68);
+  color: var(--sugar-brown);
 
-  display: flex;
-
-  align-items: center;
-
-  justify-content:
-    space-between;
-}
-
-.products-summary span {
-  font-family:
-    "DM Serif Display",
-    serif;
-
-  font-size: 30px;
-}
-
-.products-summary small {
-  color:
-    #a37970;
-
-  font-size: 12px;
-
+  font-family: "Nunito", sans-serif;
+  font-size: 15px;
   font-weight: 600;
+  cursor: pointer;
 
-  letter-spacing: 1px;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
 }
 
+.menu-sort:focus-visible,
+.menu-search:focus-within {
+  border-color: var(--sugar-rose);
+}
 
-/* ==========================
-   GRID
-========================== */
+.menu-sort-chevron {
+  width: 16px;
+  height: 16px;
+
+  position: absolute;
+  top: 50%;
+  right: 18px;
+  transform: translateY(-50%);
+
+  color: var(--sugar-brown);
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------------
+   LƯỚI SẢN PHẨM
+------------------------------------------------------------------- */
+.bakery-products-section {
+  width: 100%;
+  position: relative;
+  z-index: 3;
+}
+
+.bakery-products-inner {
+  width: var(--sugar-content-width);
+  min-width: 0;
+  margin: 0 auto;
+  padding: 12px 0 70px;
+}
 
 .boutique-product-grid {
   width: 100%;
+  min-width: 0;
 
   display: grid;
-
-  grid-template-columns:
-    repeat(
-      4,
-      minmax(0, 1fr)
-    );
-
-  gap: 30px;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 38px;
+  row-gap: 38px;
 }
-
-
-/* CARD */
 
 .boutique-product-card {
+  width: 100%;
   min-width: 0;
+  position: relative;
+  overflow: visible;
+
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+
+  transition: transform 0.25s ease;
 }
 
+.boutique-product-card:hover {
+  transform: translateY(-3px);
+}
 
-/* IMAGE */
-
-.boutique-image-wrap {
+.boutique-image-shell {
   width: 100%;
-
-  aspect-ratio: 1 / 0.93;
-
+  min-width: 0;
   position: relative;
+  overflow: visible;
+}
 
+.boutique-image-link {
+  width: 100%;
+  aspect-ratio: 1.2 / 1;
+
+  display: block;
+  position: relative;
   overflow: hidden;
 
-  border-radius:
-    48% 48%
-    12px 12px /
-    26% 26%
-    12px 12px;
-
-  background:
-    var(--sugar-blush);
+  border-radius: 47% 47% 22px 22px / 27% 27% 22px 22px;
+  background: var(--sugar-blush);
 }
 
-.boutique-image-wrap > a {
+.boutique-image-link img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
   display: block;
-
-  width: 100%;
-  height: 100%;
-}
-
-.boutique-image-wrap img {
-  width: 100%;
-  height: 100%;
-
   object-fit: cover;
-
-  display: block;
-
-  transition:
-    transform
-    0.45s ease;
+  object-position: center;
+  transition: transform 0.35s ease;
 }
 
-.boutique-product-card:hover
-.boutique-image-wrap img {
-  transform:
-    scale(1.035);
+.boutique-product-card:hover .boutique-image-link img {
+  transform: scale(1.025);
 }
-
-
-/* HEART */
 
 .boutique-heart {
-  width: 42px;
-  height: 42px;
+  width: 48px;
+  height: 48px;
 
   position: absolute;
+  top: 13px;
+  right: 13px;
+  z-index: 20;
 
-  top: 15px;
-  right: 15px;
-
-  border: none;
-
+  padding: 0;
+  border: 1px solid rgba(237, 212, 207, 0.72);
   border-radius: 50%;
+  outline: none;
 
-  background:
-    rgba(
-      255,
-      250,
-      247,
-      0.94
-    );
-
-  color:
-    var(--sugar-rose);
+  background: rgba(255, 250, 247, 0.97);
+  color: #a4473f;
 
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 
-  font-size: 24px;
-
   cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 6px 16px rgba(87, 35, 29, 0.06);
 
-  box-shadow:
-    0 8px 20px
-    rgba(
-      75,
-      38,
-      31,
-      0.08
-    );
+  transition:
+    color 0.2s ease,
+    background 0.2s ease,
+    transform 0.2s ease;
 }
 
+.boutique-heart svg {
+  width: 24px;
+  height: 24px;
+  pointer-events: none;
+}
 
-/* PRODUCT INFO */
+.boutique-heart:hover {
+  color: var(--sugar-rose);
+  background: #fff7f4;
+  transform: scale(1.05);
+}
+
+.boutique-heart.liked {
+  color: #fff;
+  background: var(--sugar-rose);
+  border-color: var(--sugar-rose);
+}
+
+.boutique-heart.liked:hover {
+  color: #fff;
+  background: var(--sugar-dark-rose);
+}
 
 .boutique-product-info {
-  padding:
-    17px 5px 0;
-}
-
-.boutique-product-info > div:first-child {
-  min-height: 69px;
+  padding: 14px 14px 0;
 }
 
 .boutique-product-name {
-  color:
-    var(--sugar-brown);
+  display: block;
+  margin: 0;
 
-  font-family:
-    "DM Serif Display",
-    serif;
-
-  font-size: 21px;
-
+  color: var(--sugar-brown);
+  font-family: "DM Serif Display", serif;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 1.2;
   text-decoration: none;
-
-  line-height: 1.25;
 }
 
 .boutique-product-name:hover {
-  color:
-    var(--sugar-rose);
+  color: var(--sugar-rose);
 }
-
-
-/* RATING */
-
-.boutique-rating {
-  margin-top: 8px;
-
-  display: flex;
-
-  align-items: center;
-
-  gap: 5px;
-}
-
-.boutique-rating span {
-  color:
-    #e4a725;
-
-  font-size: 16px;
-}
-
-.boutique-rating strong {
-  color:
-    #79554d;
-
-  font-size: 12px;
-
-  font-weight: 700;
-}
-
-.boutique-rating small {
-  color:
-    #aa8b84;
-
-  font-size: 11px;
-}
-
-
-/* BOTTOM */
 
 .boutique-product-bottom {
-  margin-top: 14px;
+  margin-top: 12px;
 
   display: flex;
-
   align-items: center;
-
-  justify-content:
-    space-between;
-}
-
-.boutique-product-bottom > strong {
-  color:
-    var(--sugar-brown);
-
-  font-size: 20px;
-
-  font-weight: 800;
-}
-
-.boutique-add-button {
-  width: 42px;
-  height: 42px;
-
-  border-radius: 50%;
-
-  background:
-    var(--sugar-blush);
-
-  color:
-    var(--sugar-brown);
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  font-family:
-    "DM Serif Display",
-    serif;
-
-  font-size: 26px;
-
-  line-height: 1;
-
-  text-decoration: none;
-
-  transition:
-    0.25s ease;
-}
-
-.boutique-add-button:hover {
-  background:
-    var(--sugar-rose);
-
-  color: white;
-
-  transform:
-    translateY(-2px);
-}
-
-
-/* ==========================
-   PAGINATION
-========================== */
-
-.boutique-pagination {
-  margin-top: 42px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
+  justify-content: space-between;
   gap: 10px;
 }
 
-.boutique-pagination button {
+.boutique-product-bottom > strong {
+  color: var(--sugar-deep-brown);
+  font-family: "Nunito", sans-serif;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.boutique-add-button {
   width: 43px;
   height: 43px;
+  flex: 0 0 43px;
 
-  border:
-    1px solid
-    var(--sugar-border);
-
+  padding: 0;
+  border: 0;
   border-radius: 50%;
+  outline: none;
 
-  background:
-    transparent;
+  background: #f4c1ba;
+  color: #64231d;
 
-  color:
-    var(--sugar-brown);
-
-  font-family:
-    "Nunito",
-    sans-serif;
-
-  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   cursor: pointer;
 
   transition:
-    0.2s ease;
+    background 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.boutique-add-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.boutique-add-button:hover {
+  background: var(--sugar-rose);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ------------------------------------------------------------------
+   PHÂN TRANG
+------------------------------------------------------------------- */
+.boutique-pagination {
+  margin-top: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  position: relative;
+  z-index: 4;
+}
+
+.boutique-pagination button {
+  width: 44px;
+  height: 44px;
+
+  padding: 0;
+  border: 1px solid var(--sugar-border);
+  border-radius: 50%;
+
+  background: rgba(255, 250, 247, 0.82);
+  color: var(--sugar-brown);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-family: "Nunito", sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.boutique-pagination button svg {
+  width: 18px;
+  height: 18px;
 }
 
 .boutique-pagination button:hover:not(:disabled) {
-  border-color:
-    var(--sugar-rose);
-
-  color:
-    var(--sugar-rose);
+  border-color: var(--sugar-rose);
+  color: var(--sugar-rose);
 }
 
 .boutique-pagination button.active {
-  border-color:
-    var(--sugar-rose);
-
-  background:
-    var(--sugar-rose);
-
-  color: white;
-
-  box-shadow:
-    0 8px 18px
-    rgba(
-      215,
-      101,
-      96,
-      0.2
-    );
+  border-color: var(--sugar-rose);
+  background: var(--sugar-rose);
+  color: #fff;
 }
 
 .boutique-pagination button:disabled {
-  opacity: 0.3;
-
-  cursor:
-    not-allowed;
+  opacity: 0.28;
+  cursor: not-allowed;
 }
 
-
-/* ==========================
-   EMPTY
-========================== */
-
+/* ------------------------------------------------------------------
+   TRẠNG THÁI RỖNG
+------------------------------------------------------------------- */
 .menu-empty-state {
-  min-height: 320px;
+  min-height: 310px;
 
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
-
   justify-content: center;
-
   text-align: center;
 }
 
 .menu-empty-state > div {
-  color:
-    var(--sugar-rose);
-
+  color: var(--sugar-rose);
   font-size: 40px;
 }
 
 .menu-empty-state h3 {
-  margin:
-    12px 0 6px;
-
-  font-family:
-    "DM Serif Display",
-    serif;
-
+  margin: 10px 0 5px;
+  font-family: "DM Serif Display", serif;
   font-size: 27px;
-
   font-weight: 400;
 }
 
 .menu-empty-state p {
   margin: 0;
-
-  color:
-    var(--sugar-text);
-
+  color: var(--sugar-text);
   font-size: 13px;
 }
 
-
-/* ==========================
+/* ------------------------------------------------------------------
    RESPONSIVE
-========================== */
+------------------------------------------------------------------- */
+@media (max-width: 1400px) {
+  .menu-controls-inner,
+  .bakery-products-inner,
+  .bakery-menu-hero-inner {
+    width: 91%;
+  }
 
-@media (
-  max-width: 1200px
-) {
+  .category-tabs {
+    gap: 12px;
+  }
 
-  .bakery-menu-hero {
-    grid-template-columns:
-      43% 57%;
+  .category-tab {
+    padding: 0 18px 0 14px;
+    font-size: 14px;
+  }
+
+  .category-tab svg {
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+  }
+
+  .menu-controls-inner {
+    gap: 14px;
+  }
+
+  .boutique-product-grid {
+    column-gap: 26px;
+  }
+}
+
+@media (max-width: 1180px) {
+  .menu-controls-inner,
+  .bakery-products-inner,
+  .bakery-menu-hero-inner {
+    width: calc(100% - 40px);
+  }
+
+  .bakery-menu-hero-inner {
+    grid-template-columns: minmax(0, 46%) minmax(0, 54%);
   }
 
   .hero-round-label {
+    width: 110px;
+    height: 110px;
+    top: 16px;
+    right: 8px;
+  }
+
+  .menu-ribbon {
+    width: 280px;
+  }
+
+  .page-flower-card {
     display: none;
   }
 
-  .menu-controls {
+  .menu-controls-inner {
     flex-wrap: wrap;
+    padding: 18px 0;
   }
 
   .category-tabs {
     width: 100%;
-
     justify-content: center;
   }
 
@@ -931,28 +858,26 @@
   }
 
   .menu-search {
-    margin-left: 0;
+    flex: 1 1 280px;
+  }
+
+  .boutique-product-grid {
+    column-gap: 22px;
   }
 
 }
 
+@media (max-width: 900px) {
+  .page-flower {
+    display: none;
+  }
 
-@media (
-  max-width: 980px
-) {
-
-  .bakery-menu-hero {
-    min-height: unset;
-
-    padding-top: 55px;
-
-    grid-template-columns:
-      1fr;
+  .bakery-menu-hero-inner {
+    grid-template-columns: 1fr;
   }
 
   .menu-hero-copy {
-    padding-bottom: 45px;
-
+    padding: 36px 0 22px;
     text-align: center;
   }
 
@@ -960,89 +885,113 @@
     justify-content: center;
   }
 
+  .menu-hero-copy h1 {
+    white-space: normal;
+  }
+
   .menu-hero-copy p {
-    margin:
-      20px auto 0;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .menu-hero-copy p br {
+    display: none;
+  }
+
+  .menu-ribbon {
+    width: 240px;
+    margin: 4px auto 0;
   }
 
   .hero-arch {
-    height: 300px;
+    max-width: none;
+    aspect-ratio: 16 / 10;
+    margin: 0;
+    border-radius: 50% 30% 0 0 / 70% 40% 0 0;
   }
 
   .boutique-product-grid {
-    grid-template-columns:
-      repeat(
-        2,
-        minmax(0, 1fr)
-      );
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 24px;
+    row-gap: 32px;
   }
-
 }
 
-
-@media (
-  max-width: 700px
-) {
-
-  .bakery-menu-hero {
-    padding:
-      45px 20px 0;
+@media (max-width: 650px) {
+  .menu-controls-inner,
+  .bakery-products-inner,
+  .bakery-menu-hero-inner {
+    width: calc(100% - 32px);
   }
 
-  .menu-controls {
-    padding:
-      22px 20px;
+  .menu-hero-copy h1 {
+    font-size: 44px;
+  }
+
+  .menu-hero-copy p {
+    font-size: 15px;
+  }
+
+  .menu-ribbon {
+    width: 200px;
+  }
+
+  .hero-arch {
+    aspect-ratio: 16 / 11;
   }
 
   .category-tabs {
+    gap: 8px;
     flex-wrap: wrap;
   }
 
   .category-tab {
     height: 42px;
+    padding: 0 13px 0 10px;
+    font-size: 12px;
+  }
 
-    padding:
-      0 15px;
+  .category-tab svg {
+    width: 21px;
+    height: 21px;
+    flex: 0 0 21px;
   }
 
   .menu-search {
     width: 100%;
-    max-width: none;
+    flex: 1 1 100%;
   }
 
-  .menu-sort {
-    flex: 1;
-  }
-
-  .bakery-products-section {
-    padding:
-      10px
-      20px
-      55px;
-  }
-
-}
-
-
-@media (
-  max-width: 520px
-) {
-
-  .menu-hero-copy h1 {
-    font-size: 42px;
-  }
-
-  .hero-arch {
-    height: 230px;
+  .menu-sort-wrap {
+    flex: 1 1 140px;
+    width: auto;
   }
 
   .boutique-product-grid {
-    grid-template-columns:
-      1fr;
+    grid-template-columns: 1fr;
+    gap: 32px;
   }
 
-  .products-summary span {
-    font-size: 25px;
+  .boutique-product-card {
+    width: 100%;
+    max-width: 430px;
+    margin: 0 auto;
   }
 
+
+  .boutique-heart {
+    width: 44px;
+    height: 44px;
+    top: 10px;
+    right: 10px;
+  }
+
+  .boutique-heart svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .boutique-pagination {
+    margin-top: 30px;
+  }
 }
