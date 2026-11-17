@@ -77,7 +77,11 @@ const Contact = () => {
           <h1>
             Let&apos;s Make Something
             <span>Sweet Together</span>
+            <img
+                src="/images/products/muse-bakery-display.jpg"
+              />
           </h1>
+          
 
           <p>
             Have a question, need help with an order, or simply want to say
@@ -97,7 +101,7 @@ const Contact = () => {
               <h3>Visit Our Bakery</h3>
 
               <p>
-                123 Sweet Street
+                20 Cong Hoa Tan Binh District
                 <br />
                 Ho Chi Minh City, Vietnam
               </p>
@@ -285,7 +289,7 @@ const Contact = () => {
           <div className="contact-visual-side">
             <div className="contact-image-frame">
               <img
-                src="/images/contact/custom-bakery.jpg"
+                src="/images/products/custom-bakery.jpg"
                 alt="Sugar Muse Bakery"
               />
 
@@ -338,11 +342,11 @@ const Contact = () => {
 
             <div className="contact-map-card">
               <span>SUGAR MUSE BAKERY</span>
-              <strong>123 Sweet Street</strong>
+              <strong>20 Cong Hoa Tan Binh District</strong>
               <p>Ho Chi Minh City, Vietnam</p>
 
               <a
-                href="https://maps.google.com"
+                href="https://maps.app.goo.gl/d1kAwRr8xg1zkNU78"
                 target="_blank"
                 rel="noreferrer"
               >
