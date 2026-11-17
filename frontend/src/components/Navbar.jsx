@@ -82,7 +82,7 @@ const Navbar = () => {
           </div>
 
           <Link
-            to="/#custom-cakes"
+            to="/custom-cakes"
             className="sugar-nav-link"
           >
             CUSTOM CAKES
@@ -95,7 +95,6 @@ const Navbar = () => {
             NEW COLLECTION
           </Link>
        
-
           <Link
             to="/contact"
             className="sugar-nav-link"

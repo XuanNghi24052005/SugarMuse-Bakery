@@ -11,6 +11,8 @@ import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
 import CustomCakes from "./pages/CustomCakes";
+import NewCollection from "./pages/NewCollection";
+
 
 function App() {
   return (
@@ -42,6 +44,11 @@ function App() {
         <Route
           path="/custom-cakes"
           element={<CustomCakes />}
+        />
+
+        <Route
+          path="/new-collection"
+          element={<NewCollection />}
         />
 
       </Routes>

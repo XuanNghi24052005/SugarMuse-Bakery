@@ -224,7 +224,7 @@
                       </a>
 
                       <a
-                        href="#custom-cakes"
+                        href="/custom-cakes"
                         className="outline-button"
                       >
                         Custom Cakes
@@ -594,7 +594,7 @@
                     </p>
 
                     <a
-                      href="/products"
+                      href="/custom-cakes"
                       className="primary-button"
                     >
                       Design Your Cake

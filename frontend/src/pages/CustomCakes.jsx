@@ -267,7 +267,7 @@ const CustomCakes = () => {
 
         <div className="custom-request-hero-image">
           <img
-            src="/images/custom-cakes/request-cake.jpg"
+            src="/images/products/request-cake.jpg"
             alt="Sugar Muse custom cake"
           />
         </div>

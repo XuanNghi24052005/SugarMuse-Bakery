@@ -13,7 +13,7 @@
     { _id: "2", name: "Strawberry Cream Cake", price: 32, category: "Cake", ratings: 4.8, numReviews: 18, image: "/images/products/strawberry-cake.jpg" },
     { _id: "3", name: "Classic Tiramisu", price: 18, category: "Cake", ratings: 4.8, numReviews: 31, image: "/images/products/tiramisu.jpg" },
     { _id: "4", name: "Matcha Cream Cake", price: 30, category: "Cake", ratings: 4.7, numReviews: 20, image: "/images/products/matcha-cake.jpg" },
-    { _id: "5", name: "Blueberry Vanilla Cake", price: 34, category: "Cake", ratings: 4.9, numReviews: 16, image: "/images/products/blueberry-cake.jpg" },
+    { _id: "5", name: "Blueberry Vanilla Cake", price: 34, category: "Cake", ratings: 4.9, numReviews: 16, image: "/images/products/blueberry-vanilla-cake.jpg" },
     { _id: "6", name: "Red Velvet Cake", price: 33, category: "Cake", ratings: 4.8, numReviews: 21, image: "/images/products/red-velvet-cake.jpg" },
     { _id: "7", name: "Lemon Berry Cake", price: 31, category: "Cake", ratings: 4.7, numReviews: 14, image: "/images/products/lemon-berry-cake.jpg" },
     { _id: "8", name: "Caramel Lotus Cake", price: 36, category: "Cake", ratings: 4.9, numReviews: 19, image: "/images/products/caramel-lotus-cake.jpg" },
