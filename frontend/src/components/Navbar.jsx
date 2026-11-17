@@ -82,11 +82,19 @@ const Navbar = () => {
           </div>
 
           <Link
-            to="/custom-cakes"
+            to="/#custom-cakes"
             className="sugar-nav-link"
           >
             CUSTOM CAKES
           </Link>
+
+          <Link
+            to="/new-collection"
+            className="sugar-nav-link"
+          >
+            NEW COLLECTION
+          </Link>
+       
 
           <Link
             to="/contact"
@@ -94,7 +102,7 @@ const Navbar = () => {
           >
             CONTACT
           </Link>
-        </nav>
+          </nav>
 
         <div className="sugar-nav-actions">
           <button

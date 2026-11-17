@@ -4,18 +4,8 @@
   import ProductCard from "../components/Product";
   import "../pageStyles/Products.css";
 
-  /*
-    Ảnh hero: nên dùng một ảnh riêng (bánh nằm giữa khung, còn khoảng thở
-    xung quanh, thấy đủ đế đĩa) thay vì dùng chung ảnh của thẻ sản phẩm.
-    Đổi đường dẫn tại đây khi bạn có ảnh hero riêng.
-  */
   const HERO_IMAGE = "/images/products/strawberry-cake.jpg";
 
-  /*
-    Đặt true khi HERO_IMAGE là ảnh hero ngang riêng (tỉ lệ khoảng 2.3:1).
-    Để false khi dùng ảnh gần vuông như ảnh sản phẩm: khi đó ảnh được hiện
-    trọn bánh, hai bên mờ dần vào nền hồng của khung vòm.
-  */
   const HERO_IMAGE_IS_WIDE = false;
 
   const products = [
