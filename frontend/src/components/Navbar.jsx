@@ -39,6 +39,13 @@ const Navbar = () => {
         </Link>
 
         <nav className="sugar-nav-menu">
+          <Link
+            to="/"
+            className="sugar-nav-link"
+          >
+            HOME
+          </Link>
+
           <div className="sugar-dropdown">
             <button
               type="button"
@@ -79,20 +86,6 @@ const Navbar = () => {
             className="sugar-nav-link"
           >
             CUSTOM CAKES
-          </Link>
-
-          <Link
-            to="/products?category=Gift Box"
-            className="sugar-nav-link"
-          >
-            GIFTING
-          </Link>
-
-          <Link
-            to="/#our-bakery"
-            className="sugar-nav-link"
-          >
-            OUR BAKERY
           </Link>
 
           <Link

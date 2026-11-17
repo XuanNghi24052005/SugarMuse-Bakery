@@ -1,35 +1,77 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+
 import "../pageStyles/Contact.css";
 
 const MailIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
     <path d="M3 5h18v14H3V5Z" />
     <path d="m3 6 9 7 9-7" />
   </svg>
 );
 
 const PhoneIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
     <path d="M7.2 3H4.5A1.5 1.5 0 0 0 3 4.5C3 13.6 10.4 21 19.5 21a1.5 1.5 0 0 0 1.5-1.5v-2.7l-5-1-1.2 3a16.4 16.4 0 0 1-9.6-9.6l3-1.2-1-5Z" />
   </svg>
 );
 
 const LocationIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
     <path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" />
     <circle cx="12" cy="9" r="2.5" />
   </svg>
 );
 
 const ClockIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
     <circle cx="12" cy="12" r="9" />
     <path d="M12 7v5l3 2" />
   </svg>
 );
 
 const ArrowIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true">
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
     <path d="M5 12h14" />
     <path d="m14 7 5 5-5 5" />
   </svg>
@@ -68,25 +110,24 @@ const Contact = () => {
   return (
     <main className="contact-page">
       <section className="contact-hero">
-        <div className="contact-hero-decoration contact-hero-decoration-one" />
-        <div className="contact-hero-decoration contact-hero-decoration-two" />
+        <div className="contact-hero-overlay" />
 
         <div className="contact-container contact-hero-inner">
-          <span className="contact-eyebrow">WE'D LOVE TO HEAR FROM YOU</span>
+          <div className="contact-hero-glass">
+            <span className="contact-eyebrow">
+              WE&apos;D LOVE TO HEAR FROM YOU
+            </span>
 
-          <h1>
-            Let&apos;s Make Something
-            <span>Sweet Together</span>
-            <img
-                src="/images/products/muse-bakery-display.jpg"
-              />
-          </h1>
-          
+            <h1>
+              Let&apos;s Make Something
+              <span>Sweet Together</span>
+            </h1>
 
-          <p>
-            Have a question, need help with an order, or simply want to say
-            hello? Our Sugar Muse team is always happy to help.
-          </p>
+            <p>
+              Have a question, need help with an order, or simply want to say
+              hello? Our Sugar Muse team is always happy to help.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -101,7 +142,7 @@ const Contact = () => {
               <h3>Visit Our Bakery</h3>
 
               <p>
-                20 Cong Hoa Tan Binh District
+                20 Cong Hoa Street, Tan Binh District
                 <br />
                 Ho Chi Minh City, Vietnam
               </p>
@@ -163,7 +204,9 @@ const Contact = () => {
                 Sat – Sun: 8:00 AM – 8:00 PM
               </p>
 
-              <span className="contact-open-label">Open Daily</span>
+              <span className="contact-open-label">
+                Open Daily
+              </span>
             </article>
           </div>
         </div>
@@ -172,7 +215,9 @@ const Contact = () => {
       <section className="contact-main-section">
         <div className="contact-container contact-main-grid">
           <div className="contact-form-side">
-            <span className="contact-section-eyebrow">GET IN TOUCH</span>
+            <span className="contact-section-eyebrow">
+              GET IN TOUCH
+            </span>
 
             <h2>Send Us a Message</h2>
 
@@ -181,10 +226,16 @@ const Contact = () => {
               visit our Custom Cakes page and submit a detailed request.
             </p>
 
-            <form className="contact-form" onSubmit={handleSubmit}>
+            <form
+              className="contact-form"
+              onSubmit={handleSubmit}
+            >
               <div className="contact-form-row">
                 <div className="contact-field">
-                  <label htmlFor="firstName">First Name</label>
+                  <label htmlFor="firstName">
+                    First Name
+                  </label>
+
                   <input
                     id="firstName"
                     name="firstName"
@@ -197,7 +248,10 @@ const Contact = () => {
                 </div>
 
                 <div className="contact-field">
-                  <label htmlFor="lastName">Last Name</label>
+                  <label htmlFor="lastName">
+                    Last Name
+                  </label>
+
                   <input
                     id="lastName"
                     name="lastName"
@@ -212,7 +266,10 @@ const Contact = () => {
 
               <div className="contact-form-row">
                 <div className="contact-field">
-                  <label htmlFor="email">Email Address</label>
+                  <label htmlFor="email">
+                    Email Address
+                  </label>
+
                   <input
                     id="email"
                     name="email"
@@ -225,7 +282,10 @@ const Contact = () => {
                 </div>
 
                 <div className="contact-field">
-                  <label htmlFor="phone">Phone Number</label>
+                  <label htmlFor="phone">
+                    Phone Number
+                  </label>
+
                   <input
                     id="phone"
                     name="phone"
@@ -238,7 +298,9 @@ const Contact = () => {
               </div>
 
               <div className="contact-field">
-                <label htmlFor="subject">What can we help with?</label>
+                <label htmlFor="subject">
+                  What can we help with?
+                </label>
 
                 <select
                   id="subject"
@@ -247,20 +309,43 @@ const Contact = () => {
                   onChange={handleChange}
                   required
                 >
-                  <option value="" disabled>
+                  <option
+                    value=""
+                    disabled
+                  >
                     Select a topic
                   </option>
-                  <option value="general">General Enquiry</option>
-                  <option value="order">Order Support</option>
-                  <option value="custom-cake">Custom Cake</option>
-                  <option value="gifting">Gifting</option>
-                  <option value="delivery">Pickup & Delivery</option>
-                  <option value="other">Other</option>
+
+                  <option value="general">
+                    General Enquiry
+                  </option>
+
+                  <option value="order">
+                    Order Support
+                  </option>
+
+                  <option value="custom-cake">
+                    Custom Cake
+                  </option>
+
+                  <option value="gifting">
+                    Gifting
+                  </option>
+
+                  <option value="delivery">
+                    Pickup & Delivery
+                  </option>
+
+                  <option value="other">
+                    Other
+                  </option>
                 </select>
               </div>
 
               <div className="contact-field">
-                <label htmlFor="message">Your Message</label>
+                <label htmlFor="message">
+                  Your Message
+                </label>
 
                 <textarea
                   id="message"
@@ -273,7 +358,10 @@ const Contact = () => {
                 />
               </div>
 
-              <button type="submit" className="contact-submit-button">
+              <button
+                type="submit"
+                className="contact-submit-button"
+              >
                 Send Message
                 <ArrowIcon />
               </button>
@@ -290,7 +378,7 @@ const Contact = () => {
             <div className="contact-image-frame">
               <img
                 src="/images/products/custom-bakery.jpg"
-                alt="Sugar Muse Bakery"
+                alt="Sugar Muse Bakery custom cake"
               />
 
               <div className="contact-image-badge">
@@ -300,9 +388,13 @@ const Contact = () => {
             </div>
 
             <div className="contact-note-card">
-              <span className="contact-note-script">A little note</span>
+              <span className="contact-note-script">
+                A little note
+              </span>
 
-              <h3>Planning a custom cake?</h3>
+              <h3>
+                Planning a custom cake?
+              </h3>
 
               <p>
                 For bespoke cakes, please send your request at least several
@@ -310,21 +402,29 @@ const Contact = () => {
                 something special for your celebration.
               </p>
 
-              <a href="/custom-cakes">
+              <Link to="/custom-cakes">
                 Explore Custom Cakes
                 <ArrowIcon />
-              </a>
+              </Link>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="contact-map-section" id="contact-map">
+      <section
+        className="contact-map-section"
+        id="contact-map"
+      >
         <div className="contact-container">
           <div className="contact-map-heading">
             <div>
-              <span className="contact-section-eyebrow">COME SAY HELLO</span>
-              <h2>Find Sugar Muse</h2>
+              <span className="contact-section-eyebrow">
+                COME SAY HELLO
+              </span>
+
+              <h2>
+                Find Sugar Muse
+              </h2>
             </div>
 
             <p>
@@ -341,12 +441,20 @@ const Contact = () => {
             </div>
 
             <div className="contact-map-card">
-              <span>SUGAR MUSE BAKERY</span>
-              <strong>20 Cong Hoa Tan Binh District</strong>
-              <p>Ho Chi Minh City, Vietnam</p>
+              <span>
+                SUGAR MUSE BAKERY
+              </span>
+
+              <strong>
+                20 Cong Hoa Street, Tan Binh District
+              </strong>
+
+              <p>
+                Ho Chi Minh City, Vietnam
+              </p>
 
               <a
-                href="https://maps.app.goo.gl/d1kAwRr8xg1zkNU78"
+                href="https://maps.app.goo.gl/2wTbsUHXBinBDSta8"
                 target="_blank"
                 rel="noreferrer"
               >

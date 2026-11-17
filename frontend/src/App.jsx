@@ -10,6 +10,7 @@ import Contact from "./pages/Contact";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
+import CustomCakes from "./pages/CustomCakes";
 
 function App() {
   return (
@@ -21,7 +22,7 @@ function App() {
         <Route
           path="/"
           element={<Home />}
-        />
+        />  
 
         <Route
           path="/products"
@@ -35,7 +36,13 @@ function App() {
 
         <Route 
           path="/contact" 
-          element={<Contact />} />
+          element={<Contact />} 
+        />
+
+        <Route
+          path="/custom-cakes"
+          element={<CustomCakes />}
+        />
 
       </Routes>
     </>
