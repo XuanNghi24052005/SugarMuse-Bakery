@@ -23,19 +23,19 @@ const collectionEdit = [
     id: "strawberry-tart",
     name: "Strawberry Tart",
     price: 26,
-    image: "/images/new-collection/strawberry-tart.jpg",
+    image: "/images/products/strawberry-tart.jpg",
   },
   {
     id: "strawberry-macaron-box",
     name: "Strawberry Macaron Box",
     price: 24,
-    image: "/images/new-collection/strawberry-macaron-box.jpg",
+    image: "/images/products/strawberry-macaron-box.jpg",
   },
   {
     id: "strawberry-mini-cake",
     name: "Strawberry Mini Cake",
     price: 30,
-    image: "/images/new-collection/strawberry-mini-cake.jpg",
+    image: "/images/products/strawberry-mini-cake.jpg",
   },
 ];
 
@@ -78,7 +78,7 @@ const NewCollection = () => {
 
         <div className="collection-hero-image">
           <img
-            src="/images/new-collection/strawberry-hero.jpg"
+            src="/images/products/strawberry-hero.jpg"
             alt="Strawberry Reverie collection"
           />
         </div>
@@ -92,7 +92,7 @@ const NewCollection = () => {
       >
         <div className="collection-feature-image">
           <img
-            src="/images/new-collection/strawberry-shortcake.jpg"
+            src="/images/products/strawberry-shortcake.jpg"
             alt="Strawberry Shortcake"
           />
         </div>
@@ -159,7 +159,7 @@ const NewCollection = () => {
 
         <div className="collection-feature-image">
           <img
-            src="/images/new-collection/strawberry-roll.jpg"
+            src="/images/products/strawberry-roll.jpg"
             alt="Strawberry Roll"
           />
         </div>
