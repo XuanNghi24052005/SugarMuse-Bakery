@@ -2,7 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 import "../pageStyles/Home.css";
-import { useCart } from "../context/Cartcontext";
+import { useCart } from "../Context/Cartcontext";
+
 const ArrowIcon = () => (
   <svg
     viewBox="0 0 24 24"
@@ -57,21 +58,25 @@ const categories = [
 
 const bestSellers = [
   {
+    _id: "2",
     name: "Strawberry Cream Cake",
     price: 32,
     image: "/images/products/strawberry-cake.jpg",
   },
   {
+    _id: "9",
     name: "Butter Croissant",
     price: 4.5,
     image: "/images/products/croissant.jpg",
   },
   {
+    _id: "12",
     name: "Fresh Fruit Tart",
     price: 8,
     image: "/images/products/fruit-tart.jpg",
   },
   {
+    _id: "25",
     name: "Macaron Gift Box",
     price: 24,
     image: "/images/products/macaron-box.jpg",
@@ -79,11 +84,10 @@ const bestSellers = [
 ];
 
 const Home = () => {
+  const { addToCart } = useCart();
+
   return (
     <main className="sugar-muse-home">
-
-      {/* HERO */}
-
       <section className="home-hero">
         <div className="home-hero-copy">
           <span className="home-eyebrow">
@@ -126,8 +130,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* BENEFITS */}
-
       <section className="home-benefits">
         <div className="home-benefit">
           <span>♡</span>
@@ -166,8 +168,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* CATEGORIES */}
-
       <section className="home-section home-category-section">
         <div className="home-section-heading">
           <span className="heading-line" />
@@ -177,9 +177,7 @@ const Home = () => {
               SOMETHING FOR EVERY CRAVING
             </span>
 
-            <h2>
-              Shop by Category
-            </h2>
+            <h2>Shop by Category</h2>
           </div>
 
           <span className="heading-line" />
@@ -208,8 +206,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* BEST SELLERS */}
-
       <section className="home-section home-best-section">
         <div className="home-section-heading">
           <span className="heading-line" />
@@ -219,9 +215,7 @@ const Home = () => {
               OUR FAVORITES
             </span>
 
-            <h2>
-              Best Sellers
-            </h2>
+            <h2>Best Sellers</h2>
           </div>
 
           <span className="heading-line" />
@@ -231,7 +225,7 @@ const Home = () => {
           {bestSellers.map((product) => (
             <article
               className="home-product-card"
-              key={product.name}
+              key={product._id}
             >
               <div className="home-product-image">
                 <img
@@ -261,6 +255,7 @@ const Home = () => {
                   type="button"
                   className="home-product-add"
                   aria-label={`Add ${product.name} to cart`}
+                  onClick={() => addToCart(product)}
                 >
                   +
                 </button>
@@ -276,8 +271,6 @@ const Home = () => {
           </Link>
         </div>
       </section>
-
-      {/* CUSTOM CAKES */}
 
       <section
         className="custom-cake-section"
@@ -320,8 +313,6 @@ const Home = () => {
         </span>
       </section>
 
-      {/* NEW COLLECTION */}
-
       <section className="home-new-collection">
         <div className="home-new-collection-copy">
           <div className="home-new-collection-top">
@@ -362,7 +353,6 @@ const Home = () => {
           />
         </div>
       </section>
-
     </main>
   );
 };
