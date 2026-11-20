@@ -1,6 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import { useCart } from "../Context/Cartcontext";
 import "../pageStyles/Navbar.css";
 
@@ -148,13 +147,6 @@ const Navbar = () => {
             className="nav-link"
           >
             CUSTOM CAKES
-          </Link>
-
-          <Link
-            to="/about"
-            className="nav-link"
-          >
-            ABOUT
           </Link>
 
           <Link

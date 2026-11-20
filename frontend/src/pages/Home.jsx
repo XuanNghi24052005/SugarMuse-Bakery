@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import "../pageStyles/Home.css";
 import { useCart } from "../Context/Cartcontext";
@@ -85,8 +85,16 @@ const bestSellers = [
 
 const Home = () => {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
+
+  const handleAddToCart = (product) => {
+    addToCart(product);
+    navigate("/cart");
+  };
 
   return (
+
+  
     <main className="sugar-muse-home">
       <section className="home-hero">
         <div className="home-hero-copy">
@@ -251,14 +259,14 @@ const Home = () => {
                   </strong>
                 </div>
 
-                <button
-                  type="button"
-                  className="home-product-add"
-                  aria-label={`Add ${product.name} to cart`}
-                  onClick={() => addToCart(product)}
-                >
-                  +
-                </button>
+             <button
+              type="button"
+              className="home-product-add"
+              aria-label={`Add ${product.name} to cart`}
+              onClick={() => handleAddToCart(product)}
+            >
+              +
+            </button>
               </div>
             </article>
           ))}

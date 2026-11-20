@@ -6,13 +6,14 @@ import {
 } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-import Contact from "./pages/Contact";
+
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
+import Contact from "./pages/Contact";
 import CustomCakes from "./pages/CustomCakes";
 import NewCollection from "./pages/NewCollection";
-
+import Cart from "./pages/Cart";
 
 function App() {
   return (
@@ -20,11 +21,10 @@ function App() {
       <Navbar />
 
       <Routes>
-
         <Route
           path="/"
           element={<Home />}
-        />  
+        />
 
         <Route
           path="/products"
@@ -36,9 +36,9 @@ function App() {
           element={<ProductDetails />}
         />
 
-        <Route 
-          path="/contact" 
-          element={<Contact />} 
+        <Route
+          path="/contact"
+          element={<Contact />}
         />
 
         <Route
@@ -51,6 +51,10 @@ function App() {
           element={<NewCollection />}
         />
 
+        <Route
+          path="/cart"
+          element={<Cart />}
+        />
       </Routes>
     </>
   );

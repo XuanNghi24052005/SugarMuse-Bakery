@@ -1,12 +1,14 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-const HeartIcon = ({ filled = false }) => (
+import { useCart } from "../Context/Cartcontext";
+
+const HeartIcon = () => (
   <svg
     viewBox="0 0 24 24"
-    fill={filled ? "currentColor" : "none"}
+    fill="none"
     stroke="currentColor"
-    strokeWidth="1.6"
+    strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
     aria-hidden="true"
@@ -22,38 +24,25 @@ const PlusIcon = () => (
     stroke="currentColor"
     strokeWidth="2"
     strokeLinecap="round"
+    strokeLinejoin="round"
     aria-hidden="true"
   >
-    <path d="M12 5v14M5 12h14" />
+    <path d="M12 5v14" />
+    <path d="M5 12h14" />
   </svg>
 );
 
-const Product = ({ product, onAddToCart }) => {
-  const [liked, setLiked] = useState(false);
+const Product = ({ product }) => {
+  const { addToCart } = useCart();
+  const navigate = useNavigate();
 
-  if (!product) return null;
-
-  const price = Number(product.price);
-  const displayPrice = Number.isFinite(price) ? price.toFixed(2) : "0.00";
-
-  const handleWishlist = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    setLiked((current) => !current);
-  };
-
-  const handleAdd = (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-
-    if (typeof onAddToCart === "function") {
-      onAddToCart(product);
-    }
+  const handleAddToCart = () => {
+    addToCart(product);
+    navigate("/cart");
   };
 
   return (
-    <article className={`boutique-product-card ${liked ? "is-liked" : ""}`}>
+    <article className="boutique-product-card">
       <div className="boutique-image-shell">
         <Link
           to={`/product/${product._id}`}
@@ -62,22 +51,15 @@ const Product = ({ product, onAddToCart }) => {
           <img
             src={product.image}
             alt={product.name}
-            loading="lazy"
           />
         </Link>
 
         <button
           type="button"
-          className={`boutique-heart ${liked ? "liked" : ""}`}
-          aria-label={
-            liked
-              ? `Remove ${product.name} from wishlist`
-              : `Add ${product.name} to wishlist`
-          }
-          aria-pressed={liked}
-          onClick={handleWishlist}
+          className="boutique-heart"
+          aria-label={`Add ${product.name} to wishlist`}
         >
-          <HeartIcon filled={liked} />
+          <HeartIcon />
         </button>
       </div>
 
@@ -90,13 +72,15 @@ const Product = ({ product, onAddToCart }) => {
         </Link>
 
         <div className="boutique-product-bottom">
-          <strong>${displayPrice}</strong>
+          <strong>
+            ${Number(product.price).toFixed(2)}
+          </strong>
 
           <button
             type="button"
             className="boutique-add-button"
+            onClick={handleAddToCart}
             aria-label={`Add ${product.name} to cart`}
-            onClick={handleAdd}
           >
             <PlusIcon />
           </button>
