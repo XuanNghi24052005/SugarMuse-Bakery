@@ -6,6 +6,7 @@ import {
 
 import { useCart } from "../Context/Cartcontext";
 import { useWishlist } from "../Context/Wishlistcontext";
+import { useAuth } from "../Context/Authcontext";
 
 import "../pageStyles/Navbar.css";
 
@@ -71,16 +72,29 @@ const CartIcon = () => (
 
 const Navbar = () => {
   const { cartCount } = useCart();
-  const { wishlistCount } = useWishlist();
+
+  const {
+    wishlistCount,
+  } = useWishlist();
+
+  const {
+    isAuthenticated,
+  } = useAuth();
 
   const navigate = useNavigate();
 
-  const [searchValue, setSearchValue] = useState("");
+  const [
+    searchValue,
+    setSearchValue,
+  ] = useState("");
 
-  const handleSearch = (event) => {
+  const handleSearch = (
+    event
+  ) => {
     event.preventDefault();
 
-    const keyword = searchValue.trim();
+    const keyword =
+      searchValue.trim();
 
     if (!keyword) {
       navigate("/products");
@@ -88,7 +102,9 @@ const Navbar = () => {
     }
 
     navigate(
-      `/products?search=${encodeURIComponent(keyword)}`
+      `/products?search=${encodeURIComponent(
+        keyword
+      )}`
     );
   };
 
@@ -103,8 +119,13 @@ const Navbar = () => {
         </span>
 
         <span className="brand-text">
-          <span>Sugar Muse</span>
-          <small>BAKERY</small>
+          <span>
+            Sugar Muse
+          </span>
+
+          <small>
+            BAKERY
+          </small>
         </span>
       </Link>
 
@@ -148,16 +169,24 @@ const Navbar = () => {
       <div className="nav-right">
         <form
           className="navbar-inline-search"
-          onSubmit={handleSearch}
+          onSubmit={
+            handleSearch
+          }
         >
           <SearchIcon />
 
           <input
             type="text"
             placeholder="Search cakes, pastries..."
-            value={searchValue}
-            onChange={(event) =>
-              setSearchValue(event.target.value)
+            value={
+              searchValue
+            }
+            onChange={(
+              event
+            ) =>
+              setSearchValue(
+                event.target.value
+              )
             }
           />
 
@@ -173,9 +202,17 @@ const Navbar = () => {
 
         <div className="nav-actions">
           <Link
-            to="/account"
+            to={
+              isAuthenticated
+                ? "/account"
+                : "/login"
+            }
             className="nav-icon-button"
-            aria-label="Account"
+            aria-label={
+              isAuthenticated
+                ? "My account"
+                : "Sign in"
+            }
           >
             <UserIcon />
           </Link>
@@ -189,7 +226,9 @@ const Navbar = () => {
 
             {wishlistCount > 0 && (
               <span className="cart-badge">
-                {wishlistCount}
+                {
+                  wishlistCount
+                }
               </span>
             )}
           </Link>

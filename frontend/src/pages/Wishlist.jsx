@@ -72,10 +72,12 @@ const Wishlist = () => {
   return (
     <main className="wishlist-page">
       <section className="wishlist-banner">
-        <img
-          src="/images/products/peach-cake.jpg"
-          alt="Sugar Muse peach cake wishlist"
-        />
+        <div className="wishlist-banner-image">
+          <img
+            src="/images/products/peach-cake.jpg"
+            alt="Sugar Muse peach cake wishlist"
+          />
+        </div>
 
         <div className="wishlist-banner-overlay" />
 
