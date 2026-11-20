@@ -1,16 +1,20 @@
-import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
+
 import { useCart } from "../Context/Cartcontext";
+import { useWishlist } from "../Context/Wishlistcontext";
+
 import "../pageStyles/Navbar.css";
 
 const SearchIcon = () => (
   <svg
-    width="20"
-    height="20"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="1.7"
+    strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
     aria-hidden="true"
@@ -22,156 +26,172 @@ const SearchIcon = () => (
 
 const UserIcon = () => (
   <svg
-    width="20"
-    height="20"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="1.7"
+    strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
     aria-hidden="true"
   >
     <circle cx="12" cy="8" r="4" />
-    <path d="M4 21c1.5-4 4.2-6 8-6s6.5 2 8 6" />
+    <path d="M4.5 21a7.5 7.5 0 0 1 15 0" />
+  </svg>
+);
+
+const HeartIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
   </svg>
 );
 
 const CartIcon = () => (
   <svg
-    width="20"
-    height="20"
     viewBox="0 0 24 24"
     fill="none"
     stroke="currentColor"
-    strokeWidth="1.7"
+    strokeWidth="1.8"
     strokeLinecap="round"
     strokeLinejoin="round"
     aria-hidden="true"
   >
-    <path d="M6 7h15l-2 8H8L6 3H3" />
     <circle cx="9" cy="20" r="1" />
     <circle cx="18" cy="20" r="1" />
-  </svg>
-);
-
-const ChevronDown = () => (
-  <svg
-    width="12"
-    height="12"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="2"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden="true"
-  >
-    <path d="m7 10 5 5 5-5" />
+    <path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L20 7H6" />
   </svg>
 );
 
 const Navbar = () => {
   const { cartCount } = useCart();
+  const { wishlistCount } = useWishlist();
+
+  const navigate = useNavigate();
+
+  const [searchValue, setSearchValue] = useState("");
+
+  const handleSearch = (event) => {
+    event.preventDefault();
+
+    const keyword = searchValue.trim();
+
+    if (!keyword) {
+      navigate("/products");
+      return;
+    }
+
+    navigate(
+      `/products?search=${encodeURIComponent(keyword)}`
+    );
+  };
 
   return (
-    <>
-      <div className="announcement-bar">
-        <span>Freshly baked every day</span>
+    <header className="main-header">
+      <Link
+        to="/"
+        className="brand"
+      >
+        <span className="brand-symbol">
+          ♡
+        </span>
 
-        <span className="announcement-divider" />
+        <span className="brand-text">
+          <span>Sugar Muse</span>
+          <small>BAKERY</small>
+        </span>
+      </Link>
 
-        <span>Made with a little love ♡</span>
-
-        <span className="announcement-divider" />
-
-        <span>Pickup & delivery available</span>
-      </div>
-
-      <header className="main-header">
-        <Link to="/" className="brand">
-          <span className="brand-symbol">♡</span>
-
-          <div className="brand-text">
-            <span>Sugar Muse</span>
-            <small>BAKERY</small>
-          </div>
+      <nav className="main-nav">
+        <Link
+          to="/"
+          className="nav-link"
+        >
+          HOME
         </Link>
 
-        <nav className="main-nav">
-          <Link to="/" className="nav-link">
-            HOME
-          </Link>
+        <Link
+          to="/products"
+          className="nav-link"
+        >
+          SHOP
+        </Link>
 
-          <div className="nav-dropdown">
+        <Link
+          to="/new-collection"
+          className="nav-link"
+        >
+          NEW COLLECTION
+        </Link>
+
+        <Link
+          to="/custom-cakes"
+          className="nav-link"
+        >
+          CUSTOM CAKES
+        </Link>
+
+        <Link
+          to="/contact"
+          className="nav-link"
+        >
+          CONTACT
+        </Link>
+      </nav>
+
+      <div className="nav-right">
+        <form
+          className="navbar-inline-search"
+          onSubmit={handleSearch}
+        >
+          <SearchIcon />
+
+          <input
+            type="text"
+            placeholder="Search cakes, pastries..."
+            value={searchValue}
+            onChange={(event) =>
+              setSearchValue(event.target.value)
+            }
+          />
+
+          {searchValue && (
             <button
-              type="button"
-              className="nav-link dropdown-trigger"
+              type="submit"
+              className="navbar-search-go"
             >
-              SHOP
-              <ChevronDown />
+              Search
             </button>
-
-            <div className="dropdown-menu">
-              <Link to="/products">
-                All Products
-              </Link>
-
-              <Link to="/products?category=Cake">
-                Cakes
-              </Link>
-
-              <Link to="/products?category=Pastry">
-                Pastries
-              </Link>
-
-              <Link to="/products?category=Savory">
-                Savory
-              </Link>
-
-              <Link to="/products?category=Gift Box">
-                Gift Boxes
-              </Link>
-            </div>
-          </div>
-
-          <Link
-            to="/new-collection"
-            className="nav-link"
-          >
-            NEW COLLECTION
-          </Link>
-
-          <Link
-            to="/custom-cakes"
-            className="nav-link"
-          >
-            CUSTOM CAKES
-          </Link>
-
-          <Link
-            to="/contact"
-            className="nav-link"
-          >
-            CONTACT
-          </Link>
-        </nav>
+          )}
+        </form>
 
         <div className="nav-actions">
-          <button
-            type="button"
-            className="nav-icon-button"
-            aria-label="Search"
-          >
-            <SearchIcon />
-          </button>
-
           <Link
-            to="/login"
+            to="/account"
             className="nav-icon-button"
             aria-label="Account"
           >
             <UserIcon />
+          </Link>
+
+          <Link
+            to="/wishlist"
+            className="nav-icon-button"
+            aria-label="Wishlist"
+          >
+            <HeartIcon />
+
+            {wishlistCount > 0 && (
+              <span className="cart-badge">
+                {wishlistCount}
+              </span>
+            )}
           </Link>
 
           <Link
@@ -188,8 +208,8 @@ const Navbar = () => {
             )}
           </Link>
         </div>
-      </header>
-    </>
+      </div>
+    </header>
   );
 };
 

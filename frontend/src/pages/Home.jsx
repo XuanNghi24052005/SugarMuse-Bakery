@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import "../pageStyles/Home.css";
 import { useCart } from "../Context/Cartcontext";
+import { useWishlist } from "../Context/Wishlistcontext";
 
 const ArrowIcon = () => (
   <svg
@@ -19,10 +20,10 @@ const ArrowIcon = () => (
   </svg>
 );
 
-const HeartIcon = () => (
+const HeartIcon = ({ filled }) => (
   <svg
     viewBox="0 0 24 24"
-    fill="none"
+    fill={filled ? "currentColor" : "none"}
     stroke="currentColor"
     strokeWidth="1.7"
     strokeLinecap="round"
@@ -85,6 +86,12 @@ const bestSellers = [
 
 const Home = () => {
   const { addToCart } = useCart();
+
+  const {
+    toggleWishlist,
+    isWishlisted,
+  } = useWishlist();
+
   const navigate = useNavigate();
 
   const handleAddToCart = (product) => {
@@ -93,8 +100,6 @@ const Home = () => {
   };
 
   return (
-
-  
     <main className="sugar-muse-home">
       <section className="home-hero">
         <div className="home-hero-copy">
@@ -230,46 +235,63 @@ const Home = () => {
         </div>
 
         <div className="home-product-grid">
-          {bestSellers.map((product) => (
-            <article
-              className="home-product-card"
-              key={product._id}
-            >
-              <div className="home-product-image">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                />
+          {bestSellers.map((product) => {
+            const liked = isWishlisted(product._id);
 
-                <button
-                  type="button"
-                  className="home-product-heart"
-                  aria-label={`Add ${product.name} to wishlist`}
-                >
-                  <HeartIcon />
-                </button>
-              </div>
+            return (
+              <article
+                className="home-product-card"
+                key={product._id}
+              >
+                <div className="home-product-image">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                  />
 
-              <div className="home-product-info">
-                <div>
-                  <h3>{product.name}</h3>
-
-                  <strong>
-                    ${product.price.toFixed(2)}
-                  </strong>
+                  <button
+                    type="button"
+                    className={
+                      liked
+                        ? "home-product-heart liked"
+                        : "home-product-heart"
+                    }
+                    onClick={() =>
+                      toggleWishlist(product)
+                    }
+                    aria-label={
+                      liked
+                        ? `Remove ${product.name} from wishlist`
+                        : `Add ${product.name} to wishlist`
+                    }
+                  >
+                    <HeartIcon filled={liked} />
+                  </button>
                 </div>
 
-             <button
-              type="button"
-              className="home-product-add"
-              aria-label={`Add ${product.name} to cart`}
-              onClick={() => handleAddToCart(product)}
-            >
-              +
-            </button>
-              </div>
-            </article>
-          ))}
+                <div className="home-product-info">
+                  <div>
+                    <h3>{product.name}</h3>
+
+                    <strong>
+                      ${product.price.toFixed(2)}
+                    </strong>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="home-product-add"
+                    aria-label={`Add ${product.name} to cart`}
+                    onClick={() =>
+                      handleAddToCart(product)
+                    }
+                  >
+                    +
+                  </button>
+                </div>
+              </article>
+            );
+          })}
         </div>
 
         <div className="home-view-all">

@@ -14,6 +14,7 @@ import Contact from "./pages/Contact";
 import CustomCakes from "./pages/CustomCakes";
 import NewCollection from "./pages/NewCollection";
 import Cart from "./pages/Cart";
+import Wishlist from "./pages/Wishlist";
 
 function App() {
   return (
@@ -54,6 +55,11 @@ function App() {
         <Route
           path="/cart"
           element={<Cart />}
+        />
+
+        <Route
+          path="/wishlist"
+          element={<Wishlist />}
         />
       </Routes>
     </>

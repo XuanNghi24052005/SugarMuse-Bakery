@@ -2,11 +2,12 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import { useCart } from "../Context/Cartcontext";
+import { useWishlist } from "../Context/Wishlistcontext";
 
-const HeartIcon = () => (
+const HeartIcon = ({ filled }) => (
   <svg
     viewBox="0 0 24 24"
-    fill="none"
+    fill={filled ? "currentColor" : "none"}
     stroke="currentColor"
     strokeWidth="1.8"
     strokeLinecap="round"
@@ -34,7 +35,15 @@ const PlusIcon = () => (
 
 const Product = ({ product }) => {
   const { addToCart } = useCart();
+
+  const {
+    toggleWishlist,
+    isWishlisted,
+  } = useWishlist();
+
   const navigate = useNavigate();
+
+  const liked = isWishlisted(product._id);
 
   const handleAddToCart = () => {
     addToCart(product);
@@ -56,10 +65,21 @@ const Product = ({ product }) => {
 
         <button
           type="button"
-          className="boutique-heart"
-          aria-label={`Add ${product.name} to wishlist`}
+          className={
+            liked
+              ? "boutique-heart liked"
+              : "boutique-heart"
+          }
+          onClick={() =>
+            toggleWishlist(product)
+          }
+          aria-label={
+            liked
+              ? `Remove ${product.name} from wishlist`
+              : `Add ${product.name} to wishlist`
+          }
         >
-          <HeartIcon />
+          <HeartIcon filled={liked} />
         </button>
       </div>
 

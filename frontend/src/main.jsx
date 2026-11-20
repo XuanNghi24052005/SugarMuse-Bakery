@@ -5,7 +5,9 @@ import { Provider } from "react-redux";
 
 import App from "./App.jsx";
 import { store } from "./app/store.js";
+
 import { CartProvider } from "./Context/Cartcontext.jsx";
+import { WishlistProvider } from "./Context/Wishlistcontext.jsx";
 
 import "./index.css";
 
@@ -16,7 +18,9 @@ ReactDOM.createRoot(
     <Provider store={store}>
       <BrowserRouter>
         <CartProvider>
-          <App />
+          <WishlistProvider>
+            <App />
+          </WishlistProvider>
         </CartProvider>
       </BrowserRouter>
     </Provider>
