@@ -2,6 +2,7 @@ import React from 'react'
 import {useSelector } from 'react-redux'
 import Loader from '../components/Loader'
 import { Navigate, useLocation } from 'react-router-dom'
+import { showToast } from '../utils/showToast'
 
 
 const ProtectedRoutes = ({element, adminOnly=false}) => {

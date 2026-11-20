@@ -18,21 +18,21 @@ const ArrowIcon = () => (
   </svg>
 );
 
-const collectionEdit = [
+const editProducts = [
   {
-    id: "strawberry-tart",
+    id: 1,
     name: "Strawberry Tart",
     price: 26,
     image: "/images/products/strawberry-tart.jpg",
   },
   {
-    id: "strawberry-macaron-box",
+    id: 2,
     name: "Strawberry Macaron Box",
     price: 24,
     image: "/images/products/strawberry-macaron-box.jpg",
   },
   {
-    id: "strawberry-mini-cake",
+    id: 3,
     name: "Strawberry Mini Cake",
     price: 30,
     image: "/images/products/strawberry-mini-cake.jpg",
@@ -42,8 +42,6 @@ const collectionEdit = [
 const NewCollection = () => {
   return (
     <main className="new-collection-page">
-
-      {/* HERO */}
 
       <section className="collection-hero">
         <div className="collection-hero-copy">
@@ -79,162 +77,154 @@ const NewCollection = () => {
         <div className="collection-hero-image">
           <img
             src="/images/products/strawberry-hero.jpg"
-            alt="Strawberry Reverie collection"
+            alt="Strawberry Reverie Collection"
           />
         </div>
       </section>
 
-      {/* FEATURE 01 */}
+      <div className="collection-content-shell">
 
-      <section
-        className="collection-feature collection-feature-one"
-        id="strawberry-collection"
-      >
-        <div className="collection-feature-image">
-          <img
-            src="/images/products/strawberry-shortcake.jpg"
-            alt="Strawberry Shortcake"
-          />
-        </div>
+        <section
+          className="collection-feature-list"
+          id="strawberry-collection"
+        >
+          <article className="collection-feature-item">
+            <div className="collection-feature-image">
+              <img
+                src="/images/products/strawberry-shortcake.jpg"
+                alt="Strawberry Shortcake"
+              />
+            </div>
 
-        <div className="collection-feature-copy">
-          <div className="collection-feature-number">
-            <span>01</span>
-            <i />
-          </div>
-
-          <h2>
-            Strawberry
-            <em>Shortcake</em>
-          </h2>
-
-          <p>
-            Soft vanilla sponge, fresh cream and juicy strawberries.
-          </p>
-
-          <strong className="collection-price">
-            $28.00
-          </strong>
-
-          <Link
-            to="/products/strawberry-shortcake"
-            className="collection-detail-link"
-          >
-            View Details
-            <ArrowIcon />
-          </Link>
-        </div>
-      </section>
-
-      {/* FEATURE 02 */}
-
-      <section className="collection-feature collection-feature-two">
-        <div className="collection-feature-copy">
-          <div className="collection-feature-number">
-            <span>02</span>
-            <i />
-          </div>
-
-          <h2>
-            Strawberry
-            <em>Roll</em>
-          </h2>
-
-          <p>
-            Light strawberry sponge wrapped around fresh cream and berries.
-          </p>
-
-          <strong className="collection-price">
-            $22.00
-          </strong>
-
-          <Link
-            to="/products/strawberry-roll"
-            className="collection-detail-link"
-          >
-            View Details
-            <ArrowIcon />
-          </Link>
-        </div>
-
-        <div className="collection-feature-image">
-          <img
-            src="/images/products/strawberry-roll.jpg"
-            alt="Strawberry Roll"
-          />
-        </div>
-      </section>
-
-      {/* THE EDIT */}
-
-      <section className="collection-edit-section">
-        <div className="collection-edit-heading">
-          <span />
-          <strong>
-            THE EDIT
-          </strong>
-          <span />
-        </div>
-
-        <div className="collection-edit-grid">
-          {collectionEdit.map((product) => (
-            <Link
-              key={product.id}
-              to={`/products/${product.id}`}
-              className="collection-edit-item"
-            >
-              <div className="collection-edit-image">
-                <img
-                  src={product.image}
-                  alt={product.name}
-                />
+            <div className="collection-feature-content">
+              <div className="collection-feature-number-row">
+                <span>01</span>
               </div>
 
-              <h3>
-                {product.name}
-              </h3>
+              <h2>
+                Strawberry
+                <em>Shortcake</em>
+              </h2>
 
               <p>
-                ${product.price.toFixed(2)}
+                Soft vanilla sponge, fresh cream and juicy strawberries.
               </p>
-            </Link>
-          ))}
-        </div>
-      </section>
 
-      {/* NEXT COLLECTION */}
+              <div className="collection-feature-price">
+                $28.00
+              </div>
 
-      <section className="next-collection-section">
-        <div className="next-collection-copy">
-          <span className="collection-label">
-            NEXT COLLECTION
-          </span>
+              <Link
+                to="/products"
+                className="collection-feature-link"
+              >
+                View Details
+                <ArrowIcon />
+              </Link>
+            </div>
+          </article>
 
-          <h2>
-            Summer Berry
-          </h2>
+          <article className="collection-feature-item reverse">
+            <div className="collection-feature-image">
+              <img
+                src="/images/products/strawberry-roll.jpg"
+                alt="Strawberry Roll"
+              />
+            </div>
 
-          <p>
-            Coming June 2027
-          </p>
+            <div className="collection-feature-content">
+              <div className="collection-feature-number-row">
+                <span>02</span>
+              </div>
 
-          <button
-            type="button"
-            className="next-collection-button"
-          >
-            Stay Tuned
-            <ArrowIcon />
-          </button>
-        </div>
+              <h2>
+                Strawberry
+                <em>Roll</em>
+              </h2>
 
-        <div className="next-collection-image">
-          <img
-            src="/images/new-collection/summer-berry.jpg"
-            alt="Summer Berry upcoming collection"
-          />
-        </div>
-      </section>
+              <p>
+                Light strawberry sponge wrapped around fresh cream
+                and berries.
+              </p>
 
+              <div className="collection-feature-price">
+                $22.00
+              </div>
+
+              <Link
+                to="/products"
+                className="collection-feature-link"
+              >
+                View Details
+                <ArrowIcon />
+              </Link>
+            </div>
+          </article>
+        </section>
+
+        <section className="collection-edit-section">
+          <div className="collection-edit-heading">
+            <span>THE EDIT</span>
+          </div>
+
+          <div className="collection-edit-grid">
+            {editProducts.map((product) => (
+              <Link
+                key={product.id}
+                to="/products"
+                className="collection-edit-card"
+              >
+                <div className="collection-edit-card-image">
+                  <img
+                    src={product.image}
+                    alt={product.name}
+                  />
+                </div>
+
+                <h3>
+                  {product.name}
+                </h3>
+
+                <p>
+                  ${product.price.toFixed(2)}
+                </p>
+              </Link>
+            ))}
+          </div>
+        </section>
+
+        <section className="next-collection">
+          <div className="next-collection-copy">
+            <span className="collection-label">
+              NEXT COLLECTION
+            </span>
+
+            <h2>
+              Summer Berry
+            </h2>
+
+            <p>
+              Coming June 2027
+            </p>
+
+            <button
+              type="button"
+              className="next-collection-button"
+            >
+              Stay Tuned
+              <ArrowIcon />
+            </button>
+          </div>
+
+          <div className="next-collection-image">
+            <img
+              src="/images/products/summer-berry.jpg"
+              alt="Summer Berry upcoming collection"
+            />
+          </div>
+        </section>
+
+      </div>
     </main>
   );
 };

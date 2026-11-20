@@ -47,7 +47,7 @@ const ResetPassword = () => {
 
     return (
         <>
-            <PageTitle title='Reset Password - MOCHA' />
+            <PageTitle title='Reset Password - Sugar Muse' />
             <Navbar />
 
             <div className="form-container">

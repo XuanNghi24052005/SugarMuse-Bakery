@@ -10,44 +10,44 @@ const Footer = () => {
     <footer className="mocha-footer">
       <div className="mocha-footer-main">
         <section>
-          <strong>MOCHA</strong>
+          <strong>Sugar Muse</strong>
           <p>
-            Minimal clothing and everyday essentials designed for effortless,
-            modern living.
+            Artisan cakes, pastries &amp; breads baked fresh every morning —
+            crafted with love in Ho Chi Minh City.
           </p>
         </section>
         <section>
-          <h3>Shop</h3>
-          <Link to="/products?category=women">Women</Link>
-          <Link to="/products?category=men">Men</Link>
-          <Link to="/products?category=unisex">Unisex</Link>
-          <Link to="/products?category=essentials">Essentials</Link>
+          <h3>Our Menu</h3>
+          <Link to="/products?category=cake">Cake</Link>
+          <Link to="/products?category=pastry">Pastry</Link>
+          <Link to="/products?category=savory">Savory</Link>
+          <Link to="/products?category=combo">Combo</Link>
         </section>
         <section>
-          <h3>Customer care</h3>
+          <h3>Customer Care</h3>
           <Link to="/orders">My Orders</Link>
-          <Link to="/products">Shipping & Delivery</Link>
-          <Link to="/products">Returns & Exchanges</Link>
-          <Link to="/products">FAQ</Link>
+          <Link to="/products">Delivery Info</Link>
+          <Link to="/custom-cakes">Custom Cake Orders</Link>
+          <Link to="/contact">FAQ &amp; Contact</Link>
         </section>
         <section>
           <h3>Contact</h3>
           <p>
-            <EmailOutlinedIcon /> hello@mocha.store
+            <EmailOutlinedIcon /> hello@sugarmuse.vn
           </p>
           <p>
-            <PhoneOutlinedIcon /> 0900 000 000
+            <PhoneOutlinedIcon /> 0900 123 456
           </p>
           <p>
-            <LocationOnOutlinedIcon /> Ho Chi Minh City, Vietnam
+            <LocationOnOutlinedIcon /> District 1, Ho Chi Minh City
           </p>
         </section>
       </div>
       <div className="mocha-footer-bottom">
-        <span>© 2026 MOCHA. All rights reserved.</span>
+        <span>© 2026 Sugar Muse. All rights reserved.</span>
         <div>
           <Link to="/products">Privacy Policy</Link>
-          <Link to="/products">Terms & Conditions</Link>
+          <Link to="/products">Terms &amp; Conditions</Link>
           <Link to="/contact">Contact Us</Link>
         </div>
       </div>

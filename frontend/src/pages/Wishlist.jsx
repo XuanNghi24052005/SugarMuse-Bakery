@@ -55,7 +55,7 @@ const Wishlist = () => {
 
     return (
         <>
-            <PageTitle title="My Wishlist - MOCHA" />
+            <PageTitle title="My Wishlist - Sugar Muse" />
             <Navbar />
 
             <div className="wishlist-container">

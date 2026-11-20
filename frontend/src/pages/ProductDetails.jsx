@@ -99,9 +99,7 @@ const ProductDetails = () => {
             setSelectedImage(product.image[0].url)
         }
         if (product) {
-            const isEssential = product.category?.toLowerCase() === 'essentials'
-            const defaultSize = isEssential ? 'OS' : (product.sizes?.[0] || 'S')
-            setSelectedSize(defaultSize)
+            setSelectedSize('1')
         }
     }, [product])
 
@@ -131,20 +129,17 @@ const ProductDetails = () => {
         setQuantity(qty => qty - 1)
     }
 
-    const isEssential = product?.category?.toLowerCase() === 'essentials'
-    const availableSizes = isEssential ? ['OS'] : (product?.sizes?.length ? product.sizes : ['S', 'M', 'L', 'XL'])
-
+    // Bakery: quantity selector only, no clothing sizes
     const addToCart = () => {
         if (!product.stock || product.stock <= 0) {
             showToast.error('Product is out of stock!')
             return
         }
-        const finalSize = selectedSize || (isEssential ? 'OS' : 'S')
         dispatch(
           addItemsToCart({
             id,
             quantity,
-            size: finalSize,
+            size: 'OS',
             stock: product.stock,
             image: selectedImage || (product.image[0]?.url || ''),
           })
@@ -223,23 +218,6 @@ const ProductDetails = () => {
                                     {product.stock > 0 ? `In stock (${product.stock} available)` : 'Out Of Stock'}
                                 </span>
                                 {product.stock > 0 && (<>
-                                    <div className="product-size-container">
-                                        <label className="size-label">
-                                            Size: <strong className="selected-size-text">{selectedSize || (isEssential ? 'OS' : 'S')}</strong>
-                                        </label>
-                                        <div className="size-buttons-group">
-                                            {availableSizes.map((sz) => (
-                                                <button
-                                                    key={sz}
-                                                    type="button"
-                                                    className={`size-btn ${selectedSize === sz ? 'active' : ''}`}
-                                                    onClick={() => setSelectedSize(sz)}
-                                                >
-                                                    {sz}
-                                                </button>
-                                            ))}
-                                        </div>
-                                    </div>
                                     <div className="quantity-controls">
                                         <span className="quantity">Quantity:  </span>
                                         <button className="quantity-button" onClick={decreaseQuantity}>-</button>

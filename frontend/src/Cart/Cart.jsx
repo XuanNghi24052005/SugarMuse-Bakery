@@ -22,6 +22,7 @@ import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 const Cart = () => {
   const dispatch = useDispatch();
   const { cartItems } = useSelector((state) => state.cart);
+  const { isAuthenticated } = useSelector((state) => state.user);
   const {
     appliedCoupon,
     loading: couponLoading,
@@ -87,6 +88,11 @@ useEffect(() => {
   };
 
   const checkOutHandler = () => {
+    if (!isAuthenticated) {
+      showToast.error("Please login to continue checkout")
+      navigate("/login?redirect=/shipping")
+      return
+    }
     navigate("/shipping");
   };
 

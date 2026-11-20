@@ -130,7 +130,7 @@ const Addresses = () => {
 
     return (
         <>
-            <PageTitle title="My Saved Addresses - MOCHA" />
+            <PageTitle title="My Addresses - Sugar Muse" />
             <Navbar />
 
             <div className="addresses-container">

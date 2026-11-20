@@ -51,7 +51,7 @@ const Login = () => {
 
   return (
     <>
-      <PageTitle title="Sign In - MOCHA" />
+      <PageTitle title="Sign In - Sugar Muse" />
       <Navbar />
       <div className="form-container">
         <div className="form-content">

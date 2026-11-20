@@ -39,7 +39,7 @@ const ForgotPassword = () => {
 
     return (
         <>
-            <PageTitle title='Forgot Password - MOCHA' />
+            <PageTitle title='Forgot Password - Sugar Muse' />
             <Navbar />
 
             <div className='form-container'>

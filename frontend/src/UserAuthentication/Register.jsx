@@ -137,7 +137,7 @@ const Register = () => {
 
     return (
         <>
-            <PageTitle title="Sign Up - MOCHA" />
+            <PageTitle title="Sign Up - Sugar Muse" />
             <Navbar />
             <div className="form-container">
                 <div className="form-content">
