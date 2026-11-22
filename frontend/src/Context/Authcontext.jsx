@@ -10,9 +10,10 @@ const AuthContext = createContext(null);
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
     try {
-      const savedUser = localStorage.getItem(
-        "sugarMuseUser"
-      );
+      const savedUser =
+        localStorage.getItem(
+          "sugarMuseUser"
+        );
 
       return savedUser
         ? JSON.parse(savedUser)
@@ -47,64 +48,68 @@ export const AuthProvider = ({ children }) => {
       };
     }
 
-    const savedAccount =
-      localStorage.getItem(
-        "sugarMuseAccount"
-      );
+    try {
+      const savedAccount =
+        localStorage.getItem(
+          "sugarMuseAccount"
+        );
 
-    if (savedAccount) {
-      try {
-        const account =
-          JSON.parse(savedAccount);
-
-        if (
-          account.email.toLowerCase() !==
-            email.toLowerCase() ||
-          account.password !== password
-        ) {
-          return {
-            success: false,
-            message:
-              "Incorrect email or password.",
-          };
-        }
-
-        const loggedInUser = {
-          fullName:
-            account.fullName,
-          email:
-            account.email,
-          phone:
-            account.phone || "",
-        };
-
-        setUser(loggedInUser);
-
-        return {
-          success: true,
-          user: loggedInUser,
-        };
-      } catch {
+      if (!savedAccount) {
         return {
           success: false,
           message:
-            "Unable to sign in. Please try again.",
+            "No account found. Please create an account first.",
         };
       }
+
+      const account =
+        JSON.parse(savedAccount);
+
+      const emailMatches =
+        account.email
+          .trim()
+          .toLowerCase() ===
+        email
+          .trim()
+          .toLowerCase();
+
+      const passwordMatches =
+        account.password ===
+        password;
+
+      if (
+        !emailMatches ||
+        !passwordMatches
+      ) {
+        return {
+          success: false,
+          message:
+            "Incorrect email or password.",
+        };
+      }
+
+      const loggedInUser = {
+        fullName:
+          account.fullName,
+        email:
+          account.email,
+        phone:
+          account.phone || "",
+      };
+
+      setUser(loggedInUser);
+
+      return {
+        success: true,
+        user: loggedInUser,
+      };
+    } catch {
+      return {
+        success: false,
+        message:
+          "Unable to sign in. Please try again.",
+      };
     }
-
-    const sampleUser = {
-      fullName: "Muse",
-      email,
-      phone: "",
-    };
-
-    setUser(sampleUser);
-
-    return {
-      success: true,
-      user: sampleUser,
-    };
   };
 
   const register = ({
@@ -117,7 +122,8 @@ export const AuthProvider = ({ children }) => {
     if (
       !fullName ||
       !email ||
-      !password
+      !password ||
+      !confirmPassword
     ) {
       return {
         success: false,
@@ -137,7 +143,9 @@ export const AuthProvider = ({ children }) => {
       };
     }
 
-    if (password.length < 6) {
+    if (
+      password.length < 6
+    ) {
       return {
         success: false,
         message:
@@ -145,43 +153,63 @@ export const AuthProvider = ({ children }) => {
       };
     }
 
-    const account = {
-      fullName,
-      email,
-      phone,
-      password,
-    };
+    try {
+      const account = {
+        fullName:
+          fullName.trim(),
+        email:
+          email.trim(),
+        phone:
+          phone.trim(),
+        password,
+      };
 
-    localStorage.setItem(
-      "sugarMuseAccount",
-      JSON.stringify(account)
-    );
+      localStorage.setItem(
+        "sugarMuseAccount",
+        JSON.stringify(account)
+      );
 
-    const loggedInUser = {
-      fullName,
-      email,
-      phone,
-    };
+      const loggedInUser = {
+        fullName:
+          account.fullName,
+        email:
+          account.email,
+        phone:
+          account.phone,
+      };
 
-    setUser(loggedInUser);
+      setUser(loggedInUser);
 
-    return {
-      success: true,
-      user: loggedInUser,
-    };
+      return {
+        success: true,
+        user: loggedInUser,
+      };
+    } catch {
+      return {
+        success: false,
+        message:
+          "Unable to create your account.",
+      };
+    }
   };
 
   const logout = () => {
     setUser(null);
+
+    localStorage.removeItem(
+      "sugarMuseUser"
+    );
   };
 
   const updateUser = (
     updatedData
   ) => {
-    setUser((currentUser) => ({
-      ...currentUser,
+    const updatedUser = {
+      ...user,
       ...updatedData,
-    }));
+    };
+
+    setUser(updatedUser);
 
     try {
       const savedAccount =
@@ -189,18 +217,20 @@ export const AuthProvider = ({ children }) => {
           "sugarMuseAccount"
         );
 
-      if (savedAccount) {
-        const account =
-          JSON.parse(savedAccount);
-
-        localStorage.setItem(
-          "sugarMuseAccount",
-          JSON.stringify({
-            ...account,
-            ...updatedData,
-          })
-        );
+      if (!savedAccount) {
+        return;
       }
+
+      const account =
+        JSON.parse(savedAccount);
+
+      localStorage.setItem(
+        "sugarMuseAccount",
+        JSON.stringify({
+          ...account,
+          ...updatedData,
+        })
+      );
     } catch {
       return;
     }

@@ -16,8 +16,8 @@ const ForgotPassword = () => {
     useState("");
 
   const [
-    password,
-    setPassword,
+    newPassword,
+    setNewPassword,
   ] = useState("");
 
   const [
@@ -35,7 +35,10 @@ const ForgotPassword = () => {
 
     setError("");
 
-    if (!email.trim()) {
+    const enteredEmail =
+      email.trim().toLowerCase();
+
+    if (!enteredEmail) {
       setError(
         "Please enter your email address."
       );
@@ -51,7 +54,7 @@ const ForgotPassword = () => {
 
       if (!savedAccount) {
         setError(
-          "We couldn't find an account with this email."
+          "No Sugar Muse account was found. Please create an account first."
         );
 
         return;
@@ -62,14 +65,18 @@ const ForgotPassword = () => {
           savedAccount
         );
 
+      const accountEmail =
+        account?.email
+          ?.trim()
+          .toLowerCase();
+
       if (
-        account.email.toLowerCase() !==
-        email
-          .trim()
-          .toLowerCase()
+        !accountEmail ||
+        accountEmail !==
+          enteredEmail
       ) {
         setError(
-          "We couldn't find an account with this email."
+          "We couldn't find an account with this email address."
         );
 
         return;
@@ -78,7 +85,7 @@ const ForgotPassword = () => {
       setStep("reset");
     } catch {
       setError(
-        "Unable to verify your account."
+        "Unable to verify your account. Please try again."
       );
     }
   };
@@ -91,18 +98,18 @@ const ForgotPassword = () => {
     setError("");
 
     if (
-      !password ||
+      !newPassword ||
       !confirmPassword
     ) {
       setError(
-        "Please enter and confirm your new password."
+        "Please complete both password fields."
       );
 
       return;
     }
 
     if (
-      password.length < 6
+      newPassword.length < 6
     ) {
       setError(
         "Password must contain at least 6 characters."
@@ -112,7 +119,7 @@ const ForgotPassword = () => {
     }
 
     if (
-      password !==
+      newPassword !==
       confirmPassword
     ) {
       setError(
@@ -128,23 +135,40 @@ const ForgotPassword = () => {
           "sugarMuseAccount"
         );
 
+      if (!savedAccount) {
+        setError(
+          "Account information could not be found."
+        );
+
+        return;
+      }
+
       const account =
         JSON.parse(
           savedAccount
         );
 
+      const updatedAccount = {
+        ...account,
+        password:
+          newPassword,
+      };
+
       localStorage.setItem(
         "sugarMuseAccount",
-        JSON.stringify({
-          ...account,
-          password,
-        })
+        JSON.stringify(
+          updatedAccount
+        )
+      );
+
+      localStorage.removeItem(
+        "sugarMuseUser"
       );
 
       setStep("success");
     } catch {
       setError(
-        "Unable to reset your password."
+        "Unable to reset your password. Please try again."
       );
     }
   };
@@ -206,6 +230,7 @@ const ForgotPassword = () => {
                   id="forgot-email"
                   type="email"
                   value={email}
+                  placeholder="muse@example.com"
                   onChange={(
                     event
                   ) => {
@@ -216,7 +241,7 @@ const ForgotPassword = () => {
 
                     setError("");
                   }}
-                  placeholder="muse@example.com"
+                  required
                 />
               </div>
 
@@ -250,8 +275,8 @@ const ForgotPassword = () => {
             </h1>
 
             <p className="forgot-description">
-              Create a new password
-              for{" "}
+              Create a new
+              password for{" "}
               <strong>
                 {email}
               </strong>
@@ -265,41 +290,43 @@ const ForgotPassword = () => {
               }
             >
               <div className="forgot-field">
-                <label htmlFor="new-password">
+                <label htmlFor="forgot-new-password">
                   New Password
                 </label>
 
                 <input
-                  id="new-password"
+                  id="forgot-new-password"
                   type="password"
                   value={
-                    password
+                    newPassword
                   }
+                  placeholder="Enter new password"
                   onChange={(
                     event
                   ) => {
-                    setPassword(
+                    setNewPassword(
                       event.target
                         .value
                     );
 
                     setError("");
                   }}
-                  placeholder="Enter new password"
+                  required
                 />
               </div>
 
               <div className="forgot-field">
-                <label htmlFor="confirm-new-password">
+                <label htmlFor="forgot-confirm-password">
                   Confirm Password
                 </label>
 
                 <input
-                  id="confirm-new-password"
+                  id="forgot-confirm-password"
                   type="password"
                   value={
                     confirmPassword
                   }
+                  placeholder="Confirm new password"
                   onChange={(
                     event
                   ) => {
@@ -310,7 +337,7 @@ const ForgotPassword = () => {
 
                     setError("");
                   }}
-                  placeholder="Confirm new password"
+                  required
                 />
               </div>
 
@@ -350,7 +377,10 @@ const ForgotPassword = () => {
             <p>
               Your password has
               been changed
-              successfully.
+              successfully. You
+              can now sign in
+              with your new
+              password.
             </p>
 
             <button

@@ -459,12 +459,12 @@ const Auth = () => {
                     </span>
                   </label>
 
-                  <button
-                    type="button"
+                  <Link
+                    to="/forgot-password"
                     className="auth-forgot"
-                  >
+                    >
                     Forgot Password?
-                  </button>
+                    </Link>
                 </div>
               )}
 
