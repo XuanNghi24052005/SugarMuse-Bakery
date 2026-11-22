@@ -13,6 +13,7 @@ import {
 } from "../Context/Authcontext";
 
 import "../pageStyles/Account.css";
+import AccountWishlist from "../components/AccountWishlist";
 
 const UserIcon = () => (
   <svg
@@ -721,14 +722,13 @@ const Account = () => {
 
               <div className="account-profile-layout">
                 <div className="account-profile-visual">
-                  <div className="account-profile-art">
-                    <div className="account-art-shape" />
-
+                <div className="account-profile-circle">
                     <img
-                      src="/images/products/peach-cake.jpg"
-                      alt="Peach cake"
+                    src="/images/products/peach-cake.jpg"
+                    alt="Sugar Muse cake"
+                    className="account-profile-cake"
                     />
-                  </div>
+                </div>
                 </div>
 
                 <form
