@@ -1,12 +1,21 @@
 import React, { useState } from "react";
+
 import {
   Link,
   useNavigate,
 } from "react-router-dom";
 
-import { useCart } from "../Context/Cartcontext";
-import { useWishlist } from "../Context/Wishlistcontext";
-import { useAuth } from "../Context/Authcontext";
+import {
+  useCart,
+} from "../Context/Cartcontext";
+
+import {
+  useWishlist,
+} from "../Context/Wishlistcontext";
+
+import {
+  useAuth,
+} from "../Context/Authcontext";
 
 import "../pageStyles/Navbar.css";
 
@@ -20,7 +29,12 @@ const SearchIcon = () => (
     strokeLinejoin="round"
     aria-hidden="true"
   >
-    <circle cx="11" cy="11" r="7" />
+    <circle
+      cx="11"
+      cy="11"
+      r="7"
+    />
+
     <path d="m20 20-3.5-3.5" />
   </svg>
 );
@@ -35,7 +49,12 @@ const UserIcon = () => (
     strokeLinejoin="round"
     aria-hidden="true"
   >
-    <circle cx="12" cy="8" r="4" />
+    <circle
+      cx="12"
+      cy="8"
+      r="4"
+    />
+
     <path d="M4.5 21a7.5 7.5 0 0 1 15 0" />
   </svg>
 );
@@ -64,14 +83,26 @@ const CartIcon = () => (
     strokeLinejoin="round"
     aria-hidden="true"
   >
-    <circle cx="9" cy="20" r="1" />
-    <circle cx="18" cy="20" r="1" />
+    <circle
+      cx="9"
+      cy="20"
+      r="1"
+    />
+
+    <circle
+      cx="18"
+      cy="20"
+      r="1"
+    />
+
     <path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L20 7H6" />
   </svg>
 );
 
 const Navbar = () => {
-  const { cartCount } = useCart();
+  const {
+    cartCount,
+  } = useCart();
 
   const {
     wishlistCount,
@@ -81,7 +112,8 @@ const Navbar = () => {
     isAuthenticated,
   } = useAuth();
 
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
   const [
     searchValue,
@@ -242,7 +274,9 @@ const Navbar = () => {
 
             {cartCount > 0 && (
               <span className="cart-badge">
-                {cartCount}
+                {
+                  cartCount
+                }
               </span>
             )}
           </Link>

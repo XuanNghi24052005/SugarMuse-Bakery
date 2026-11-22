@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-import Auth from "./pages/Auth";
+
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
@@ -15,7 +15,9 @@ import NewCollection from "./pages/NewCollection";
 import Cart from "./pages/Cart";
 import Wishlist from "./pages/Wishlist";
 import Account from "./pages/Account";
+import Auth from "./pages/Auth";
 import Checkout from "./pages/Checkout";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function App() {
   return (
@@ -32,10 +34,6 @@ function App() {
           path="/products"
           element={<Products />}
         />
-        <Route
-          path="/checkout"
-          element={<Checkout />}
-        />
 
         <Route
           path="/product/:id"
@@ -48,8 +46,8 @@ function App() {
         />
 
         <Route
-          path="/login"
-          element={<Auth />}
+          path="/forgot-password"
+          element={<ForgotPassword />}
         />
 
         <Route
@@ -73,8 +71,18 @@ function App() {
         />
 
         <Route
+          path="/login"
+          element={<Auth />}
+        />
+
+        <Route
           path="/account"
           element={<Account />}
+        />
+
+        <Route
+          path="/checkout"
+          element={<Checkout />}
         />
       </Routes>
     </>

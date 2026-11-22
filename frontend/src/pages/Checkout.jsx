@@ -3,13 +3,19 @@ import React, {
   useMemo,
   useState,
 } from "react";
+
 import {
   Link,
   useNavigate,
 } from "react-router-dom";
 
-import { useCart } from "../Context/Cartcontext";
-import { useAuth } from "../Context/Authcontext";
+import {
+  useCart,
+} from "../Context/Cartcontext";
+
+import {
+  useAuth,
+} from "../Context/Authcontext";
 
 import "../pageStyles/Checkout.css";
 
@@ -45,6 +51,7 @@ const LockIcon = () => (
       height="11"
       rx="2"
     />
+
     <path d="M8 10V7a4 4 0 0 1 8 0v3" />
   </svg>
 );
@@ -66,6 +73,7 @@ const CardIcon = () => (
       height="14"
       rx="2"
     />
+
     <path d="M2 10h20" />
   </svg>
 );
@@ -87,11 +95,13 @@ const CashIcon = () => (
       height="12"
       rx="2"
     />
+
     <circle
       cx="12"
       cy="12"
       r="2.5"
     />
+
     <path d="M7 9H5v2" />
     <path d="M17 15h2v-2" />
   </svg>
@@ -109,60 +119,126 @@ const Checkout = () => {
     isAuthenticated,
   } = useAuth();
 
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
-  const [paymentMethod, setPaymentMethod] =
-    useState("cash");
+  const [
+    paymentMethod,
+    setPaymentMethod,
+  ] = useState("cash");
 
-  const [submitted, setSubmitted] =
-    useState(false);
+  const [
+    submitted,
+    setSubmitted,
+  ] = useState(false);
 
-  const [formData, setFormData] =
-    useState({
-      fullName: "",
-      email: "",
-      phone: "",
-      address: "",
-      city: "",
-      district: "",
-      note: "",
-    });
+  const [
+    placedOrder,
+    setPlacedOrder,
+  ] = useState(null);
+
+  const [
+    formData,
+    setFormData,
+  ] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    address: "",
+    city: "",
+    district: "",
+    note: "",
+  });
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate(
-        "/login?redirect=/checkout"
-      );
-
+      navigate("/login");
       return;
     }
 
-    setFormData((current) => ({
-      ...current,
-      fullName:
-        user?.fullName || "",
-      email:
-        user?.email || "",
-      phone:
-        user?.phone || "",
-    }));
+    let defaultAddress = null;
+
+    try {
+      const savedAddresses =
+        localStorage.getItem(
+          "sugarMuseAddresses"
+        );
+
+      const addresses =
+        savedAddresses
+          ? JSON.parse(
+              savedAddresses
+            )
+          : [];
+
+      defaultAddress =
+        addresses.find(
+          (item) =>
+            item.isDefault
+        ) ||
+        addresses[0] ||
+        null;
+    } catch {
+      defaultAddress = null;
+    }
+
+    setFormData(
+      (current) => ({
+        ...current,
+
+        fullName:
+          defaultAddress
+            ?.fullName ||
+          user?.fullName ||
+          "",
+
+        email:
+          user?.email ||
+          "",
+
+        phone:
+          defaultAddress
+            ?.phone ||
+          user?.phone ||
+          "",
+
+        address:
+          defaultAddress
+            ?.address ||
+          "",
+
+        city:
+          defaultAddress
+            ?.city ||
+          "",
+
+        district:
+          defaultAddress
+            ?.district ||
+          "",
+      })
+    );
   }, [
     isAuthenticated,
     navigate,
     user,
   ]);
 
+  const subtotal =
+    Number(cartTotal) || 0;
+
   const shippingFee =
-    cartItems.length > 0
-      ? 5
-      : 0;
+    subtotal === 0 ||
+    subtotal >= 60
+      ? 0
+      : 4;
 
   const total = useMemo(
     () =>
-      Number(cartTotal) +
+      subtotal +
       shippingFee,
     [
-      cartTotal,
+      subtotal,
       shippingFee,
     ]
   );
@@ -175,10 +251,12 @@ const Checkout = () => {
       value,
     } = event.target;
 
-    setFormData((current) => ({
-      ...current,
-      [name]: value,
-    }));
+    setFormData(
+      (current) => ({
+        ...current,
+        [name]: value,
+      })
+    );
   };
 
   const handleSubmit = (
@@ -187,33 +265,95 @@ const Checkout = () => {
     event.preventDefault();
 
     if (
-      !formData.fullName ||
-      !formData.email ||
-      !formData.phone ||
-      !formData.address
+      !formData.fullName.trim() ||
+      !formData.email.trim() ||
+      !formData.phone.trim() ||
+      !formData.address.trim()
     ) {
       return;
     }
 
-    setSubmitted(true);
+    if (
+      cartItems.length === 0
+    ) {
+      return;
+    }
 
-    localStorage.setItem(
-      "sugarMuseLastOrder",
-      JSON.stringify({
-        customer:
-          formData,
-        items:
-          cartItems,
-        subtotal:
-          cartTotal,
-        shipping:
-          shippingFee,
-        total,
-        paymentMethod,
-        createdAt:
-          new Date().toISOString(),
-      })
+    const newOrder = {
+      id: `SM${Date.now()}`,
+
+      customer: {
+        fullName:
+          formData.fullName,
+        email:
+          formData.email,
+        phone:
+          formData.phone,
+        address:
+          formData.address,
+        city:
+          formData.city,
+        district:
+          formData.district,
+        note:
+          formData.note,
+      },
+
+      items:
+        cartItems.map(
+          (item) => ({
+            ...item,
+          })
+        ),
+
+      subtotal,
+      shipping:
+        shippingFee,
+      total,
+
+      paymentMethod,
+
+      status:
+        "Preparing",
+
+      createdAt:
+        new Date().toISOString(),
+    };
+
+    try {
+      const savedOrders =
+        localStorage.getItem(
+          "sugarMuseOrders"
+        );
+
+      const existingOrders =
+        savedOrders
+          ? JSON.parse(
+              savedOrders
+            )
+          : [];
+
+      localStorage.setItem(
+        "sugarMuseOrders",
+        JSON.stringify([
+          newOrder,
+          ...existingOrders,
+        ])
+      );
+    } catch {
+      localStorage.setItem(
+        "sugarMuseOrders",
+        JSON.stringify([
+          newOrder,
+        ])
+      );
+    }
+
+    setPlacedOrder(
+      newOrder
     );
+
+    setSubmitted(true);
 
     clearCart();
   };
@@ -237,15 +377,42 @@ const Checkout = () => {
           <h1>
             Thank You,
             <em>
-              {formData.fullName}!
+              {
+                formData.fullName
+              }!
             </em>
           </h1>
 
           <p>
-            Your Sugar Muse order has been received.
-            We&apos;ll begin preparing your treats with
-            a little extra love.
+            Your Sugar Muse
+            order has been
+            received. We&apos;ll
+            begin preparing your
+            treats with a little
+            extra love.
           </p>
+
+          {placedOrder && (
+            <div className="checkout-success-order">
+              <span>
+                ORDER NUMBER
+              </span>
+
+              <strong>
+                #
+                {
+                  placedOrder.id
+                }
+              </strong>
+
+              <small>
+                Total: $
+                {Number(
+                  placedOrder.total
+                ).toFixed(2)}
+              </small>
+            </div>
+          )}
 
           <div className="checkout-success-actions">
             <Link
@@ -253,6 +420,7 @@ const Checkout = () => {
               className="checkout-primary-button"
             >
               Continue Shopping
+
               <ArrowIcon />
             </Link>
 
@@ -268,7 +436,9 @@ const Checkout = () => {
     );
   }
 
-  if (cartItems.length === 0) {
+  if (
+    cartItems.length === 0
+  ) {
     return (
       <main className="checkout-page">
         <section className="checkout-empty">
@@ -284,8 +454,10 @@ const Checkout = () => {
           </h1>
 
           <p>
-            Your cart is currently empty.
-            Add something sweet before checking out.
+            Your cart is
+            currently empty. Add
+            something sweet before
+            checking out.
           </p>
 
           <Link
@@ -293,6 +465,7 @@ const Checkout = () => {
             className="checkout-primary-button"
           >
             Shop Our Bakes
+
             <ArrowIcon />
           </Link>
         </section>
@@ -315,7 +488,8 @@ const Checkout = () => {
         </h1>
 
         <p>
-          Complete your delivery details and we&apos;ll
+          Complete your delivery
+          details and we&apos;ll
           take care of the rest.
         </p>
       </section>
@@ -335,11 +509,14 @@ const Checkout = () => {
 
               <div>
                 <h2>
-                  Contact Information
+                  Contact
+                  Information
                 </h2>
 
                 <p>
-                  We&apos;ll use these details for your order.
+                  We&apos;ll use
+                  these details for
+                  your order.
                 </p>
               </div>
             </div>
@@ -416,7 +593,9 @@ const Checkout = () => {
                 </h2>
 
                 <p>
-                  Where should we send your sweet order?
+                  Where should we
+                  send your sweet
+                  order?
                 </p>
               </div>
             </div>
@@ -513,7 +692,9 @@ const Checkout = () => {
                 </h2>
 
                 <p>
-                  Choose how you&apos;d like to pay.
+                  Choose how
+                  you&apos;d like
+                  to pay.
                 </p>
               </div>
             </div>
@@ -522,7 +703,8 @@ const Checkout = () => {
               <button
                 type="button"
                 className={
-                  paymentMethod === "cash"
+                  paymentMethod ===
+                  "cash"
                     ? "checkout-payment active"
                     : "checkout-payment"
                 }
@@ -542,7 +724,8 @@ const Checkout = () => {
                   </strong>
 
                   <small>
-                    Pay when your order arrives
+                    Pay when your
+                    order arrives
                   </small>
                 </span>
 
@@ -552,7 +735,8 @@ const Checkout = () => {
               <button
                 type="button"
                 className={
-                  paymentMethod === "card"
+                  paymentMethod ===
+                  "card"
                     ? "checkout-payment active"
                     : "checkout-payment"
                 }
@@ -572,7 +756,8 @@ const Checkout = () => {
                   </strong>
 
                   <small>
-                    Credit or debit card
+                    Credit or debit
+                    card
                   </small>
                 </span>
 
@@ -641,7 +826,9 @@ const Checkout = () => {
                         product.price
                       ) *
                       product.quantity
-                    ).toFixed(2)}
+                    ).toFixed(
+                      2
+                    )}
                   </b>
                 </div>
               )
@@ -657,9 +844,9 @@ const Checkout = () => {
 
             <strong>
               $
-              {Number(
-                cartTotal
-              ).toFixed(2)}
+              {subtotal.toFixed(
+                2
+              )}
             </strong>
           </div>
 
@@ -669,12 +856,29 @@ const Checkout = () => {
             </span>
 
             <strong>
-              $
-              {shippingFee.toFixed(
-                2
-              )}
+              {shippingFee === 0
+                ? "Free"
+                : `$${shippingFee.toFixed(
+                    2
+                  )}`}
             </strong>
           </div>
+
+          {subtotal > 0 &&
+            subtotal < 60 && (
+              <div className="checkout-free-shipping-note">
+                Add{" "}
+                <strong>
+                  $
+                  {(
+                    60 -
+                    subtotal
+                  ).toFixed(2)}
+                </strong>{" "}
+                more for free
+                delivery.
+              </div>
+            )}
 
           <div className="checkout-summary-total">
             <span>

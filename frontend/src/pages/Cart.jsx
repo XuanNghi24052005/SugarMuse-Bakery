@@ -1,7 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
 
 import { useCart } from "../Context/Cartcontext";
+import { useAuth } from "../Context/Authcontext";
 
 const Cart = () => {
   const {
@@ -12,6 +16,21 @@ const Cart = () => {
     removeFromCart,
     clearCart,
   } = useCart();
+
+  const {
+    isAuthenticated,
+  } = useAuth();
+
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    if (!isAuthenticated) {
+      navigate("/login");
+      return;
+    }
+
+    navigate("/checkout");
+  };
 
   if (cartItems.length === 0) {
     return (
@@ -404,7 +423,7 @@ const Cart = () => {
                   fontSize: "14px",
                 }}
               >
-                ${cartTotal.toFixed(2)}
+                ${Number(cartTotal).toFixed(2)}
               </strong>
             </div>
 
@@ -464,12 +483,13 @@ const Cart = () => {
                   fontWeight: "400",
                 }}
               >
-                ${cartTotal.toFixed(2)}
+                ${Number(cartTotal).toFixed(2)}
               </strong>
             </div>
 
             <button
               type="button"
+              onClick={handleCheckout}
               style={{
                 width: "100%",
                 minHeight: "48px",

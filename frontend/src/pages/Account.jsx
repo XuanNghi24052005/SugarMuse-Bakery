@@ -1,7 +1,16 @@
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, {
+  useEffect,
+  useState,
+} from "react";
 
-import { useAuth } from "../Context/Authcontext";
+import {
+  Link,
+  useNavigate,
+} from "react-router-dom";
+
+import {
+  useAuth,
+} from "../Context/Authcontext";
 
 import "../pageStyles/Account.css";
 
@@ -106,77 +115,426 @@ const Account = () => {
 
   const navigate = useNavigate();
 
-  const [activeSection, setActiveSection] =
-    useState("profile");
+  const [
+    activeSection,
+    setActiveSection,
+  ] = useState("profile");
 
-  const [formData, setFormData] = useState({
+  const [
+    formData,
+    setFormData,
+  ] = useState({
+    fullName: "Muse",
+    email: "muse@sugarmuse.com",
+    phone: "+1 (234) 567-8901",
+  });
+
+  const [
+    profileSaved,
+    setProfileSaved,
+  ] = useState(false);
+
+  const [
+    addresses,
+    setAddresses,
+  ] = useState(() => {
+    try {
+      const savedAddresses =
+        localStorage.getItem(
+          "sugarMuseAddresses"
+        );
+
+      return savedAddresses
+        ? JSON.parse(
+            savedAddresses
+          )
+        : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [
+    orders,
+    setOrders,
+  ] = useState(() => {
+    try {
+      const savedOrders =
+        localStorage.getItem(
+          "sugarMuseOrders"
+        );
+
+      return savedOrders
+        ? JSON.parse(
+            savedOrders
+          )
+        : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [
+    showAddressForm,
+    setShowAddressForm,
+  ] = useState(false);
+
+  const [
+    editingAddressId,
+    setEditingAddressId,
+  ] = useState(null);
+
+  const [
+    addressForm,
+    setAddressForm,
+  ] = useState({
     fullName: "",
-    email: "",
     phone: "",
+    address: "",
+    city: "",
+    district: "",
+    isDefault: false,
   });
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      navigate("/login");
-      return;
-    }
-
-    setFormData({
-      fullName: user?.fullName || "",
-      email: user?.email || "",
-      phone: user?.phone || "",
-    });
-  }, [
-    isAuthenticated,
-    user,
-    navigate,
-  ]);
-
-  if (!isAuthenticated) {
-    return null;
+  if (!user) {
+    return;
   }
 
+  setFormData({
+    fullName:
+      user.fullName || "",
+    email:
+      user.email || "",
+    phone:
+      user.phone || "",
+  });
+}, [user]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "sugarMuseAddresses",
+      JSON.stringify(
+        addresses
+      )
+    );
+  }, [addresses]);
+
   const displayName =
-    user?.fullName || "Muse";
+    user?.fullName?.trim() ||
+    "Muse";
 
   const firstLetter =
     displayName
-      .trim()
       .charAt(0)
       .toUpperCase() || "M";
 
-  const handleChange = (event) => {
+  const handleChange = (
+    event
+  ) => {
     const {
       name,
       value,
     } = event.target;
 
-    setFormData((current) => ({
-      ...current,
-      [name]: value,
-    }));
+    setFormData(
+      (current) => ({
+        ...current,
+        [name]: value,
+      })
+    );
+
+    setProfileSaved(false);
   };
 
-  const handleSave = (event) => {
+  const handleSave = (
+    event
+  ) => {
     event.preventDefault();
 
-    updateUser(formData);
+    if (isAuthenticated) {
+      updateUser({
+        fullName:
+          formData.fullName,
+        email:
+          formData.email,
+        phone:
+          formData.phone,
+      });
+    }
+
+    setProfileSaved(true);
   };
 
   const handleCancel = () => {
     setFormData({
       fullName:
-        user?.fullName || "",
+        user?.fullName ||
+        "Muse",
       email:
-        user?.email || "",
+        user?.email ||
+        "muse@sugarmuse.com",
       phone:
-        user?.phone || "",
+        user?.phone ||
+        "+1 (234) 567-8901",
     });
+
+    setProfileSaved(false);
   };
 
   const handleLogout = () => {
-    logout();
+    if (isAuthenticated) {
+      logout();
+    }
+
     navigate("/");
+  };
+
+  const handleAddressChange = (
+    event
+  ) => {
+    const {
+      name,
+      value,
+      type,
+      checked,
+    } = event.target;
+
+    setAddressForm(
+      (current) => ({
+        ...current,
+        [name]:
+          type ===
+          "checkbox"
+            ? checked
+            : value,
+      })
+    );
+  };
+
+  const resetAddressForm =
+    () => {
+      setAddressForm({
+        fullName:
+          user?.fullName ||
+          "Muse",
+        phone:
+          user?.phone ||
+          "+1 (234) 567-8901",
+        address: "",
+        city: "",
+        district: "",
+        isDefault: false,
+      });
+
+      setEditingAddressId(
+        null
+      );
+
+      setShowAddressForm(
+        false
+      );
+    };
+
+  const handleAddAddress =
+    () => {
+      setAddressForm({
+        fullName:
+          user?.fullName ||
+          "Muse",
+        phone:
+          user?.phone ||
+          "+1 (234) 567-8901",
+        address: "",
+        city: "",
+        district: "",
+        isDefault:
+          addresses.length ===
+          0,
+      });
+
+      setEditingAddressId(
+        null
+      );
+
+      setShowAddressForm(
+        true
+      );
+    };
+
+  const handleSaveAddress = (
+    event
+  ) => {
+    event.preventDefault();
+
+    if (
+      !addressForm.fullName.trim() ||
+      !addressForm.phone.trim() ||
+      !addressForm.address.trim()
+    ) {
+      return;
+    }
+
+    if (editingAddressId) {
+      setAddresses(
+        (current) =>
+          current.map(
+            (item) => {
+              if (
+                addressForm.isDefault &&
+                item.id !==
+                  editingAddressId
+              ) {
+                return {
+                  ...item,
+                  isDefault:
+                    false,
+                };
+              }
+
+              if (
+                item.id ===
+                editingAddressId
+              ) {
+                return {
+                  ...addressForm,
+                  id:
+                    editingAddressId,
+                };
+              }
+
+              return item;
+            }
+          )
+      );
+    } else {
+      const newAddress = {
+        ...addressForm,
+        id: Date.now(),
+      };
+
+      setAddresses(
+        (current) => {
+          const updated =
+            addressForm.isDefault
+              ? current.map(
+                  (item) => ({
+                    ...item,
+                    isDefault:
+                      false,
+                  })
+                )
+              : current;
+
+          return [
+            ...updated,
+            newAddress,
+          ];
+        }
+      );
+    }
+
+    resetAddressForm();
+  };
+
+  const handleEditAddress = (
+    address
+  ) => {
+    setAddressForm({
+      fullName:
+        address.fullName,
+      phone:
+        address.phone,
+      address:
+        address.address,
+      city:
+        address.city || "",
+      district:
+        address.district ||
+        "",
+      isDefault:
+        Boolean(
+          address.isDefault
+        ),
+    });
+
+    setEditingAddressId(
+      address.id
+    );
+
+    setShowAddressForm(
+      true
+    );
+  };
+
+  const handleDeleteAddress = (
+    addressId
+  ) => {
+    setAddresses(
+      (current) => {
+        const target =
+          current.find(
+            (item) =>
+              item.id ===
+              addressId
+          );
+
+        const remaining =
+          current.filter(
+            (item) =>
+              item.id !==
+              addressId
+          );
+
+        if (
+          target?.isDefault &&
+          remaining.length > 0
+        ) {
+          return remaining.map(
+            (
+              item,
+              index
+            ) => ({
+              ...item,
+              isDefault:
+                index === 0,
+            })
+          );
+        }
+
+        return remaining;
+      }
+    );
+  };
+
+  const handleSetDefaultAddress =
+    (addressId) => {
+      setAddresses(
+        (current) =>
+          current.map(
+            (item) => ({
+              ...item,
+              isDefault:
+                item.id ===
+                addressId,
+            })
+          )
+      );
+    };
+
+  const formatOrderDate = (
+    date
+  ) => {
+    return new Intl.DateTimeFormat(
+      "en-US",
+      {
+        month: "short",
+        day: "2-digit",
+        year: "numeric",
+      }
+    ).format(
+      new Date(date)
+    );
   };
 
   return (
@@ -204,7 +562,9 @@ const Account = () => {
           </h1>
 
           <p>
-            Manage your profile, orders and favorite treats in one place.
+            Manage your profile,
+            orders and favorite
+            treats in one place.
           </p>
         </div>
       </section>
@@ -230,12 +590,15 @@ const Account = () => {
             </h2>
 
             <p>
-              {user?.email}
+              {user?.email ||
+                "muse@sugarmuse.com"}
             </p>
 
             <div className="account-user-divider">
               <span />
+
               <HeartIcon />
+
               <span />
             </div>
           </div>
@@ -244,7 +607,8 @@ const Account = () => {
             <button
               type="button"
               className={
-                activeSection === "profile"
+                activeSection ===
+                "profile"
                   ? "account-menu-item active"
                   : "account-menu-item"
               }
@@ -255,6 +619,7 @@ const Account = () => {
               }
             >
               <UserIcon />
+
               <span>
                 My Profile
               </span>
@@ -263,7 +628,8 @@ const Account = () => {
             <button
               type="button"
               className={
-                activeSection === "orders"
+                activeSection ===
+                "orders"
                   ? "account-menu-item active"
                   : "account-menu-item"
               }
@@ -274,6 +640,7 @@ const Account = () => {
               }
             >
               <OrderIcon />
+
               <span>
                 My Orders
               </span>
@@ -284,6 +651,7 @@ const Account = () => {
               className="account-menu-item"
             >
               <HeartIcon />
+
               <span>
                 My Wishlist
               </span>
@@ -292,17 +660,27 @@ const Account = () => {
             <button
               type="button"
               className={
-                activeSection === "addresses"
+                activeSection ===
+                "addresses"
                   ? "account-menu-item active"
                   : "account-menu-item"
               }
-              onClick={() =>
+              onClick={() => {
                 setActiveSection(
                   "addresses"
-                )
-              }
+                );
+
+                setShowAddressForm(
+                  false
+                );
+
+                setEditingAddressId(
+                  null
+                );
+              }}
             >
               <LocationIcon />
+
               <span>
                 Addresses
               </span>
@@ -336,7 +714,8 @@ const Account = () => {
                 </h2>
 
                 <p>
-                  View and update your account details.
+                  View and update your
+                  account details.
                 </p>
               </div>
 
@@ -373,6 +752,7 @@ const Account = () => {
                       onChange={
                         handleChange
                       }
+                      required
                     />
                   </div>
 
@@ -391,6 +771,7 @@ const Account = () => {
                       onChange={
                         handleChange
                       }
+                      required
                     />
                   </div>
 
@@ -401,7 +782,7 @@ const Account = () => {
 
                     <input
                       id="account-phone"
-                      type="text"
+                      type="tel"
                       name="phone"
                       value={
                         formData.phone
@@ -411,6 +792,13 @@ const Account = () => {
                       }
                     />
                   </div>
+
+                  {profileSaved && (
+                    <div className="account-profile-success">
+                      Your profile has
+                      been updated.
+                    </div>
+                  )}
 
                   <div className="account-form-actions">
                     <button
@@ -437,43 +825,530 @@ const Account = () => {
 
           {activeSection ===
             "orders" && (
-            <div className="account-simple-section">
-              <span>
-                MY ORDERS
-              </span>
+            <div className="account-orders-section">
+              <div className="account-address-header">
+                <div>
+                  <span>
+                    MY ORDERS
+                  </span>
 
-              <h2>
-                Your Orders
-              </h2>
+                  <h2>
+                    Order History
+                  </h2>
 
-              <p>
-                Your recent Sugar Muse orders will appear here.
-              </p>
+                  <p>
+                    Track and review
+                    your Sugar Muse
+                    orders.
+                  </p>
+                </div>
+              </div>
 
-              <Link to="/products">
-                Continue Shopping
-              </Link>
+              {orders.length ===
+              0 ? (
+                <div className="account-orders-empty">
+                  <div className="account-orders-icon">
+                    <OrderIcon />
+                  </div>
+
+                  <h3>
+                    No orders yet
+                  </h3>
+
+                  <p>
+                    Your Sugar Muse
+                    orders will appear
+                    here once you place
+                    your first order.
+                  </p>
+
+                  <Link to="/products">
+                    Start Shopping
+                  </Link>
+                </div>
+              ) : (
+                <div className="account-order-list">
+                  {orders.map(
+                    (order) => (
+                      <article
+                        className="account-order-card"
+                        key={
+                          order.id
+                        }
+                      >
+                        <div className="account-order-top">
+                          <div>
+                            <span>
+                              ORDER
+                            </span>
+
+                            <h3>
+                              #
+                              {
+                                order.id
+                              }
+                            </h3>
+                          </div>
+
+                          <span className="account-order-status">
+                            {
+                              order.status
+                            }
+                          </span>
+                        </div>
+
+                        <div className="account-order-meta">
+                          <div>
+                            <span>
+                              Order Date
+                            </span>
+
+                            <strong>
+                              {formatOrderDate(
+                                order.createdAt
+                              )}
+                            </strong>
+                          </div>
+
+                          <div>
+                            <span>
+                              Items
+                            </span>
+
+                            <strong>
+                              {order.items.reduce(
+                                (
+                                  totalQuantity,
+                                  item
+                                ) =>
+                                  totalQuantity +
+                                  item.quantity,
+                                0
+                              )}
+                            </strong>
+                          </div>
+
+                          <div>
+                            <span>
+                              Payment
+                            </span>
+
+                            <strong>
+                              {order.paymentMethod ===
+                              "cash"
+                                ? "Cash on Delivery"
+                                : "Card Payment"}
+                            </strong>
+                          </div>
+
+                          <div>
+                            <span>
+                              Total
+                            </span>
+
+                            <strong>
+                              $
+                              {Number(
+                                order.total
+                              ).toFixed(
+                                2
+                              )}
+                            </strong>
+                          </div>
+                        </div>
+
+                        <div className="account-order-products">
+                          {order.items.map(
+                            (
+                              product
+                            ) => (
+                              <div
+                                className="account-order-product"
+                                key={
+                                  product._id
+                                }
+                              >
+                                <img
+                                  src={
+                                    product.image
+                                  }
+                                  alt={
+                                    product.name
+                                  }
+                                />
+
+                                <div>
+                                  <strong>
+                                    {
+                                      product.name
+                                    }
+                                  </strong>
+
+                                  <span>
+                                    Qty{" "}
+                                    {
+                                      product.quantity
+                                    }
+                                  </span>
+                                </div>
+
+                                <b>
+                                  $
+                                  {(
+                                    Number(
+                                      product.price
+                                    ) *
+                                    product.quantity
+                                  ).toFixed(
+                                    2
+                                  )}
+                                </b>
+                              </div>
+                            )
+                          )}
+                        </div>
+
+                        <div className="account-order-bottom">
+                          <div>
+                            <span>
+                              Deliver to
+                            </span>
+
+                            <p>
+                              {
+                                order.customer
+                                  ?.address
+                              }
+
+                              {order.customer
+                                ?.district &&
+                                `, ${order.customer.district}`}
+
+                              {order.customer
+                                ?.city &&
+                                `, ${order.customer.city}`}
+                            </p>
+                          </div>
+
+                          <Link to="/products">
+                            Buy Again
+                          </Link>
+                        </div>
+                      </article>
+                    )
+                  )}
+                </div>
+              )}
             </div>
           )}
 
           {activeSection ===
             "addresses" && (
-            <div className="account-simple-section">
-              <span>
-                DELIVERY DETAILS
-              </span>
+            <div className="account-address-section">
+              <div className="account-address-header">
+                <div>
+                  <span>
+                    DELIVERY DETAILS
+                  </span>
 
-              <h2>
-                Your Addresses
-              </h2>
+                  <h2>
+                    My Addresses
+                  </h2>
 
-              <p>
-                Save your delivery addresses for a faster checkout.
-              </p>
+                  <p>
+                    Save your delivery
+                    addresses for a
+                    faster checkout.
+                  </p>
+                </div>
 
-              <button type="button">
-                Add New Address
-              </button>
+                {!showAddressForm && (
+                  <button
+                    type="button"
+                    className="account-add-address"
+                    onClick={
+                      handleAddAddress
+                    }
+                  >
+                    + Add New Address
+                  </button>
+                )}
+              </div>
+
+              {showAddressForm ? (
+                <form
+                  className="account-address-form"
+                  onSubmit={
+                    handleSaveAddress
+                  }
+                >
+                  <div className="account-address-form-grid">
+                    <div className="account-field">
+                      <label htmlFor="address-name">
+                        Full Name
+                      </label>
+
+                      <input
+                        id="address-name"
+                        type="text"
+                        name="fullName"
+                        value={
+                          addressForm.fullName
+                        }
+                        onChange={
+                          handleAddressChange
+                        }
+                        required
+                      />
+                    </div>
+
+                    <div className="account-field">
+                      <label htmlFor="address-phone">
+                        Phone Number
+                      </label>
+
+                      <input
+                        id="address-phone"
+                        type="tel"
+                        name="phone"
+                        value={
+                          addressForm.phone
+                        }
+                        onChange={
+                          handleAddressChange
+                        }
+                        required
+                      />
+                    </div>
+
+                    <div className="account-field account-address-full">
+                      <label htmlFor="address-street">
+                        Street Address
+                      </label>
+
+                      <input
+                        id="address-street"
+                        type="text"
+                        name="address"
+                        placeholder="House number, street..."
+                        value={
+                          addressForm.address
+                        }
+                        onChange={
+                          handleAddressChange
+                        }
+                        required
+                      />
+                    </div>
+
+                    <div className="account-field">
+                      <label htmlFor="address-city">
+                        City
+                      </label>
+
+                      <input
+                        id="address-city"
+                        type="text"
+                        name="city"
+                        placeholder="Ho Chi Minh City"
+                        value={
+                          addressForm.city
+                        }
+                        onChange={
+                          handleAddressChange
+                        }
+                      />
+                    </div>
+
+                    <div className="account-field">
+                      <label htmlFor="address-district">
+                        District
+                      </label>
+
+                      <input
+                        id="address-district"
+                        type="text"
+                        name="district"
+                        placeholder="District"
+                        value={
+                          addressForm.district
+                        }
+                        onChange={
+                          handleAddressChange
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <label className="account-default-address">
+                    <input
+                      type="checkbox"
+                      name="isDefault"
+                      checked={
+                        addressForm.isDefault
+                      }
+                      onChange={
+                        handleAddressChange
+                      }
+                    />
+
+                    <span>
+                      Set as default
+                      address
+                    </span>
+                  </label>
+
+                  <div className="account-form-actions">
+                    <button
+                      type="submit"
+                      className="account-save-button"
+                    >
+                      {editingAddressId
+                        ? "Save Address"
+                        : "Add Address"}
+                    </button>
+
+                    <button
+                      type="button"
+                      className="account-cancel-button"
+                      onClick={
+                        resetAddressForm
+                      }
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </form>
+              ) : addresses.length ===
+                0 ? (
+                <div className="account-address-empty">
+                  <div className="account-address-empty-icon">
+                    <LocationIcon />
+                  </div>
+
+                  <h3>
+                    No addresses yet
+                  </h3>
+
+                  <p>
+                    Add your delivery
+                    address to make
+                    checkout faster.
+                  </p>
+
+                  <button
+                    type="button"
+                    onClick={
+                      handleAddAddress
+                    }
+                  >
+                    Add Your First
+                    Address
+                  </button>
+                </div>
+              ) : (
+                <div className="account-address-list">
+                  {addresses.map(
+                    (address) => (
+                      <article
+                        className={
+                          address.isDefault
+                            ? "account-address-card default"
+                            : "account-address-card"
+                        }
+                        key={
+                          address.id
+                        }
+                      >
+                        <div className="account-address-card-top">
+                          <div className="account-address-card-icon">
+                            <LocationIcon />
+                          </div>
+
+                          {address.isDefault && (
+                            <span className="account-address-badge">
+                              DEFAULT
+                            </span>
+                          )}
+                        </div>
+
+                        <h3>
+                          {
+                            address.fullName
+                          }
+                        </h3>
+
+                        <p>
+                          {
+                            address.phone
+                          }
+                        </p>
+
+                        <address>
+                          {
+                            address.address
+                          }
+
+                          {(address.district ||
+                            address.city) && (
+                            <>
+                              <br />
+
+                              {[
+                                address.district,
+                                address.city,
+                              ]
+                                .filter(
+                                  Boolean
+                                )
+                                .join(
+                                  ", "
+                                )}
+                            </>
+                          )}
+                        </address>
+
+                        <div className="account-address-actions">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleEditAddress(
+                                address
+                              )
+                            }
+                          >
+                            Edit
+                          </button>
+
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleDeleteAddress(
+                                address.id
+                              )
+                            }
+                          >
+                            Delete
+                          </button>
+
+                          {!address.isDefault && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                handleSetDefaultAddress(
+                                  address.id
+                                )
+                              }
+                            >
+                              Set Default
+                            </button>
+                          )}
+                        </div>
+                      </article>
+                    )
+                  )}
+                </div>
+              )}
             </div>
           )}
         </section>

@@ -69,8 +69,7 @@ const Auth = () => {
     useSearchParams();
 
   const initialMode =
-    searchParams.get("mode") ===
-    "signup"
+    searchParams.get("mode") === "signup"
       ? "signup"
       : "login";
 
@@ -80,26 +79,26 @@ const Auth = () => {
   const [error, setError] =
     useState("");
 
-  const [showPassword, setShowPassword] =
-    useState(false);
+  const [
+    showPassword,
+    setShowPassword,
+  ] = useState(false);
 
   const [
     showConfirmPassword,
     setShowConfirmPassword,
   ] = useState(false);
 
-  const [formData, setFormData] =
-    useState({
-      fullName: "",
-      email: "",
-      phone: "",
-      password: "",
-      confirmPassword: "",
-    });
-
-  const redirect =
-    searchParams.get("redirect") ||
-    "/account";
+  const [
+    formData,
+    setFormData,
+  ] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const handleChange = (event) => {
     const {
@@ -143,7 +142,7 @@ const Auth = () => {
         return;
       }
 
-      navigate(redirect);
+      navigate("/");
 
       return;
     }
@@ -169,7 +168,7 @@ const Auth = () => {
       return;
     }
 
-    navigate(redirect);
+    navigate("/");
   };
 
   return (
@@ -209,6 +208,7 @@ const Auth = () => {
 
             <h2>
               Welcome to
+
               <em>
                 Sugar Muse
               </em>
@@ -382,7 +382,11 @@ const Auth = () => {
                           !current
                       )
                     }
-                    aria-label="Show password"
+                    aria-label={
+                      showPassword
+                        ? "Hide password"
+                        : "Show password"
+                    }
                   >
                     <EyeIcon
                       visible={
@@ -426,7 +430,11 @@ const Auth = () => {
                             !current
                         )
                       }
-                      aria-label="Show confirm password"
+                      aria-label={
+                        showConfirmPassword
+                          ? "Hide confirm password"
+                          : "Show confirm password"
+                      }
                     >
                       <EyeIcon
                         visible={
