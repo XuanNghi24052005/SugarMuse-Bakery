@@ -12,8 +12,9 @@ import {
   useAuth,
 } from "../Context/Authcontext";
 
-import "../pageStyles/Account.css";
 import AccountWishlist from "../components/AccountWishlist";
+
+import "../pageStyles/Account.css";
 
 const UserIcon = () => (
   <svg
@@ -25,7 +26,12 @@ const UserIcon = () => (
     strokeLinejoin="round"
     aria-hidden="true"
   >
-    <circle cx="12" cy="8" r="4" />
+    <circle
+      cx="12"
+      cy="8"
+      r="4"
+    />
+
     <path d="M4.5 21a7.5 7.5 0 0 1 15 0" />
   </svg>
 );
@@ -71,7 +77,12 @@ const LocationIcon = () => (
     aria-hidden="true"
   >
     <path d="M20 10c0 5-8 11-8 11S4 15 4 10a8 8 0 1 1 16 0Z" />
-    <circle cx="12" cy="10" r="2.5" />
+
+    <circle
+      cx="12"
+      cy="10"
+      r="2.5"
+    />
   </svg>
 );
 
@@ -102,7 +113,12 @@ const CameraIcon = () => (
     aria-hidden="true"
   >
     <path d="M4 7h3l1.5-2h7L17 7h3a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Z" />
-    <circle cx="12" cy="13" r="4" />
+
+    <circle
+      cx="12"
+      cy="13"
+      r="4"
+    />
   </svg>
 );
 
@@ -114,7 +130,8 @@ const Account = () => {
     updateUser,
   } = useAuth();
 
-  const navigate = useNavigate();
+  const navigate =
+    useNavigate();
 
   const [
     activeSection,
@@ -125,35 +142,15 @@ const Account = () => {
     formData,
     setFormData,
   ] = useState({
-    fullName: "Muse",
-    email: "muse@sugarmuse.com",
-    phone: "+1 (234) 567-8901",
+    fullName: "",
+    email: "",
+    phone: "",
   });
 
   const [
     profileSaved,
     setProfileSaved,
   ] = useState(false);
-
-  const [
-    addresses,
-    setAddresses,
-  ] = useState(() => {
-    try {
-      const savedAddresses =
-        localStorage.getItem(
-          "sugarMuseAddresses"
-        );
-
-      return savedAddresses
-        ? JSON.parse(
-            savedAddresses
-          )
-        : [];
-    } catch {
-      return [];
-    }
-  });
 
   const [
     orders,
@@ -168,6 +165,26 @@ const Account = () => {
       return savedOrders
         ? JSON.parse(
             savedOrders
+          )
+        : [];
+    } catch {
+      return [];
+    }
+  });
+
+  const [
+    addresses,
+    setAddresses,
+  ] = useState(() => {
+    try {
+      const savedAddresses =
+        localStorage.getItem(
+          "sugarMuseAddresses"
+        );
+
+      return savedAddresses
+        ? JSON.parse(
+            savedAddresses
           )
         : [];
     } catch {
@@ -198,19 +215,26 @@ const Account = () => {
   });
 
   useEffect(() => {
-  if (!user) {
-    return;
-  }
+    if (
+      !isAuthenticated
+    ) {
+      navigate("/login");
+      return;
+    }
 
-  setFormData({
-    fullName:
-      user.fullName || "",
-    email:
-      user.email || "",
-    phone:
-      user.phone || "",
-  });
-}, [user]);
+    setFormData({
+      fullName:
+        user?.fullName || "",
+      email:
+        user?.email || "",
+      phone:
+        user?.phone || "",
+    });
+  }, [
+    isAuthenticated,
+    user,
+    navigate,
+  ]);
 
   useEffect(() => {
     localStorage.setItem(
@@ -221,6 +245,38 @@ const Account = () => {
     );
   }, [addresses]);
 
+  useEffect(() => {
+    if (
+      activeSection !==
+      "orders"
+    ) {
+      return;
+    }
+
+    try {
+      const savedOrders =
+        localStorage.getItem(
+          "sugarMuseOrders"
+        );
+
+      setOrders(
+        savedOrders
+          ? JSON.parse(
+              savedOrders
+            )
+          : []
+      );
+    } catch {
+      setOrders([]);
+    }
+  }, [activeSection]);
+
+  if (
+    !isAuthenticated
+  ) {
+    return null;
+  }
+
   const displayName =
     user?.fullName?.trim() ||
     "Muse";
@@ -228,7 +284,113 @@ const Account = () => {
   const firstLetter =
     displayName
       .charAt(0)
-      .toUpperCase() || "M";
+      .toUpperCase() ||
+    "M";
+
+  const formatPrice = (
+    value
+  ) => {
+    const parsed =
+      Number(value);
+
+    if (
+      Number.isNaN(parsed)
+    ) {
+      return "$0.00";
+    }
+
+    return `$${parsed.toFixed(
+      2
+    )}`;
+  };
+
+  const formatDate = (
+    value
+  ) => {
+    if (!value) {
+      return "—";
+    }
+
+    const date =
+      new Date(value);
+
+    if (
+      Number.isNaN(
+        date.getTime()
+      )
+    ) {
+      return "—";
+    }
+
+    return date.toLocaleDateString(
+      "en-US",
+      {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      }
+    );
+  };
+
+  const getItemsCount = (
+    order
+  ) => {
+    if (
+      !Array.isArray(
+        order?.items
+      )
+    ) {
+      return 0;
+    }
+
+    return order.items.reduce(
+      (
+        total,
+        item
+      ) =>
+        total +
+        Number(
+          item.quantity || 1
+        ),
+      0
+    );
+  };
+
+  const getPaymentLabel = (
+    method
+  ) => {
+    if (
+      method === "card"
+    ) {
+      return "Card Payment";
+    }
+
+    if (
+      method === "cash"
+    ) {
+      return "Cash on Delivery";
+    }
+
+    return (
+      method ||
+      "Payment"
+    );
+  };
+
+  const getDeliveryAddress = (
+    order
+  ) => {
+    const customer =
+      order?.customer || {};
+
+    return [
+      customer.address,
+      customer.district,
+      customer.city,
+    ]
+      .filter(Boolean)
+      .join(", ");
+  };
 
   const handleChange = (
     event
@@ -245,7 +407,9 @@ const Account = () => {
       })
     );
 
-    setProfileSaved(false);
+    setProfileSaved(
+      false
+    );
   };
 
   const handleSave = (
@@ -253,75 +417,73 @@ const Account = () => {
   ) => {
     event.preventDefault();
 
-    if (isAuthenticated) {
-      updateUser({
-        fullName:
-          formData.fullName,
-        email:
-          formData.email,
-        phone:
-          formData.phone,
-      });
-    }
-
-    setProfileSaved(true);
-  };
-
-  const handleCancel = () => {
-    setFormData({
+    updateUser({
       fullName:
-        user?.fullName ||
-        "Muse",
+        formData.fullName,
       email:
-        user?.email ||
-        "muse@sugarmuse.com",
+        formData.email,
       phone:
-        user?.phone ||
-        "+1 (234) 567-8901",
+        formData.phone,
     });
 
-    setProfileSaved(false);
-  };
-
-  const handleLogout = () => {
-    if (isAuthenticated) {
-      logout();
-    }
-
-    navigate("/");
-  };
-
-  const handleAddressChange = (
-    event
-  ) => {
-    const {
-      name,
-      value,
-      type,
-      checked,
-    } = event.target;
-
-    setAddressForm(
-      (current) => ({
-        ...current,
-        [name]:
-          type ===
-          "checkbox"
-            ? checked
-            : value,
-      })
+    setProfileSaved(
+      true
     );
   };
+
+  const handleCancel =
+    () => {
+      setFormData({
+        fullName:
+          user?.fullName ||
+          "",
+        email:
+          user?.email || "",
+        phone:
+          user?.phone || "",
+      });
+
+      setProfileSaved(
+        false
+      );
+    };
+
+  const handleLogout =
+    () => {
+      logout();
+
+      navigate("/");
+    };
+
+  const handleAddressChange =
+    (event) => {
+      const {
+        name,
+        value,
+        type,
+        checked,
+      } = event.target;
+
+      setAddressForm(
+        (current) => ({
+          ...current,
+          [name]:
+            type ===
+            "checkbox"
+              ? checked
+              : value,
+        })
+      );
+    };
 
   const resetAddressForm =
     () => {
       setAddressForm({
         fullName:
           user?.fullName ||
-          "Muse",
+          "",
         phone:
-          user?.phone ||
-          "+1 (234) 567-8901",
+          user?.phone || "",
         address: "",
         city: "",
         district: "",
@@ -342,10 +504,9 @@ const Account = () => {
       setAddressForm({
         fullName:
           user?.fullName ||
-          "Muse",
+          "",
         phone:
-          user?.phone ||
-          "+1 (234) 567-8901",
+          user?.phone || "",
         address: "",
         city: "",
         district: "",
@@ -363,150 +524,153 @@ const Account = () => {
       );
     };
 
-  const handleSaveAddress = (
-    event
-  ) => {
-    event.preventDefault();
+  const handleSaveAddress =
+    (event) => {
+      event.preventDefault();
 
-    if (
-      !addressForm.fullName.trim() ||
-      !addressForm.phone.trim() ||
-      !addressForm.address.trim()
-    ) {
-      return;
-    }
+      if (
+        !addressForm.fullName.trim() ||
+        !addressForm.phone.trim() ||
+        !addressForm.address.trim()
+      ) {
+        return;
+      }
 
-    if (editingAddressId) {
-      setAddresses(
-        (current) =>
-          current.map(
-            (item) => {
-              if (
-                addressForm.isDefault &&
-                item.id !==
-                  editingAddressId
-              ) {
-                return {
-                  ...item,
-                  isDefault:
-                    false,
-                };
-              }
-
-              if (
-                item.id ===
-                editingAddressId
-              ) {
-                return {
-                  ...addressForm,
-                  id:
-                    editingAddressId,
-                };
-              }
-
-              return item;
-            }
-          )
-      );
-    } else {
-      const newAddress = {
-        ...addressForm,
-        id: Date.now(),
-      };
-
-      setAddresses(
-        (current) => {
-          const updated =
-            addressForm.isDefault
-              ? current.map(
-                  (item) => ({
+      if (
+        editingAddressId
+      ) {
+        setAddresses(
+          (current) =>
+            current.map(
+              (item) => {
+                if (
+                  addressForm.isDefault &&
+                  item.id !==
+                    editingAddressId
+                ) {
+                  return {
                     ...item,
                     isDefault:
                       false,
-                  })
-                )
-              : current;
+                  };
+                }
 
-          return [
-            ...updated,
-            newAddress,
-          ];
+                if (
+                  item.id ===
+                  editingAddressId
+                ) {
+                  return {
+                    ...addressForm,
+                    id:
+                      editingAddressId,
+                  };
+                }
+
+                return item;
+              }
+            )
+        );
+      } else {
+        const newAddress = {
+          ...addressForm,
+          id: Date.now(),
+        };
+
+        setAddresses(
+          (current) => {
+            const updated =
+              addressForm.isDefault
+                ? current.map(
+                    (
+                      item
+                    ) => ({
+                      ...item,
+                      isDefault:
+                        false,
+                    })
+                  )
+                : current;
+
+            return [
+              ...updated,
+              newAddress,
+            ];
+          }
+        );
+      }
+
+      resetAddressForm();
+    };
+
+  const handleEditAddress =
+    (address) => {
+      setAddressForm({
+        fullName:
+          address.fullName,
+        phone:
+          address.phone,
+        address:
+          address.address,
+        city:
+          address.city ||
+          "",
+        district:
+          address.district ||
+          "",
+        isDefault:
+          Boolean(
+            address.isDefault
+          ),
+      });
+
+      setEditingAddressId(
+        address.id
+      );
+
+      setShowAddressForm(
+        true
+      );
+    };
+
+  const handleDeleteAddress =
+    (addressId) => {
+      setAddresses(
+        (current) => {
+          const target =
+            current.find(
+              (item) =>
+                item.id ===
+                addressId
+            );
+
+          const remaining =
+            current.filter(
+              (item) =>
+                item.id !==
+                addressId
+            );
+
+          if (
+            target?.isDefault &&
+            remaining.length >
+              0
+          ) {
+            return remaining.map(
+              (
+                item,
+                index
+              ) => ({
+                ...item,
+                isDefault:
+                  index === 0,
+              })
+            );
+          }
+
+          return remaining;
         }
       );
-    }
-
-    resetAddressForm();
-  };
-
-  const handleEditAddress = (
-    address
-  ) => {
-    setAddressForm({
-      fullName:
-        address.fullName,
-      phone:
-        address.phone,
-      address:
-        address.address,
-      city:
-        address.city || "",
-      district:
-        address.district ||
-        "",
-      isDefault:
-        Boolean(
-          address.isDefault
-        ),
-    });
-
-    setEditingAddressId(
-      address.id
-    );
-
-    setShowAddressForm(
-      true
-    );
-  };
-
-  const handleDeleteAddress = (
-    addressId
-  ) => {
-    setAddresses(
-      (current) => {
-        const target =
-          current.find(
-            (item) =>
-              item.id ===
-              addressId
-          );
-
-        const remaining =
-          current.filter(
-            (item) =>
-              item.id !==
-              addressId
-          );
-
-        if (
-          target?.isDefault &&
-          remaining.length > 0
-        ) {
-          return remaining.map(
-            (
-              item,
-              index
-            ) => ({
-              ...item,
-              isDefault:
-                index === 0,
-            })
-          );
-        }
-
-        return remaining;
-      }
-    );
-  };
+    };
 
   const handleSetDefaultAddress =
     (addressId) => {
@@ -522,21 +686,6 @@ const Account = () => {
           )
       );
     };
-
-  const formatOrderDate = (
-    date
-  ) => {
-    return new Intl.DateTimeFormat(
-      "en-US",
-      {
-        month: "short",
-        day: "2-digit",
-        year: "numeric",
-      }
-    ).format(
-      new Date(date)
-    );
-  };
 
   return (
     <main className="account-page">
@@ -563,9 +712,11 @@ const Account = () => {
           </h1>
 
           <p>
-            Manage your profile,
-            orders and favorite
-            treats in one place.
+            Manage your
+            profile, orders
+            and favorite
+            treats in one
+            place.
           </p>
         </div>
       </section>
@@ -591,8 +742,7 @@ const Account = () => {
             </h2>
 
             <p>
-              {user?.email ||
-                "muse@sugarmuse.com"}
+              {user?.email}
             </p>
 
             <div className="account-user-divider">
@@ -613,11 +763,15 @@ const Account = () => {
                   ? "account-menu-item active"
                   : "account-menu-item"
               }
-              onClick={() =>
+              onClick={() => {
                 setActiveSection(
                   "profile"
-                )
-              }
+                );
+
+                setShowAddressForm(
+                  false
+                );
+              }}
             >
               <UserIcon />
 
@@ -634,11 +788,15 @@ const Account = () => {
                   ? "account-menu-item active"
                   : "account-menu-item"
               }
-              onClick={() =>
+              onClick={() => {
                 setActiveSection(
                   "orders"
-                )
-              }
+                );
+
+                setShowAddressForm(
+                  false
+                );
+              }}
             >
               <OrderIcon />
 
@@ -647,16 +805,30 @@ const Account = () => {
               </span>
             </button>
 
-            <Link
-              to="/wishlist"
-              className="account-menu-item"
+            <button
+              type="button"
+              className={
+                activeSection ===
+                "wishlist"
+                  ? "account-menu-item active"
+                  : "account-menu-item"
+              }
+              onClick={() => {
+                setActiveSection(
+                  "wishlist"
+                );
+
+                setShowAddressForm(
+                  false
+                );
+              }}
             >
               <HeartIcon />
 
               <span>
                 My Wishlist
               </span>
-            </Link>
+            </button>
 
             <button
               type="button"
@@ -711,24 +883,28 @@ const Account = () => {
             <>
               <div className="account-section-heading">
                 <h2>
-                  Personal Information
+                  Personal
+                  Information
                 </h2>
 
                 <p>
-                  View and update your
-                  account details.
+                  View and
+                  update your
+                  account
+                  details.
                 </p>
               </div>
 
               <div className="account-profile-layout">
                 <div className="account-profile-visual">
-                <div className="account-profile-circle">
+                  <div className="account-profile-art">
+                    <div className="account-art-shape" />
+
                     <img
-                    src="/images/products/peach-cake.jpg"
-                    alt="Sugar Muse cake"
-                    className="account-profile-cake"
+                      src="/images/products/peach-cake.jpg"
+                      alt="Peach cake"
                     />
-                </div>
+                  </div>
                 </div>
 
                 <form
@@ -758,7 +934,8 @@ const Account = () => {
 
                   <div className="account-field">
                     <label htmlFor="account-email">
-                      Email Address
+                      Email
+                      Address
                     </label>
 
                     <input
@@ -777,7 +954,8 @@ const Account = () => {
 
                   <div className="account-field">
                     <label htmlFor="account-phone">
-                      Phone Number
+                      Phone
+                      Number
                     </label>
 
                     <input
@@ -795,8 +973,9 @@ const Account = () => {
 
                   {profileSaved && (
                     <div className="account-profile-success">
-                      Your profile has
-                      been updated.
+                      Your profile
+                      has been
+                      updated.
                     </div>
                   )}
 
@@ -837,8 +1016,9 @@ const Account = () => {
                   </h2>
 
                   <p>
-                    Track and review
-                    your Sugar Muse
+                    Track and
+                    review your
+                    Sugar Muse
                     orders.
                   </p>
                 </div>
@@ -856,10 +1036,12 @@ const Account = () => {
                   </h3>
 
                   <p>
-                    Your Sugar Muse
-                    orders will appear
-                    here once you place
-                    your first order.
+                    Your Sugar
+                    Muse orders
+                    will appear
+                    here once you
+                    place your
+                    first order.
                   </p>
 
                   <Link to="/products">
@@ -891,20 +1073,20 @@ const Account = () => {
                           </div>
 
                           <span className="account-order-status">
-                            {
-                              order.status
-                            }
+                            {order.status ||
+                              "Preparing"}
                           </span>
                         </div>
 
                         <div className="account-order-meta">
                           <div>
                             <span>
-                              Order Date
+                              Order
+                              Date
                             </span>
 
                             <strong>
-                              {formatOrderDate(
+                              {formatDate(
                                 order.createdAt
                               )}
                             </strong>
@@ -916,14 +1098,8 @@ const Account = () => {
                             </span>
 
                             <strong>
-                              {order.items.reduce(
-                                (
-                                  totalQuantity,
-                                  item
-                                ) =>
-                                  totalQuantity +
-                                  item.quantity,
-                                0
+                              {getItemsCount(
+                                order
                               )}
                             </strong>
                           </div>
@@ -934,10 +1110,9 @@ const Account = () => {
                             </span>
 
                             <strong>
-                              {order.paymentMethod ===
-                              "cash"
-                                ? "Cash on Delivery"
-                                : "Card Payment"}
+                              {getPaymentLabel(
+                                order.paymentMethod
+                              )}
                             </strong>
                           </div>
 
@@ -947,92 +1122,89 @@ const Account = () => {
                             </span>
 
                             <strong>
-                              $
-                              {Number(
+                              {formatPrice(
                                 order.total
-                              ).toFixed(
-                                2
                               )}
                             </strong>
                           </div>
                         </div>
 
-                        <div className="account-order-products">
-                          {order.items.map(
-                            (
-                              product
-                            ) => (
-                              <div
-                                className="account-order-product"
-                                key={
-                                  product._id
-                                }
-                              >
-                                <img
-                                  src={
-                                    product.image
-                                  }
-                                  alt={
-                                    product.name
-                                  }
-                                />
-
-                                <div>
-                                  <strong>
-                                    {
-                                      product.name
+                        {Array.isArray(
+                          order.items
+                        ) &&
+                          order
+                            .items
+                            .length >
+                            0 && (
+                            <div className="account-order-products">
+                              {order.items.map(
+                                (
+                                  item,
+                                  index
+                                ) => (
+                                  <div
+                                    className="account-order-product"
+                                    key={
+                                      item.id ||
+                                      `${order.id}-${index}`
                                     }
-                                  </strong>
+                                  >
+                                    <img
+                                      src={
+                                        item.image ||
+                                        "/images/products/peach-cake.jpg"
+                                      }
+                                      alt={
+                                        item.name ||
+                                        "Sugar Muse product"
+                                      }
+                                    />
 
-                                  <span>
-                                    Qty{" "}
-                                    {
-                                      product.quantity
-                                    }
-                                  </span>
-                                </div>
+                                    <div>
+                                      <h4>
+                                        {item.name ||
+                                          "Sugar Muse Treat"}
+                                      </h4>
 
-                                <b>
-                                  $
-                                  {(
-                                    Number(
-                                      product.price
-                                    ) *
-                                    product.quantity
-                                  ).toFixed(
-                                    2
-                                  )}
-                                </b>
-                              </div>
-                            )
+                                      <p>
+                                        Qty:{" "}
+                                        {item.quantity ||
+                                          1}
+                                      </p>
+                                    </div>
+
+                                    <strong>
+                                      {formatPrice(
+                                        Number(
+                                          item.price ||
+                                            0
+                                        ) *
+                                          Number(
+                                            item.quantity ||
+                                              1
+                                          )
+                                      )}
+                                    </strong>
+                                  </div>
+                                )
+                              )}
+                            </div>
                           )}
-                        </div>
 
                         <div className="account-order-bottom">
                           <div>
                             <span>
-                              Deliver to
+                              Delivery
+                              Address
                             </span>
 
                             <p>
-                              {
-                                order.customer
-                                  ?.address
-                              }
-
-                              {order.customer
-                                ?.district &&
-                                `, ${order.customer.district}`}
-
-                              {order.customer
-                                ?.city &&
-                                `, ${order.customer.city}`}
+                              {getDeliveryAddress(
+                                order
+                              ) ||
+                                "Delivery details not available."}
                             </p>
                           </div>
-
-                          <Link to="/products">
-                            Buy Again
-                          </Link>
                         </div>
                       </article>
                     )
@@ -1043,12 +1215,18 @@ const Account = () => {
           )}
 
           {activeSection ===
+            "wishlist" && (
+            <AccountWishlist />
+          )}
+
+          {activeSection ===
             "addresses" && (
             <div className="account-address-section">
               <div className="account-address-header">
                 <div>
                   <span>
-                    DELIVERY DETAILS
+                    DELIVERY
+                    DETAILS
                   </span>
 
                   <h2>
@@ -1056,9 +1234,11 @@ const Account = () => {
                   </h2>
 
                   <p>
-                    Save your delivery
-                    addresses for a
-                    faster checkout.
+                    Save your
+                    delivery
+                    addresses for
+                    a faster
+                    checkout.
                   </p>
                 </div>
 
@@ -1070,7 +1250,8 @@ const Account = () => {
                       handleAddAddress
                     }
                   >
-                    + Add New Address
+                    + Add New
+                    Address
                   </button>
                 )}
               </div>
@@ -1104,7 +1285,8 @@ const Account = () => {
 
                     <div className="account-field">
                       <label htmlFor="address-phone">
-                        Phone Number
+                        Phone
+                        Number
                       </label>
 
                       <input
@@ -1123,7 +1305,8 @@ const Account = () => {
 
                     <div className="account-field account-address-full">
                       <label htmlFor="address-street">
-                        Street Address
+                        Street
+                        Address
                       </label>
 
                       <input
@@ -1193,7 +1376,8 @@ const Account = () => {
                     />
 
                     <span>
-                      Set as default
+                      Set as
+                      default
                       address
                     </span>
                   </label>
@@ -1227,13 +1411,16 @@ const Account = () => {
                   </div>
 
                   <h3>
-                    No addresses yet
+                    No addresses
+                    yet
                   </h3>
 
                   <p>
-                    Add your delivery
-                    address to make
-                    checkout faster.
+                    Add your
+                    delivery
+                    address to
+                    make checkout
+                    faster.
                   </p>
 
                   <button

@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, {
+  useState,
+} from "react";
 
 import {
   Link,
@@ -8,10 +10,6 @@ import {
 import {
   useCart,
 } from "../Context/Cartcontext";
-
-import {
-  useWishlist,
-} from "../Context/Wishlistcontext";
 
 import {
   useAuth,
@@ -59,7 +57,7 @@ const UserIcon = () => (
   </svg>
 );
 
-const HeartIcon = () => (
+const HistoryIcon = () => (
   <svg
     viewBox="0 0 24 24"
     fill="none"
@@ -69,7 +67,11 @@ const HeartIcon = () => (
     strokeLinejoin="round"
     aria-hidden="true"
   >
-    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+    <path d="M3 12a9 9 0 1 0 3-6.7" />
+
+    <path d="M3 4v5h5" />
+
+    <path d="M12 7v5l3 2" />
   </svg>
 );
 
@@ -105,10 +107,6 @@ const Navbar = () => {
   } = useCart();
 
   const {
-    wishlistCount,
-  } = useWishlist();
-
-  const {
     isAuthenticated,
   } = useAuth();
 
@@ -129,7 +127,10 @@ const Navbar = () => {
       searchValue.trim();
 
     if (!keyword) {
-      navigate("/products");
+      navigate(
+        "/products"
+      );
+
       return;
     }
 
@@ -245,30 +246,29 @@ const Navbar = () => {
                 ? "My account"
                 : "Sign in"
             }
+            title={
+              isAuthenticated
+                ? "My Account"
+                : "Sign In"
+            }
           >
             <UserIcon />
           </Link>
 
           <Link
-            to="/wishlist"
+            to="/recently-viewed"
             className="nav-icon-button"
-            aria-label="Wishlist"
+            aria-label="Recently Viewed"
+            title="Recently Viewed"
           >
-            <HeartIcon />
-
-            {wishlistCount > 0 && (
-              <span className="cart-badge">
-                {
-                  wishlistCount
-                }
-              </span>
-            )}
+            <HistoryIcon />
           </Link>
 
           <Link
             to="/cart"
             className="nav-icon-button"
             aria-label="Shopping cart"
+            title="Shopping Cart"
           >
             <CartIcon />
 

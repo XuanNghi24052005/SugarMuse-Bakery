@@ -1,9 +1,4 @@
 import React from "react";
-import {
-  Trash2,
-  Heart,
-  ShoppingBag,
-} from "lucide-react";
 
 import { useWishlist } from "../Context/Wishlistcontext";
 import { useCart } from "../Context/Cartcontext";
@@ -42,10 +37,12 @@ const AccountWishlist = () => {
 
         <div className="account-wishlist-empty">
           <div className="account-wishlist-empty-icon">
-            <Heart />
+            ♡
           </div>
 
-          <h3>Your wishlist is empty</h3>
+          <h3>
+            Your wishlist is empty
+          </h3>
 
           <p>
             Save your favorite Sugar Muse treats and they will appear here.
@@ -80,7 +77,10 @@ const AccountWishlist = () => {
           className="account-clear-wishlist"
           onClick={clearWishlist}
         >
-          <Trash2 />
+          <span className="account-wishlist-trash-icon">
+            ♢
+          </span>
+
           Clear Wishlist
         </button>
       </div>
@@ -106,7 +106,7 @@ const AccountWishlist = () => {
                 }
                 aria-label={`Remove ${product.name} from wishlist`}
               >
-                <Trash2 />
+                ×
               </button>
             </div>
 
@@ -127,12 +127,9 @@ const AccountWishlist = () => {
                   type="button"
                   className="account-wishlist-cart"
                   onClick={() =>
-                    handleAddToCart(
-                      product
-                    )
+                    handleAddToCart(product)
                   }
                 >
-                  <ShoppingBag />
                   Add to Cart
                   <span>→</span>
                 </button>
