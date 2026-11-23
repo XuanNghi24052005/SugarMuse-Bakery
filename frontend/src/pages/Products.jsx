@@ -7,7 +7,9 @@ import { useSearchParams } from "react-router-dom";
 
 import Product from "../components/Product";
 import "../pageStyles/Products.css";
-
+import {
+  saveRecentlyViewed,
+} from "../utils/recentlyViewed";
 const HERO_IMAGE =
   "/images/products/strawberry-cake.jpg";
 
@@ -687,6 +689,48 @@ const Products = () => {
     );
   };
 
+  const handleProductView = (
+    event,
+    product
+  ) => {
+    const clickedButton =
+      event.target.closest(
+        "button"
+      );
+
+    if (clickedButton) {
+      return;
+    }
+
+    const clickedLink =
+      event.target.closest(
+        "a"
+      );
+
+    if (!clickedLink) {
+      return;
+    }
+
+    const href =
+      clickedLink.getAttribute(
+        "href"
+      ) || "";
+
+    const productPath =
+      `/product/${product._id}`;
+
+    if (
+      href === productPath ||
+      href.startsWith(
+        `${productPath}?`
+      )
+    ) {
+      saveRecentlyViewed(
+        product
+      );
+    }
+  };
+
   const filteredProducts =
     useMemo(() => {
       let result = [
@@ -995,14 +1039,28 @@ const Products = () => {
             <div className="boutique-product-grid">
               {currentProducts.map(
                 (product) => (
-                  <Product
+                  <div
                     key={
                       product._id
                     }
-                    product={
-                      product
+                    style={{
+                      display: "contents",
+                    }}
+                    onClickCapture={(
+                      event
+                    ) =>
+                      handleProductView(
+                        event,
+                        product
+                      )
                     }
-                  />
+                  >
+                    <Product
+                      product={
+                        product
+                      }
+                    />
+                  </div>
                 )
               )}
             </div>

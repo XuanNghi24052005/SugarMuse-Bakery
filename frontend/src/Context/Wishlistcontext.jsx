@@ -76,7 +76,7 @@ export const WishlistProvider = ({ children }) => {
       value={{
         wishlistItems,
         wishlistCount,
-        toggleWishlist,
+        toggleWishlist, 
         removeFromWishlist,
         clearWishlist,
         isWishlisted,

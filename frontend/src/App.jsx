@@ -48,7 +48,7 @@ function App() {
         <Route
           path="/recently-viewed"
           element={<RecentlyViewed />}
-        />
+        />  
 
         <Route
           path="/forgot-password"
