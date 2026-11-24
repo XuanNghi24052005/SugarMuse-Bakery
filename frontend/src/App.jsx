@@ -106,102 +106,109 @@ function App() {
           element={<Checkout />}
         />
 
+        {/* Admin Portal Authentication */}
         <Route
-          path="/admin/login"
+          path="/admin-login"
           element={<AdminLogin />}
         />
 
-        <Route
-        path="/admin"
-        element={<AdminLayout />}
-      >
-        <Route
-          index
-          element={
-            <Navigate
-              to="/admin/dashboard"
-              replace
+        <Route path="/admin">
+          {/* Public Admin Login Route (No AdminLayout Shell) */}
+          <Route
+            path="login"
+            element={<AdminLogin />}
+          />
+
+          {/* Protected Admin Pages (Wrapped with AdminLayout Shell) */}
+          <Route element={<AdminLayout />}>
+            <Route
+              index
+              element={
+                <Navigate
+                  to="/admin/dashboard"
+                  replace
+                />
+              }
             />
-          }
-        />
 
-        <Route
-          path="dashboard"
-          element={
-            <AdminDashboard />
-          }
-        />
+            <Route
+              path="dashboard"
+              element={
+                <AdminDashboard />
+              }
+            />
 
-        <Route
-          path="products"
-          element={
-            <ProductList />
-          }
-        />
+            <Route
+              path="products"
+              element={
+                <ProductList />
+              }
+            />
 
-        <Route
-          path="product/create"
-          element={
-            <CreateProduct />
-          }
-        />
+            <Route
+              path="product/create"
+              element={
+                <CreateProduct />
+              }
+            />
 
-        <Route
-          path="product/:id"
-          element={
-            <UpdateProduct />
-          }
-        />
+            <Route
+              path="product/:id"
+              element={
+                <UpdateProduct />
+              }
+            />
 
-        <Route
-          path="orders"
-          element={
-            <OrdersList />
-          }
-        />
+            <Route
+              path="orders"
+              element={
+                <OrdersList />
+              }
+            />
 
-        <Route
-          path="order/:id"
-          element={
-            <UpdateOrderStatus />
-          }
-        />
+            <Route
+              path="order/:id"
+              element={
+                <UpdateOrderStatus />
+              }
+            />
 
-        <Route
-          path="users"
-          element={
-            <UsersList />
-          }
-        />
+            <Route
+              path="users"
+              element={
+                <UsersList />
+              }
+            />
 
-        <Route
-          path="user/:id"
-          element={
-            <UpdateRole />
-          }
-        />
+            <Route
+              path="user/:id"
+              element={
+                <UpdateRole />
+              }
+            />
 
-        <Route
-          path="reviews"
-          element={
-            <ReviewList />
-          }
-        />
+            <Route
+              path="reviews"
+              element={
+                <ReviewList />
+              }
+            />
 
-        <Route
-          path="vouchers"
-          element={
-            <VoucherList />
-          }
-        />
+            <Route
+              path="vouchers"
+              element={
+                <VoucherList />
+              }
+            />
 
-        <Route
-          path="voucher/create"
-          element={
-            <CreateVoucher />
-          }
-        />
-      </Route>
+            <Route
+              path="voucher/create"
+              element={
+                <CreateVoucher />
+              }
+            />
+          </Route>
+        </Route>
       </Routes>
     </>
   );
