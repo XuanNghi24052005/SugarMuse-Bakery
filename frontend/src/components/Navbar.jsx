@@ -5,6 +5,7 @@ import React, {
 import {
   Link,
   useNavigate,
+  useLocation,
 } from "react-router-dom";
 
 import {
@@ -102,6 +103,11 @@ const CartIcon = () => (
 );
 
 const Navbar = () => {
+  const location = useLocation();
+  if (location.pathname.startsWith("/admin")) {
+    return null;
+  }
+
   const {
     cartCount,
   } = useCart();

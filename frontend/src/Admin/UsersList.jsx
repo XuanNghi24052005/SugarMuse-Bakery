@@ -1,8 +1,5 @@
 import React from 'react'
 import '../AdminStyles/UsersList.css'
-import Footer from '../components/Footer'
-import Navbar from '../components/Navbar'
-import PageTitle from '../components/PageTitle'
 import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
@@ -42,9 +39,7 @@ const UsersList = () => {
         }, [dispatch, error,message])
   return (
     <>
-   {loading ? (<Loader />) :( <>
-    <Navbar/>
-    <PageTitle title = 'All Users'/>
+   {loading ? (<Loader />) : (
     <div className="usersList-container">
         <h1 className="usersList-title">All Users</h1>
         <div className="usersList-table-container">
@@ -78,8 +73,7 @@ const UsersList = () => {
             </table>
         </div>
     </div>
-    <Footer/>
-    </>)}
+    )}
     </>
   )
 }

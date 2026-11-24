@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import '../AdminStyles/OrdersList.css'
-import Footer from '../components/Footer'
-import Navbar from '../components/Navbar'
-import PageTitle from '../components/PageTitle'
 import { Delete, Edit } from '@mui/icons-material'
 import Loader from '../components/Loader'
 import { useDispatch, useSelector } from 'react-redux'
@@ -56,9 +53,7 @@ const OrdersList = () => {
 
     return (
         <>
-            {loading ? (<Loader />) : (<>
-                <Navbar />
-                <PageTitle title="All Orders" />
+            {loading ? (<Loader />) : (
                 <div className="ordersList-container">
                     <h1 className="ordersList-title">All Orders</h1>
 
@@ -129,8 +124,7 @@ const OrdersList = () => {
                         )}
                     </div>
                 </div>
-                <Footer />
-            </>)}
+            )}
         </>
     )
 }

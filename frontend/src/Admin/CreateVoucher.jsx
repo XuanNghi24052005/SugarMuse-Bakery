@@ -1,7 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Navbar from '../components/Navbar'
-import PageTitle from '../components/PageTitle'
-import Footer from '../components/Footer'
 import Loader from '../components/Loader'
 import { showToast } from '../utils/showToast'
 import { useDispatch, useSelector } from 'react-redux'
@@ -57,10 +54,7 @@ const CreateVoucher = () => {
   }
 
   return (
-    <>
-      <Navbar />
-      <PageTitle title="Create Voucher" />
-      <div className="create-voucher-container">
+    <div className="create-voucher-container">
         <h1 className="create-voucher-title">Create New Voucher</h1>
         <form onSubmit={handleCreateVoucher} className="create-voucher-form">
           <div className="form-group-centered">
@@ -120,8 +114,6 @@ const CreateVoucher = () => {
           </button>
         </form>
       </div>
-      <Footer />
-    </>
   )
 }
 

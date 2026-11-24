@@ -1,11 +1,13 @@
 
 .update-product-wrapper {
-    width: 700px;
-    margin: 40px auto;
+    max-width: 700px;
+    width: 100%;
+    margin: 0 auto 40px;
     padding: 32px;
     background: #fff;
-    border-radius: 16px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 18px;
+    border: 1px solid #efddd8;
+    box-shadow: 0 8px 30px rgba(89, 33, 27, 0.04);
   }
   
   .update-product-title {

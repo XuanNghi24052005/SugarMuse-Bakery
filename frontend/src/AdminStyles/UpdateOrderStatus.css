@@ -1,10 +1,11 @@
 .order-container {
   max-width: 1200px;
-  margin: 80px auto 0;
-  padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 0 auto;
+  padding: 24px;
+  background-color: #fff;
+  border-radius: 18px;
+  border: 1px solid #efddd8;
+  box-shadow: 0 8px 30px rgba(89, 33, 27, 0.04);
   font-family: 'Roboto', sans-serif;
 }
 

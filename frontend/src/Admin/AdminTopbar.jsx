@@ -37,6 +37,10 @@ const pageTitles = {
     eyebrow: "CATALOG",
     title: "Products",
   },
+  "/admin/product/create": {
+    eyebrow: "CATALOG",
+    title: "Add New Cake",
+  },
   "/admin/orders": {
     eyebrow: "SALES",
     title: "Orders",
@@ -52,6 +56,10 @@ const pageTitles = {
   "/admin/vouchers": {
     eyebrow: "PROMOTIONS",
     title: "Vouchers",
+  },
+  "/admin/voucher/create": {
+    eyebrow: "PROMOTIONS",
+    title: "Create Voucher",
   },
 };
 

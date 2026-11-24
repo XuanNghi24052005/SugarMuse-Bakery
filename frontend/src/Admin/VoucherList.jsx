@@ -1,7 +1,4 @@
 import React, { useEffect } from 'react'
-import Navbar from '../components/Navbar'
-import PageTitle from '../components/PageTitle'
-import Footer from '../components/Footer'
 import Loader from '../components/Loader'
 import { showToast } from '../utils/showToast'
 import { useDispatch, useSelector } from 'react-redux'
@@ -46,8 +43,6 @@ const VoucherList = () => {
 
   return (
     <>
-      <Navbar />
-      <PageTitle title="All Vouchers" />
       {loading && (!coupons || coupons.length === 0) ? (
         <Loader />
       ) : (
@@ -119,7 +114,6 @@ const VoucherList = () => {
           </div>
         </div>
       )}
-      <Footer />
     </>
   )
 }

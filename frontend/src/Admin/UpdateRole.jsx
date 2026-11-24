@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import '../AdminStyles/UpdateRole.css'
-import Navbar from '../components/Navbar'
-import PageTitle from '../components/PageTitle'
-import Footer from '../components/Footer'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { showToast } from '../utils/showToast'
@@ -63,10 +60,7 @@ const UpdateProduct = () => {
         }
     }, [success, error, dispatch, navigate]);
     return (
-        <>
-            <Navbar />
-            <PageTitle title="Update User Role" />
-            <div className="page-wrapper">
+        <div className="page-wrapper">
                 <div className="update-user-role-container">
                     <h1>Update User Role</h1>
                     <form className="update-user-role-form" onSubmit={submitHandler}>
@@ -94,8 +88,6 @@ const UpdateProduct = () => {
                     </form>
                 </div>
             </div>
-            <Footer />
-        </>
     )
 }
 export default UpdateProduct

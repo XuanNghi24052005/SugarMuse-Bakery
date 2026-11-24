@@ -3,18 +3,18 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height:100vh;
+    min-height: 60vh;
     width: 100%; 
   }
   .update-user-role-container {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 18px;
+    border: 1px solid #efddd8;
+    box-shadow: 0 8px 30px rgba(89, 33, 27, 0.04);
     width: 100%;
     max-width: 500px; 
     margin: 0 auto; 
-    height: 350px;;
   }
   .update-user-role-form {
     display: flex;

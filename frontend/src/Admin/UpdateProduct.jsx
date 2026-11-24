@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import '../AdminStyles/UpdateProduct.css'
-import Navbar from '../components/Navbar'
-import PageTitle from '../components/PageTitle'
-import Footer from '../components/Footer'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate, useParams } from 'react-router-dom'
 import { removeErrors, removeSuccess, updateAdminProduct } from '../features/admin/adminSlice'
@@ -104,10 +101,7 @@ const UpdateProduct = () => {
         dispatch(updateAdminProduct({ id: updateId, formData: myForm }))
     }
     return (
-        <>
-            <Navbar />
-            <PageTitle title="Update Product" />
-            <div className="update-product-wrapper">
+        <div className="update-product-wrapper">
                 <h1 className="update-product-title">Update Product</h1>
                 <form className='update-product-form' encType='multipart/form-data' onSubmit={updateProductSubmit}>
                     <label htmlFor="name">Product Name</label>
@@ -158,8 +152,6 @@ const UpdateProduct = () => {
                     <button style={{ cursor: 'pointer' }} className="update-product-submit-btn">{loading ? 'Updating...' : 'Update'}</button>
                 </form>
             </div>
-            <Footer />
-        </>
     )
 }
 export default UpdateProduct

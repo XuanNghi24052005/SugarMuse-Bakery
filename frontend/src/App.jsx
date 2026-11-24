@@ -25,10 +25,15 @@ import {
 import AdminLayout from "./Admin/AdminLayout";
 import AdminDashboard from "./Admin/AdminDashboard";
 import ProductList from "./Admin/ProductList";
+import CreateProduct from "./Admin/CreateProduct";
+import UpdateProduct from "./Admin/UpdateProduct";
 import OrdersList from "./Admin/OrdersList";
+import UpdateOrderStatus from "./Admin/UpdateOrderStatus";
 import UsersList from "./Admin/UsersList";
+import UpdateRole from "./Admin/UpdateRole";
 import ReviewList from "./Admin/ReviewList";
 import VoucherList from "./Admin/VoucherList";
+import CreateVoucher from "./Admin/CreateVoucher";
 function App() {
   return (
     <>
@@ -129,6 +134,20 @@ function App() {
         />
 
         <Route
+          path="product/create"
+          element={
+            <CreateProduct />
+          }
+        />
+
+        <Route
+          path="product/:id"
+          element={
+            <UpdateProduct />
+          }
+        />
+
+        <Route
           path="orders"
           element={
             <OrdersList />
@@ -136,9 +155,23 @@ function App() {
         />
 
         <Route
+          path="order/:id"
+          element={
+            <UpdateOrderStatus />
+          }
+        />
+
+        <Route
           path="users"
           element={
             <UsersList />
+          }
+        />
+
+        <Route
+          path="user/:id"
+          element={
+            <UpdateRole />
           }
         />
 
@@ -153,6 +186,13 @@ function App() {
           path="vouchers"
           element={
             <VoucherList />
+          }
+        />
+
+        <Route
+          path="voucher/create"
+          element={
+            <CreateVoucher />
           }
         />
       </Route>

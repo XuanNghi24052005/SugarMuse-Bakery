@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import '../AdminStyles/UpdateOrder.css'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
-import PageTitle from '../components/PageTitle'
+import '../AdminStyles/UpdateOrderStatus.css'
 import { useParams } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { getOrderDetails } from '../features/order/orderSlice'
@@ -53,8 +50,6 @@ const UpdateOrderStatus = () => {
     }, [dispatch, error, success, orderId])
   return (
     <>
-    <Navbar/>
-    <PageTitle title = 'Update Order'/>
     {loading ? (<Loader/>): (<div className="order-container">
         <h1 className="order-title">Update Order</h1>
         <div className="order-details">
@@ -104,10 +99,6 @@ const UpdateOrderStatus = () => {
         </div>
         
     </div>)}
-
-   
-
-    <Footer/>
     </>
   )
 }

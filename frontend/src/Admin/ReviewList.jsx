@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import '../AdminStyles/ReviewList.css'
-import Navbar from '../components/Navbar'
-import Footer from '../components/Footer'
-import PageTitle from '../components/PageTitle'
 import { Delete } from '@mui/icons-material'
 import { useDispatch, useSelector } from 'react-redux'
 import { clearMessage, deleteReview, fetchAdminProducts, fetchProductReviews, removeErrors, removeSuccess } from '../features/admin/adminSlice'
@@ -53,23 +50,18 @@ const ReviewList = () => {
 
     if (!products || products.length === 0) {
         return (
-            <>
-                <Navbar />
-                <PageTitle title="All Reviews" />
-                <div className="reviews-list-container">
-                    <h1 className="reviews-list-title">Admin Reviews</h1>
-                    <p>No Product Found..</p>
-                </div>
-                <Footer />
-            </>
+            <div className="reviews-list-container">
+                <h1 className="reviews-list-title">Admin Reviews</h1>
+                <p style={{ textAlign: "center", color: "#8c6e67", margin: "20px 0" }}>
+                    No products in database yet. Add cakes to see customer reviews.
+                </p>
+            </div>
         )
     }
 
     return (
         <>
-            {loading && !products.length ? (<Loader />) : (<>
-                <Navbar />
-                <PageTitle title="All Reviews" />
+            {loading && !products.length ? (<Loader />) : (
                 <div className="reviews-list-container">
                     <h1 className="reviews-list-title">All Products</h1>
                     <table className="reviews-table">
@@ -136,8 +128,7 @@ const ReviewList = () => {
                         </div>
                     )}
                 </div>
-                <Footer />
-            </>)}
+            )}
         </>
     )
 }
