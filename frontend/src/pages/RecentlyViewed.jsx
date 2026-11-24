@@ -69,44 +69,44 @@ const recentlyViewed = () => {
     try {
       const saved =
         localStorage.getItem(
-          "sugarMuserecenlyViewed"
+          "sugarMuserecentlyViewed"
         );
 
-      setrecenlyViewed(
+      setrecentlyViewed(
         saved
           ? JSON.parse(saved)
           : []
       );
     } catch {
-      setrecenlyViewed([]);
+      setrecentlyViewed([]);
     }
   }, []);
 
   const handleClearHistory =
     () => {
       localStorage.removeItem(
-        "sugarMuserecenlyViewed"
+        "sugarMuserecentlyViewed"
       );
 
-      setrecenlyViewed([]);
+      setrecentlyViewed([]);
     };
 
   const handleRemoveItem = (
     productId
   ) => {
     const updated =
-      recenlyViewed.filter(
+      recentlyViewed.filter(
         (product) =>
           product.id !==
           productId
       );
 
-    setrecenlyViewed(
+    setrecentlyViewed(
       updated
     );
 
     localStorage.setItem(
-      "sugarMuserecenlyViewed",
+      "sugarMuserecentlyViewed",
       JSON.stringify(updated)
     );
   };
@@ -152,15 +152,15 @@ const recentlyViewed = () => {
                 Recently Viewed
               </h2>
 
-              {recenlyViewed.length >
+              {recentlyViewed.length >
                 0 && (
                 <span className="recently-viewed-count">
                   <ClockIcon />
 
                   {
-                    recenlyViewed.length
+                    recentlyViewed.length
                   }{" "}
-                  {recenlyViewed.length ===
+                  {recentlyViewed.length ===
                   1
                     ? "item"
                     : "items"}
@@ -309,4 +309,4 @@ const recentlyViewed = () => {
   );
 };
 
-export default recenlyViewed;
+export default recentlyViewed;

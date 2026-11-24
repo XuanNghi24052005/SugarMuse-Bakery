@@ -9,7 +9,7 @@ import Product from "../components/Product";
 import "../pageStyles/Products.css";
 import {
   saverecentlyViewed,
-} from "../utils/recentlyViewed";
+} from "../utils/RecentlyViewed";
 const HERO_IMAGE =
   "/images/products/strawberry-cake.jpg";
 

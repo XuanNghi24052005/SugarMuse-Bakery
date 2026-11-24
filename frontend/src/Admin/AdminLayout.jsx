@@ -9,7 +9,7 @@ import {
 import AdminSidebar from "./AdminSidebar";
 import AdminTopbar from "./AdminTopbar";
 
-import "../../AdminStyles/AdminLayout.css";
+import "../AdminStyles/AdminLayout.css";
 
 const AdminLayout = () => {
   const [

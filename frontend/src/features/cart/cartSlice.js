@@ -21,8 +21,7 @@ export const addItemsToCart = createAsyncThunk('cart/addItemsToCart', async ({ i
             return rejectWithValue({ message: 'Product is out of stock.' })
         }
 
-        const isEssential = productData.product.category?.toLowerCase() === 'essentials'
-        const itemSize = size || (isEssential ? 'OS' : (productData.product.sizes?.[0] || 'S'))
+        const itemSize = size || 'Standard'
 
         const payload = {
             productId: productData.product._id,

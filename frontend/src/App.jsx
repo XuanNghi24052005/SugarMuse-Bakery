@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-import recentlyViewed from "./pages/recentlyViewed";
+import RecentlyViewed from "./pages/RecentlyViewed";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
@@ -22,7 +22,7 @@ import {
   Navigate,
 } from "react-router-dom";
 
-import AdminLayout from "./Admin/components/AdminLayout";
+import AdminLayout from "./Admin/AdminLayout";
 import AdminDashboard from "./Admin/AdminDashboard";
 import ProductList from "./Admin/ProductList";
 import OrdersList from "./Admin/OrdersList";
