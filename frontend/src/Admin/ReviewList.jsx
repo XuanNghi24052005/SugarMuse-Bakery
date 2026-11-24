@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import '../AdminStyles/ReviewsList.css'
+import '../AdminStyles/ReviewList.css'
 import Navbar from '../components/Navbar'
 import Footer from '../components/Footer'
 import PageTitle from '../components/PageTitle'

@@ -1,4 +1,4 @@
-const STORAGE_KEY = 'sugarMuserecenlyViewed'
+const STORAGE_KEY = 'sugarMuserecentlyViewed'
 const MAX_ITEMS = 8
 
 const getProductImage = (product) => {
@@ -35,7 +35,7 @@ const getProductImage = (product) => {
   return ''
 }
 
-export const getrecenlyViewed = () => {
+export const getrecentlyViewed = () => {
   try {
     const saved =
       localStorage.getItem(
@@ -57,7 +57,7 @@ export const getrecenlyViewed = () => {
   }
 }
 
-export const saverecenlyViewed = (
+export const saverecentlyViewed = (
   product
 ) => {
   if (!product) {
@@ -139,11 +139,11 @@ export const saverecenlyViewed = (
   return updated
 }
 
-export const removerecenlyViewed = (
+export const removerecentlyViewed = (
   id
 ) => {
   const current =
-    getrecenlyViewed()
+    getrecentlyViewed()
 
   const updated =
     current.filter(
@@ -164,7 +164,7 @@ export const removerecenlyViewed = (
   return updated
 }
 
-export const clearrecenlyViewed =
+export const clearrecentlyViewed =
   () => {
     localStorage.removeItem(
       STORAGE_KEY

@@ -11,7 +11,7 @@ import {
   useCart,
 } from "../Context/Cartcontext";
 
-import "../pageStyles/RecentlyViewed.css";
+import "../pageStyles/recentlyViewed.css";
 
 const ClockIcon = () => (
   <svg
@@ -55,58 +55,58 @@ const TrashIcon = () => (
   </svg>
 );
 
-const RecentlyViewed = () => {
+const recentlyViewed = () => {
   const {
     addToCart,
   } = useCart();
 
   const [
     recentlyViewed,
-    setRecentlyViewed,
+    setrecentlyViewed,
   ] = useState([]);
 
   useEffect(() => {
     try {
       const saved =
         localStorage.getItem(
-          "sugarMuseRecentlyViewed"
+          "sugarMuserecenlyViewed"
         );
 
-      setRecentlyViewed(
+      setrecenlyViewed(
         saved
           ? JSON.parse(saved)
           : []
       );
     } catch {
-      setRecentlyViewed([]);
+      setrecenlyViewed([]);
     }
   }, []);
 
   const handleClearHistory =
     () => {
       localStorage.removeItem(
-        "sugarMuseRecentlyViewed"
+        "sugarMuserecenlyViewed"
       );
 
-      setRecentlyViewed([]);
+      setrecenlyViewed([]);
     };
 
   const handleRemoveItem = (
     productId
   ) => {
     const updated =
-      recentlyViewed.filter(
+      recenlyViewed.filter(
         (product) =>
           product.id !==
           productId
       );
 
-    setRecentlyViewed(
+    setrecenlyViewed(
       updated
     );
 
     localStorage.setItem(
-      "sugarMuseRecentlyViewed",
+      "sugarMuserecenlyViewed",
       JSON.stringify(updated)
     );
   };
@@ -152,15 +152,15 @@ const RecentlyViewed = () => {
                 Recently Viewed
               </h2>
 
-              {recentlyViewed.length >
+              {recenlyViewed.length >
                 0 && (
                 <span className="recently-viewed-count">
                   <ClockIcon />
 
                   {
-                    recentlyViewed.length
+                    recenlyViewed.length
                   }{" "}
-                  {recentlyViewed.length ===
+                  {recenlyViewed.length ===
                   1
                     ? "item"
                     : "items"}
@@ -175,7 +175,7 @@ const RecentlyViewed = () => {
             </p>
           </div>
 
-          {recentlyViewed.length >
+          {recenlyViewed.length >
             0 && (
             <button
               type="button"
@@ -191,7 +191,7 @@ const RecentlyViewed = () => {
           )}
         </div>
 
-        {recentlyViewed.length ===
+        {recenlyViewed.length ===
         0 ? (
           <div className="recently-viewed-empty">
             <div className="recently-viewed-empty-icon">
@@ -220,7 +220,7 @@ const RecentlyViewed = () => {
           </div>
         ) : (
           <div className="recently-viewed-grid">
-            {recentlyViewed.map(
+            {recenlyViewed.map(
               (product) => (
                 <article
                   className="recently-viewed-card"
@@ -309,4 +309,4 @@ const RecentlyViewed = () => {
   );
 };
 
-export default RecentlyViewed;
+export default recenlyViewed;

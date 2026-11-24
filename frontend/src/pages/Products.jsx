@@ -8,8 +8,8 @@ import { useSearchParams } from "react-router-dom";
 import Product from "../components/Product";
 import "../pageStyles/Products.css";
 import {
-  saverecenlyViewed,
-} from "../utils/recenlyViewed";
+  saverecentlyViewed,
+} from "../utils/recentlyViewed";
 const HERO_IMAGE =
   "/images/products/strawberry-cake.jpg";
 

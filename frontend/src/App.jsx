@@ -5,7 +5,7 @@ import {
 } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
-import recenlyViewed from "./pages/recenlyViewed";
+import recentlyViewed from "./pages/recentlyViewed";
 import Home from "./pages/Home";
 import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
@@ -18,7 +18,17 @@ import Account from "./pages/Account";
 import Auth from "./pages/Auth";
 import Checkout from "./pages/Checkout";
 import ForgotPassword from "./pages/ForgotPassword";
+import {
+  Navigate,
+} from "react-router-dom";
 
+import AdminLayout from "./Admin/components/AdminLayout";
+import AdminDashboard from "./Admin/AdminDashboard";
+import ProductList from "./Admin/ProductList";
+import OrdersList from "./Admin/OrdersList";
+import UsersList from "./Admin/UsersList";
+import ReviewList from "./Admin/ReviewList";
+import VoucherList from "./Admin/VoucherList";
 function App() {
   return (
     <>
@@ -47,7 +57,7 @@ function App() {
 
         <Route
           path="/recently-viewed"
-          element={<recenlyViewed />}
+          element={<recentlyViewed />}
         />  
 
         <Route
@@ -89,6 +99,63 @@ function App() {
           path="/checkout"
           element={<Checkout />}
         />
+
+        <Route
+        path="/admin"
+        element={<AdminLayout />}
+      >
+        <Route
+          index
+          element={
+            <Navigate
+              to="/admin/dashboard"
+              replace
+            />
+          }
+        />
+
+        <Route
+          path="dashboard"
+          element={
+            <AdminDashboard />
+          }
+        />
+
+        <Route
+          path="products"
+          element={
+            <ProductList />
+          }
+        />
+
+        <Route
+          path="orders"
+          element={
+            <OrdersList />
+          }
+        />
+
+        <Route
+          path="users"
+          element={
+            <UsersList />
+          }
+        />
+
+        <Route
+          path="reviews"
+          element={
+            <ReviewList />
+          }
+        />
+
+        <Route
+          path="vouchers"
+          element={
+            <VoucherList />
+          }
+        />
+      </Route>
       </Routes>
     </>
   );
