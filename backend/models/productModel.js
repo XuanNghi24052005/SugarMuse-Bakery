@@ -111,10 +111,11 @@
                 "Pastry",
                 "Savory",
                 "Gift Box",
+                "Combo",
               ],
 
               message:
-                "Category must be one of: Cake, Pastry, Savory, Gift Box",
+                "Category must be one of: Cake, Pastry, Savory, Gift Box, Combo",
             },
           },
 
