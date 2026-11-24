@@ -124,8 +124,8 @@ app.use(
   )
 );
 
-app.all("/*splat", (req, res) => {
-  res.status(404).send("Not Found");
+app.get("/*splat", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
 });
 
 app.use(errorHandlerMiddleware);
