@@ -18,6 +18,7 @@ import wishlistRoute from "./routes/wishlistRoute.js";
 import addressRoute from "./routes/addressRoute.js";
 import notificationRoute from "./routes/notificationRoute.js";
 import contactRoute from "./routes/contactRoute.js";
+import adminAuthRoutes from "./routes/adminAuthRoutes.js";
 import errorHandlerMiddleware from "./middleware/error.js";
 import { stripeWebhook } from "./controller/webhookController.js";
 
@@ -117,6 +118,7 @@ app.use("/api/v1", wishlistRoute);
 app.use("/api/v1", addressRoute);
 app.use("/api/v1", notificationRoute);
 app.use("/api/v1", contactRoute);
+app.use("/api/v1", adminAuthRoutes);
 
 app.use(
   express.static(

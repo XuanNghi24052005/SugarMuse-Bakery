@@ -1,33 +1,23 @@
-import React, {
-  useState,
-} from "react";
-
-import {
-  Outlet,
-} from "react-router-dom";
-
+import React, { useState } from "react";
+import { Outlet, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 import AdminSidebar from "./AdminSidebar";
 import AdminTopbar from "./AdminTopbar";
-
 import "../AdminStyles/AdminLayout.css";
 
 const AdminLayout = () => {
-  const [
-    sidebarOpen,
-    setSidebarOpen,
-  ] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { isAdminAuthenticated } = useSelector((state) => state.admin);
+
+  if (!isAdminAuthenticated) {
+    return <Navigate to="/admin/login" replace />;
+  }
 
   return (
     <div className="admin-shell">
       <AdminSidebar
-        sidebarOpen={
-          sidebarOpen
-        }
-        closeSidebar={() =>
-          setSidebarOpen(
-            false
-          )
-        }
+        sidebarOpen={sidebarOpen}
+        closeSidebar={() => setSidebarOpen(false)}
       />
 
       {sidebarOpen && (
@@ -35,22 +25,12 @@ const AdminLayout = () => {
           type="button"
           className="admin-sidebar-overlay"
           aria-label="Close menu"
-          onClick={() =>
-            setSidebarOpen(
-              false
-            )
-          }
+          onClick={() => setSidebarOpen(false)}
         />
       )}
 
       <div className="admin-main">
-        <AdminTopbar
-          onMenuClick={() =>
-            setSidebarOpen(
-              true
-            )
-          }
-        />
+        <AdminTopbar onMenuClick={() => setSidebarOpen(true)} />
 
         <main className="admin-content">
           <Outlet />

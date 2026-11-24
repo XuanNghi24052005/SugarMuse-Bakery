@@ -1,0 +1,198 @@
+/* Sugar Muse Bakery - Admin Login Portal Styling */
+.admin-portal-login-wrapper {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #fff2ee 0%, #fffbf8 50%, #f6e6e2 100%);
+  padding: 30px 20px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.admin-portal-login-card {
+  width: 100%;
+  max-width: 440px;
+  background: #ffffff;
+  border: 1px solid #ebd9d4;
+  border-radius: 24px;
+  padding: 40px 36px;
+  box-shadow: 0 16px 40px rgba(89, 33, 27, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+.admin-portal-brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.admin-portal-symbol {
+  width: 52px;
+  height: 52px;
+  border-radius: 16px;
+  background: #fae6e2;
+  color: #c95c57;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 12px rgba(201, 92, 87, 0.15);
+}
+
+.admin-portal-brand h2 {
+  margin: 0 0 6px 0;
+  color: #57231c;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.admin-portal-badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fde8e5;
+  color: #c15752;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 1.5px;
+}
+
+.admin-portal-desc {
+  color: #8c6e67;
+  font-size: 13px;
+  line-height: 1.5;
+  margin: 0 0 28px 0;
+}
+
+.admin-portal-form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  text-align: left;
+}
+
+.admin-portal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-portal-field label {
+  color: #57231c;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-portal-field input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #e5d2cc;
+  border-radius: 10px;
+  background: #fffaf8;
+  color: #4a2722;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.admin-portal-field input:focus {
+  border-color: #d56560;
+  background: #ffffff;
+  box-shadow: 0 0 0 3px rgba(213, 101, 96, 0.12);
+}
+
+.admin-password-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.admin-eye-toggle {
+  position: absolute;
+  right: 12px;
+  background: transparent;
+  border: none;
+  color: #9e7f79;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.admin-eye-toggle:hover {
+  color: #57231c;
+}
+
+.admin-portal-submit-btn {
+  width: 100%;
+  margin-top: 6px;
+  padding: 13px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #d86863 0%, #ba4e49 100%);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(216, 104, 99, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.admin-portal-submit-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(216, 104, 99, 0.45);
+}
+
+.admin-portal-submit-btn:disabled {
+  background: #d8c3be;
+  box-shadow: none;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.admin-portal-footer {
+  width: 100%;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #f2e5e1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+
+.admin-portal-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #8c6e67;
+  font-size: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.admin-portal-back-link:hover {
+  color: #c95c57;
+}
+
+.admin-security-note {
+  color: #aa8c86;
+  font-size: 10px;
+}

@@ -23,6 +23,7 @@ import {
 } from "react-router-dom";
 
 import AdminLayout from "./Admin/AdminLayout";
+import AdminLogin from "./Admin/AdminLogin";
 import AdminDashboard from "./Admin/AdminDashboard";
 import ProductList from "./Admin/ProductList";
 import CreateProduct from "./Admin/CreateProduct";
@@ -103,6 +104,11 @@ function App() {
         <Route
           path="/checkout"
           element={<Checkout />}
+        />
+
+        <Route
+          path="/admin/login"
+          element={<AdminLogin />}
         />
 
         <Route

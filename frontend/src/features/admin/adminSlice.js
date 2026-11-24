@@ -198,12 +198,47 @@ export const deleteAdminCoupon = createAsyncThunk('/admin/deleteAdminCoupon', as
     }
 })
 
+// Admin Login
+export const adminLogin = createAsyncThunk('/admin/auth/login', async ({ email, password }, { rejectWithValue }) => {
+    try {
+        const { data } = await axios.post("/api/v1/admin/auth/login", { email, password })
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response?.data?.message || "Admin login failed.")
+    }
+})
+
+// Admin Logout
+export const adminLogout = createAsyncThunk('/admin/auth/logout', async (_, { rejectWithValue }) => {
+    try {
+        const { data } = await axios.get("/api/v1/admin/auth/logout")
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response?.data?.message || "Admin logout failed.")
+    }
+})
+
+// Check Admin Auth
+export const checkAdminAuth = createAsyncThunk('/admin/auth/me', async (_, { rejectWithValue }) => {
+    try {
+        const { data } = await axios.get("/api/v1/admin/auth/me")
+        return data;
+    } catch (error) {
+        return rejectWithValue(error.response?.data?.message || "Not authenticated as admin.")
+    }
+})
+
 const adminSlice = createSlice({
     name: 'admin',
     initialState:{
         loading: false,
         error: null,
         success:false,
+        adminInfo: (() => {
+            try { return JSON.parse(localStorage.getItem("adminInfo")) } catch { return null }
+        })(),
+        isAdminAuthenticated: !!localStorage.getItem("adminInfo"),
+        adminAuthLoading: false,
         products: [],
         product:{},
         deleting:{},
@@ -484,6 +519,59 @@ const adminSlice = createSlice({
             const id = action.meta.arg;
             state.deleting[id] = false;
             state.error = action.payload?.message || "Failed to delete voucher.";
+        });
+
+        // Admin Auth builders
+        builder
+        .addCase(adminLogin.pending, (state) => {
+            state.adminAuthLoading = true;
+            state.error = null;
+        })
+        .addCase(adminLogin.fulfilled, (state, action) => {
+            state.adminAuthLoading = false;
+            state.adminInfo = action.payload.admin;
+            state.isAdminAuthenticated = true;
+            try {
+                localStorage.setItem("adminInfo", JSON.stringify(action.payload.admin));
+            } catch (err) {
+                console.error(err);
+            }
+        })
+        .addCase(adminLogin.rejected, (state, action) => {
+            state.adminAuthLoading = false;
+            state.error = action.payload;
+            state.isAdminAuthenticated = false;
+        });
+
+        builder
+        .addCase(adminLogout.fulfilled, (state) => {
+            state.adminInfo = null;
+            state.isAdminAuthenticated = false;
+            try {
+                localStorage.removeItem("adminInfo");
+            } catch (err) {
+                console.error(err);
+            }
+        });
+
+        builder
+        .addCase(checkAdminAuth.fulfilled, (state, action) => {
+            state.adminInfo = action.payload.admin;
+            state.isAdminAuthenticated = true;
+            try {
+                localStorage.setItem("adminInfo", JSON.stringify(action.payload.admin));
+            } catch (err) {
+                console.error(err);
+            }
+        })
+        .addCase(checkAdminAuth.rejected, (state) => {
+            state.adminInfo = null;
+            state.isAdminAuthenticated = false;
+            try {
+                localStorage.removeItem("adminInfo");
+            } catch (err) {
+                console.error(err);
+            }
         });
     }
 })

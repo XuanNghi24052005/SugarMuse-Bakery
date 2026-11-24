@@ -3,6 +3,8 @@ import {
   NavLink,
   useNavigate,
 } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { adminLogout } from "../features/admin/adminSlice";
 
 const DashboardIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
@@ -107,6 +109,16 @@ const AdminSidebar = ({
   closeSidebar,
 }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { adminInfo } = useSelector((state) => state.admin);
+
+  const handleLogout = () => {
+    dispatch(adminLogout());
+    navigate("/admin/login");
+  };
+
+  const adminName = adminInfo?.name || "Sugar Muse Admin";
+  const initial = adminName.charAt(0).toUpperCase();
 
   return (
     <aside
@@ -168,12 +180,12 @@ const AdminSidebar = ({
 
         <div className="admin-sidebar-profile">
           <div className="admin-sidebar-avatar">
-            A
+            {initial}
           </div>
 
           <div className="admin-sidebar-profile-copy">
             <strong>
-              Sugar Muse Admin
+              {adminName}
             </strong>
             <span>
               Administrator
@@ -185,6 +197,7 @@ const AdminSidebar = ({
             className="admin-sidebar-logout"
             aria-label="Log out"
             title="Log out"
+            onClick={handleLogout}
           >
             <LogoutIcon />
           </button>
