@@ -1,13 +1,13 @@
 {
-  "name": "mern_stack",
+  "name": "sugar_muse_bakery",
   "version": "1.0.0",
-  "description": "",
+  "description": "Sugar Muse - Artisan Bakery E-Commerce Store",
   "main": "index.js",
   "scripts": {
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js",
-    "build":"npm install && npm install --prefix frontend && npm run build --prefix frontend"
-
+    "seed": "node backend/seeder.js",
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "keywords": [],
   "author": "",
@@ -27,8 +27,10 @@
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.7.2",
     "nodemailer": "^9.0.3",
-    "nodemon": "^3.1.14",
     "stripe": "^22.3.2",
     "validator": "^13.15.35"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
   }
 }

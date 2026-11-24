@@ -16,11 +16,11 @@ export const createContact = handleAsyncError(async (req, res, next) => {
 
     // Try sending email notification to the store email
     try {
-        const targetEmail = process.env.NODEMAILER_EMAIL || "hello@mocha.store"
+        const targetEmail = process.env.NODEMAILER_EMAIL || "hello@sugarmuse.vn"
         await sendEmail({
             email: targetEmail,
-            subject: `Mocha Support ${name}: ${subject || "You have a New Message"}`,
-            message: `You received a new contact message on MOCHA store:\n\nSender Name: ${name}\nSender Email: ${email}\n\nMessage:\n${message}`
+            subject: `Sugar Muse Support ${name}: ${subject || "You have a New Message"}`,
+            message: `You received a new contact message on Sugar Muse Bakery:\n\nSender Name: ${name}\nSender Email: ${email}\n\nMessage:\n${message}`
         })
     } catch (err) {
         console.error("Contact email notification failed:", err.message)

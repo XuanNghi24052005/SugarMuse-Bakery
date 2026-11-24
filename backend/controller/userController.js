@@ -48,8 +48,8 @@ export const userRegister = handleAsyncError(async (req, res, next) => {
 
         await sendEmail({
             email: user.email,
-            subject: "[MOCHA] Account Verification OTP Code",
-            message: `Hello ${user.name},\n\nThank you for registering at MOCHA! Your 6-Digit Verification OTP Code is: ${otp}\n\nThis code will expire in 10 minutes.`
+            subject: "[Sugar Muse] Account Verification OTP Code",
+            message: `Hello ${user.name},\n\nThank you for registering at Sugar Muse Bakery! Your 6-Digit Verification OTP Code is: ${otp}\n\nThis code will expire in 10 minutes.`
         });
     } catch (err) {
         console.error("Failed to send registration OTP email:", err.message);
@@ -306,7 +306,7 @@ export const sendEmailVerificationOTP = handleAsyncError(async (req, res, next) 
     try {
         await sendEmail({
             email: user.email,
-            subject: "[MOCHA] Account Verification OTP Code",
+            subject: "[Sugar Muse] Account Verification OTP Code",
             message
         });
 

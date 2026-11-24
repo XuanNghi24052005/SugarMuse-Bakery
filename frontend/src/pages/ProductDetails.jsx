@@ -26,7 +26,7 @@ import {
     removeFromWishlist
 } from '../features/wishlist/wishlistSlice'
 
-const saveRecentlyViewed = (product, routeId) => {
+const saverecenlyViewed = (product, routeId) => {
     if (!product) {
         return
     }
@@ -43,7 +43,7 @@ const saveRecentlyViewed = (product, routeId) => {
     try {
         const saved =
             localStorage.getItem(
-                'sugarMuseRecentlyViewed'
+                'sugarMuserecenlyViewed'
             )
 
         const parsed =
@@ -92,7 +92,7 @@ const saveRecentlyViewed = (product, routeId) => {
         ].slice(0, 8)
 
         localStorage.setItem(
-            'sugarMuseRecentlyViewed',
+            'sugarMuserecenlyViewed',
             JSON.stringify(updated)
         )
     } catch (error) {
@@ -350,7 +350,7 @@ const ProductDetails = () => {
             return
         }
 
-        saveRecentlyViewed(
+        saverecenlyViewed(
             product,
             id
         )

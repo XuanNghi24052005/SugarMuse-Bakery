@@ -8,8 +8,8 @@ import { useSearchParams } from "react-router-dom";
 import Product from "../components/Product";
 import "../pageStyles/Products.css";
 import {
-  saveRecentlyViewed,
-} from "../utils/recentlyViewed";
+  saverecenlyViewed,
+} from "../utils/recenlyViewed";
 const HERO_IMAGE =
   "/images/products/strawberry-cake.jpg";
 
@@ -725,7 +725,7 @@ const Products = () => {
         `${productPath}?`
       )
     ) {
-      saveRecentlyViewed(
+      saverecenlyViewed(
         product
       );
     }
