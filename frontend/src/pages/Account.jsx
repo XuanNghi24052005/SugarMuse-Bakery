@@ -861,6 +861,25 @@ const Account = () => {
           </nav>
 
           <div className="account-sidebar-bottom">
+            {user?.role === "admin" && (
+              <button
+                type="button"
+                className="account-menu-item account-admin-btn"
+                style={{
+                  background: "rgba(158, 67, 67, 0.08)",
+                  color: "#9e4343",
+                  fontWeight: "700",
+                  marginBottom: "8px",
+                  borderRadius: "8px",
+                  border: "1px dashed rgba(158, 67, 67, 0.4)",
+                }}
+                onClick={() => navigate("/admin/dashboard")}
+              >
+                <span style={{ fontSize: "16px" }}>⚙</span>
+                <span>Admin Dashboard</span>
+              </button>
+            )}
+
             <button
               type="button"
               className="account-menu-item account-logout"

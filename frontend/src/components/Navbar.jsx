@@ -113,8 +113,11 @@ const Navbar = () => {
   } = useCart();
 
   const {
+    user,
     isAuthenticated,
   } = useAuth();
+
+  const isAdmin = user?.role === "admin";
 
   const navigate =
     useNavigate();
@@ -203,6 +206,15 @@ const Navbar = () => {
         >
           CONTACT
         </Link>
+
+        {isAdmin && (
+          <Link
+            to="/admin/dashboard"
+            className="nav-link admin-nav-pill"
+          >
+            ⚙ ADMIN DASHBOARD
+          </Link>
+        )}
       </nav>
 
       <div className="nav-right">

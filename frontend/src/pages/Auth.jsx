@@ -121,13 +121,13 @@ const Auth = () => {
     setError("");
   };
 
-  const handleSubmit = (
+  const handleSubmit = async (
     event
   ) => {
     event.preventDefault();
 
     if (mode === "login") {
-      const result = login({
+      const result = await login({
         email:
           formData.email,
         password:
@@ -142,12 +142,18 @@ const Auth = () => {
         return;
       }
 
-      navigate("/");
+      if (result.user?.role === "admin") {
+        navigate("/admin/dashboard");
+        return;
+      }
+
+      const redirect = searchParams.get("redirect") || "/";
+      navigate(redirect);
 
       return;
     }
 
-    const result = register({
+    const result = await register({
       fullName:
         formData.fullName,
       email:

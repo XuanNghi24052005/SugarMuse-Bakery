@@ -106,17 +106,21 @@ function App() {
           element={<Checkout />}
         />
 
-        {/* Admin Portal Authentication */}
+        {/* Admin Portal Authentication - unified under /login */}
         <Route
           path="/admin-login"
-          element={<AdminLogin />}
+          element={<Navigate to="/login" replace />}
+        />
+        <Route
+          path="/admin/login"
+          element={<Navigate to="/login" replace />}
         />
 
         <Route path="/admin">
-          {/* Public Admin Login Route (No AdminLayout Shell) */}
+          {/* Direct any legacy /admin/login to /login */}
           <Route
             path="login"
-            element={<AdminLogin />}
+            element={<Navigate to="/login" replace />}
           />
 
           {/* Protected Admin Pages (Wrapped with AdminLayout Shell) */}

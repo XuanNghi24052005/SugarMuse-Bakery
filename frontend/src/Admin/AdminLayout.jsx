@@ -1,16 +1,34 @@
 import React, { useState } from "react";
 import { Outlet, Navigate } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { useAuth } from "../Context/Authcontext";
 import AdminSidebar from "./AdminSidebar";
 import AdminTopbar from "./AdminTopbar";
 import "../AdminStyles/AdminLayout.css";
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const { isAdminAuthenticated } = useSelector((state) => state.admin);
+  const { isAdminAuthenticated, adminInfo } = useSelector((state) => state.admin);
+  const { user: reduxUser } = useSelector((state) => state.user);
+  const { user: authUser } = useAuth();
 
-  if (!isAdminAuthenticated) {
-    return <Navigate to="/admin/login" replace />;
+  const localUser = (() => {
+    try {
+      const u =
+        localStorage.getItem("sugarMuseUser") ||
+        localStorage.getItem("user") ||
+        localStorage.getItem("adminInfo");
+      return u ? JSON.parse(u) : null;
+    } catch {
+      return null;
+    }
+  })();
+
+  const currentUser = authUser || reduxUser || adminInfo || localUser;
+  const isAdmin = currentUser?.role === "admin" || isAdminAuthenticated;
+
+  if (!isAdmin) {
+    return <Navigate to="/login" replace />;
   }
 
   return (

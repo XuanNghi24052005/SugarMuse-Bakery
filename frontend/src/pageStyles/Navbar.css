@@ -531,3 +531,26 @@
     min-width: unset;
   }
 }
+
+.admin-nav-pill {
+  color: #9e4343 !important;
+  font-weight: 700 !important;
+  font-size: 11px !important;
+  letter-spacing: 0.08em !important;
+  background: rgba(224, 138, 142, 0.16) !important;
+  border: 1px solid rgba(200, 107, 114, 0.35) !important;
+  padding: 5px 13px !important;
+  border-radius: 999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  transition: all 0.2s ease !important;
+}
+
+.admin-nav-pill:hover {
+  background: #9e4343 !important;
+  color: #ffffff !important;
+  border-color: #9e4343 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(158, 67, 67, 0.25);
+}

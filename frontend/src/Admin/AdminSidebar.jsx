@@ -5,6 +5,7 @@ import {
 } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { adminLogout } from "../features/admin/adminSlice";
+import { useAuth } from "../Context/Authcontext";
 
 const DashboardIcon = () => (
   <svg viewBox="0 0 24 24" fill="none">
@@ -111,13 +112,23 @@ const AdminSidebar = ({
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { adminInfo } = useSelector((state) => state.admin);
+  const { user: authUser, logout } = useAuth();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch {
+      // ignore
+    }
     dispatch(adminLogout());
-    navigate("/admin/login");
+    navigate("/login");
   };
 
-  const adminName = adminInfo?.name || "Sugar Muse Admin";
+  const adminName =
+    authUser?.fullName ||
+    authUser?.name ||
+    adminInfo?.name ||
+    "Sugar Muse Admin";
   const initial = adminName.charAt(0).toUpperCase();
 
   return (
