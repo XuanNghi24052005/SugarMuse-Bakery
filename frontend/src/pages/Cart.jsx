@@ -233,9 +233,9 @@ const Cart = () => {
           }}
         >
           <div>
-            {cartItems.map((item) => (
+            {cartItems.map((item, index) => (
               <article
-                key={item._id}
+                key={item._id || item.id || item.name || index}
                 style={{
                   marginBottom: "18px",
                   padding: "18px",
