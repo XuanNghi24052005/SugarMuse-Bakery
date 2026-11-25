@@ -8,10 +8,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 dotenv.config({ path: path.join(__dirname, "config", "config.env") });
 
-const sampleUsers = [
+const sampleEnglishUsers = [
   {
-    name: "Mai Ngoc",
-    email: "ngocmai@sugarmuse.vn",
+    name: "Emily Watson",
+    email: "emily.watson@sugarmuse.com",
     password: "Customer@2026",
     role: "user",
     avatar: {
@@ -21,8 +21,8 @@ const sampleUsers = [
     isVerified: true
   },
   {
-    name: "Hoang Nam",
-    email: "hoangnam@sugarmuse.vn",
+    name: "Oliver Smith",
+    email: "oliver.smith@sugarmuse.com",
     password: "Customer@2026",
     role: "user",
     avatar: {
@@ -32,8 +32,8 @@ const sampleUsers = [
     isVerified: true
   },
   {
-    name: "Thu Ha",
-    email: "thuha@sugarmuse.vn",
+    name: "Sophia Brown",
+    email: "sophia.brown@sugarmuse.com",
     password: "Customer@2026",
     role: "user",
     avatar: {
@@ -43,8 +43,8 @@ const sampleUsers = [
     isVerified: true
   },
   {
-    name: "Minh Khang",
-    email: "minhkhang@sugarmuse.vn",
+    name: "James Wilson",
+    email: "james.wilson@sugarmuse.com",
     password: "Customer@2026",
     role: "user",
     avatar: {
@@ -54,8 +54,8 @@ const sampleUsers = [
     isVerified: true
   },
   {
-    name: "Lan Anh",
-    email: "lananh@sugarmuse.vn",
+    name: "Lucas Miller",
+    email: "lucas.miller@sugarmuse.com",
     password: "Customer@2026",
     role: "user",
     avatar: {
@@ -65,52 +65,52 @@ const sampleUsers = [
     isVerified: true
   },
   {
-    name: "Quoc Anh",
-    email: "quocanh@sugarmuse.vn",
+    name: "Charlotte Davis",
+    email: "charlotte.davis@sugarmuse.com",
     password: "Customer@2026",
     role: "user",
     avatar: {
       public_id: "avatar_user_6",
-      url: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150"
-    },
-    isVerified: true
-  },
-  {
-    name: "Phuong Thao",
-    email: "phuongthao@sugarmuse.vn",
-    password: "Customer@2026",
-    role: "user",
-    avatar: {
-      public_id: "avatar_user_7",
       url: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150"
     },
     isVerified: true
   },
   {
-    name: "Duc Minh",
-    email: "ducminh@sugarmuse.vn",
+    name: "Liam Johnson",
+    email: "liam.johnson@sugarmuse.com",
     password: "Customer@2026",
     role: "user",
     avatar: {
-      public_id: "avatar_user_8",
-      url: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150"
+      public_id: "avatar_user_7",
+      url: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150"
     },
     isVerified: true
   },
   {
-    name: "Khanh Ly",
-    email: "khanhly@sugarmuse.vn",
+    name: "Isabella Martinez",
+    email: "isabella.m@sugarmuse.com",
     password: "Customer@2026",
     role: "user",
     avatar: {
-      public_id: "avatar_user_9",
+      public_id: "avatar_user_8",
       url: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=150"
     },
     isVerified: true
   },
   {
-    name: "Bao Long",
-    email: "baolong@sugarmuse.vn",
+    name: "Ethan Anderson",
+    email: "ethan.anderson@sugarmuse.com",
+    password: "Customer@2026",
+    role: "user",
+    avatar: {
+      public_id: "avatar_user_9",
+      url: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150"
+    },
+    isVerified: true
+  },
+  {
+    name: "Mia Taylor",
+    email: "mia.taylor@sugarmuse.com",
     password: "Customer@2026",
     role: "user",
     avatar: {
@@ -121,33 +121,37 @@ const sampleUsers = [
   }
 ];
 
-async function seedUsers() {
+async function replaceWithEnglishUsers() {
   try {
     console.log("Connecting to MongoDB Atlas...");
     await mongoose.connect(process.env.DB_URL);
     console.log("Connected successfully!");
 
+    // Delete existing customer accounts (role: "user"), keep admin!
+    const deleteResult = await User.deleteMany({ role: "user" });
+    console.log(`Removed ${deleteResult.deletedCount} old customer accounts.`);
+
     let createdCount = 0;
-    for (const u of sampleUsers) {
-      const existing = await User.findOne({ email: u.email });
-      if (!existing) {
-        // Create user triggers pre('save') for bcrypt hashing
-        await User.create(u);
-        createdCount++;
-        console.log(`Created user: ${u.name} (${u.email})`);
-      } else {
-        console.log(`User already exists: ${u.email}`);
-      }
+    for (const u of sampleEnglishUsers) {
+      // User.create triggers bcrypt pre('save') password hashing
+      await User.create(u);
+      createdCount++;
+      console.log(`Created user: ${u.name} (${u.email})`);
     }
 
     const totalUsers = await User.countDocuments();
-    console.log(`\nDONE: Created ${createdCount} new users. Total users in MongoDB: ${totalUsers}`);
+    const adminUser = await User.findOne({ role: "admin" });
+
+    console.log(`\nDONE: Successfully added ${createdCount} English customer accounts.`);
+    console.log(`Admin account preserved: ${adminUser?.email || "N/A"}`);
+    console.log(`Total users in MongoDB: ${totalUsers}`);
+
     await mongoose.disconnect();
     process.exit(0);
   } catch (error) {
-    console.error("Seeding users failed:", error);
+    console.error("Replacing users failed:", error);
     process.exit(1);
   }
 }
 
-seedUsers();
+replaceWithEnglishUsers();
