@@ -91,6 +91,15 @@ const Product = ({ product }) => {
           {product.name}
         </Link>
 
+        {product.description && (
+          <p
+            className="boutique-product-desc"
+            title={product.description}
+          >
+            {product.description}
+          </p>
+        )}
+
         <div className="boutique-product-bottom">
           <strong>
             ${Number(product.price).toFixed(2)}

@@ -1,3 +1,4 @@
+import mongoose from "mongoose";
 import Product from "../models/productModel.js";
 import ErrorHandler from "../utils/handleError.js";
 import handleAsyncError from "../middleware/handleAsyncError.js";
@@ -222,14 +223,24 @@ export const getAllProducts = handleAsyncError(
 
 export const getSingleProduct = handleAsyncError(
     async (req, res, next) => {
-
-        const product =
-            await Product.findById(
-                req.params.id
-            );
+        let product;
+        if (mongoose.Types.ObjectId.isValid(req.params.id)) {
+            product = await Product.findById(req.params.id);
+        } else {
+            // Support numeric index (e.g., /product/1 -> 1st product) or name match
+            const numericIndex = parseInt(req.params.id, 10);
+            if (!isNaN(numericIndex) && numericIndex > 0) {
+                const all = await Product.find().limit(numericIndex);
+                if (all.length >= numericIndex) {
+                    product = all[numericIndex - 1];
+                }
+            }
+            if (!product) {
+                product = await Product.findOne({ name: new RegExp(req.params.id, "i") });
+            }
+        }
 
         if (!product) {
-
             return next(
                 new ErrorHandler(
                     "Product Not Found!",

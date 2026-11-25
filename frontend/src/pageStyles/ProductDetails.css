@@ -49,8 +49,24 @@
     padding: 20px;
     width: 500px;
   }
-  .product-description,.product-price{
+  .product-description {
     text-align: left;
+    font-size: 15px;
+    line-height: 1.65;
+    color: #5c443e;
+    margin: 12px 0 16px;
+    padding: 12px 16px;
+    background: rgba(247, 207, 200, 0.2);
+    border-left: 3px solid #d47277;
+    border-radius: 4px;
+    font-family: inherit;
+  }
+  .product-price {
+    text-align: left;
+    font-size: 24px;
+    font-weight: 800;
+    color: #9e4343;
+    margin: 8px 0;
   }
   .product-info h2 {
     font-size: 24px;

@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import "../pageStyles/Home.css";
 import { useCart } from "../Context/Cartcontext";
 import { useWishlist } from "../Context/Wishlistcontext";
+import axiosInstance from "../utils/axiosInstance";
 
 const ArrowIcon = () => (
   <svg
@@ -85,7 +86,43 @@ const bestSellers = [
 ];
 
 const Home = () => {
+  const [products, setProducts] = useState(bestSellers);
   const { addToCart } = useCart();
+
+  useEffect(() => {
+    let mounted = true;
+    axiosInstance
+      .get("/api/v1/products?limit=4")
+      .then(({ data }) => {
+        if (
+          mounted &&
+          data &&
+          Array.isArray(data.products) &&
+          data.products.length > 0
+        ) {
+          const mapped = data.products.map((p) => ({
+            _id: p._id,
+            name: p.name,
+            price: p.price,
+            description: p.description || "",
+            image:
+              Array.isArray(p.image) && p.image.length > 0
+                ? p.image[0].url
+                : typeof p.image === "string"
+                ? p.image
+                : "/images/products/strawberry-cake.jpg",
+          }));
+          setProducts(mapped);
+        }
+      })
+      .catch((err) =>
+        console.warn("Could not fetch home products from MongoDB:", err)
+      );
+
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const {
     toggleWishlist,
@@ -235,7 +272,7 @@ const Home = () => {
         </div>
 
         <div className="home-product-grid">
-          {bestSellers.map((product) => {
+          {products.map((product) => {
             const liked = isWishlisted(product._id);
 
             return (
@@ -244,10 +281,12 @@ const Home = () => {
                 key={product._id}
               >
                 <div className="home-product-image">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                  />
+                  <Link to={`/product/${product._id}`}>
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                    />
+                  </Link>
 
                   <button
                     type="button"
@@ -271,10 +310,24 @@ const Home = () => {
 
                 <div className="home-product-info">
                   <div>
-                    <h3>{product.name}</h3>
+                    <Link
+                      to={`/product/${product._id}`}
+                      className="home-product-name-link"
+                    >
+                      <h3>{product.name}</h3>
+                    </Link>
+
+                    {product.description && (
+                      <p
+                        className="home-product-desc"
+                        title={product.description}
+                      >
+                        {product.description}
+                      </p>
+                    )}
 
                     <strong>
-                      ${product.price.toFixed(2)}
+                      ${Number(product.price).toFixed(2)}
                     </strong>
                   </div>
 

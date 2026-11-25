@@ -6,6 +6,7 @@ import React, {
 import { useSearchParams } from "react-router-dom";
 
 import Product from "../components/Product";
+import axiosInstance from "../utils/axiosInstance";
 import "../pageStyles/Products.css";
 import {
   saverecentlyViewed,
@@ -17,325 +18,389 @@ const HERO_IMAGE_IS_WIDE = false;
 
 const products = [
   {
-    _id: "1",
-    name: "Chocolate Ganache Cake",
-    price: 35,
-    category: "Cake",
-    ratings: 4.9,
-    numReviews: 24,
-    image:
-      "/images/products/chocolate-cake.jpg",
+    "_id": "1",
+    "name": "Chocolate Ganache Cake",
+    "price": 35,
+    "category": "Cake",
+    "description": "Rich dark Belgian chocolate sponge layered with silky ganache and chocolate curls.",
+    "flavor": "Dark Chocolate",
+    "ratings": 4.9,
+    "numReviews": 24,
+    "image": "/images/products/chocolate-cake.jpg",
+    "stock": 20
   },
   {
-    _id: "2",
-    name: "Strawberry Cream Cake",
-    price: 32,
-    category: "Cake",
-    ratings: 4.8,
-    numReviews: 18,
-    image:
-      "/images/products/strawberry-cake.jpg",
+    "_id": "2",
+    "name": "Strawberry Cream Cake",
+    "price": 32,
+    "category": "Cake",
+    "description": "Light vanilla sponge cake enveloped in fresh Hokkaido whipped cream and hand-picked strawberries.",
+    "flavor": "Strawberry Vanilla",
+    "ratings": 4.8,
+    "numReviews": 18,
+    "image": "/images/products/strawberry-cake.jpg",
+    "stock": 25
   },
   {
-    _id: "3",
-    name: "Classic Tiramisu",
-    price: 18,
-    category: "Cake",
-    ratings: 4.8,
-    numReviews: 31,
-    image:
-      "/images/products/tiramisu.jpg",
+    "_id": "3",
+    "name": "Classic Tiramisu",
+    "price": 18,
+    "category": "Cake",
+    "description": "Authentic Italian tiramisu with espresso-soaked savoiardi, mascarpone cream and cocoa powder.",
+    "flavor": "Coffee Mascarpone",
+    "ratings": 4.8,
+    "numReviews": 31,
+    "image": "/images/products/tiramisu.jpg",
+    "stock": 30
   },
   {
-    _id: "4",
-    name: "Matcha Cream Cake",
-    price: 30,
-    category: "Cake",
-    ratings: 4.7,
-    numReviews: 20,
-    image:
-      "/images/products/matcha-cake.jpg",
+    "_id": "4",
+    "name": "Matcha Cream Cake",
+    "price": 30,
+    "category": "Cake",
+    "description": "Ceremonial grade Uji matcha sponge with delicate white chocolate chantilly cream.",
+    "flavor": "Uji Matcha",
+    "ratings": 4.7,
+    "numReviews": 20,
+    "image": "/images/products/matcha-cake.jpg",
+    "stock": 18
   },
   {
-    _id: "5",
-    name: "Blueberry Vanilla Cake",
-    price: 34,
-    category: "Cake",
-    ratings: 4.9,
-    numReviews: 16,
-    image:
-      "/images/products/blueberry-vanilla-cake.jpg",
+    "_id": "5",
+    "name": "Blueberry Vanilla Cake",
+    "price": 34,
+    "category": "Cake",
+    "description": "Soft vanilla bean sponge infused with wild blueberry compote and lavender cream.",
+    "flavor": "Wild Blueberry",
+    "ratings": 4.9,
+    "numReviews": 16,
+    "image": "/images/products/blueberry-vanilla-cake.jpg",
+    "stock": 15
   },
   {
-    _id: "6",
-    name: "Red Velvet Cake",
-    price: 33,
-    category: "Cake",
-    ratings: 4.8,
-    numReviews: 21,
-    image:
-      "/images/products/red-velvet-cake.jpg",
+    "_id": "6",
+    "name": "Red Velvet Cake",
+    "price": 33,
+    "category": "Cake",
+    "description": "Velvety cocoa buttermilk cake layered with smooth vanilla bean cream cheese frosting.",
+    "flavor": "Red Velvet",
+    "ratings": 4.8,
+    "numReviews": 21,
+    "image": "/images/products/red-velvet-cake.jpg",
+    "stock": 20
   },
   {
-    _id: "7",
-    name: "Lemon Berry Cake",
-    price: 31,
-    category: "Cake",
-    ratings: 4.7,
-    numReviews: 14,
-    image:
-      "/images/products/lemon-berry-cake.jpg",
+    "_id": "7",
+    "name": "Lemon Berry Cake",
+    "price": 31,
+    "category": "Cake",
+    "description": "Zesty Meyer lemon curd and mixed summer berries between moist citrus sponge layers.",
+    "flavor": "Lemon & Mixed Berry",
+    "ratings": 4.7,
+    "numReviews": 14,
+    "image": "/images/products/lemon-berry-cake.jpg",
+    "stock": 16
   },
   {
-    _id: "8",
-    name: "Caramel Lotus Cake",
-    price: 36,
-    category: "Cake",
-    ratings: 4.9,
-    numReviews: 19,
-    image:
-      "/images/products/caramel-lotus-cake.jpg",
+    "_id": "8",
+    "name": "Caramel Lotus Cake",
+    "price": 36,
+    "category": "Cake",
+    "description": "Caramelized Biscoff spread infused layers with crushed Lotus cookies and salted caramel drip.",
+    "flavor": "Caramel Lotus Biscoff",
+    "ratings": 4.9,
+    "numReviews": 19,
+    "image": "/images/products/caramel-lotus-cake.jpg",
+    "stock": 15
   },
   {
-    _id: "9",
-    name: "Butter Croissant",
-    price: 4.5,
-    category: "Pastry",
-    ratings: 4.8,
-    numReviews: 27,
-    image:
-      "/images/products/croissant.jpg",
+    "_id": "9",
+    "name": "Butter Croissant",
+    "price": 4.5,
+    "category": "Pastry",
+    "description": "Golden flaky croissant laminated with 100% French AOP butter, crispy outside and honeycomb airy inside.",
+    "flavor": "French Butter",
+    "ratings": 4.8,
+    "numReviews": 27,
+    "image": "/images/products/croissant.jpg",
+    "stock": 50
   },
   {
-    _id: "10",
-    name: "Cinnamon Swirl",
-    price: 5.5,
-    category: "Pastry",
-    ratings: 4.7,
-    numReviews: 17,
-    image:
-      "/images/products/cinnamon-roll.jpg",
+    "_id": "10",
+    "name": "Cinnamon Swirl",
+    "price": 5.5,
+    "category": "Pastry",
+    "description": "Tender brioche swirled with Ceylon cinnamon sugar and topped with vanilla glaze.",
+    "flavor": "Ceylon Cinnamon",
+    "ratings": 4.7,
+    "numReviews": 17,
+    "image": "/images/products/cinnamon-roll.jpg",
+    "stock": 35
   },
   {
-    _id: "11",
-    name: "Almond Danish",
-    price: 5.8,
-    category: "Pastry",
-    ratings: 4.8,
-    numReviews: 13,
-    image:
-      "/images/products/almond-danish.jpg",
+    "_id": "11",
+    "name": "Almond Danish",
+    "price": 5.8,
+    "category": "Pastry",
+    "description": "Flaky Danish pastry filled with rich almond frangipane cream and topped with toasted almond flakes.",
+    "flavor": "Almond Frangipane",
+    "ratings": 4.8,
+    "numReviews": 13,
+    "image": "/images/products/almond-danish.jpg",
+    "stock": 30
   },
   {
-    _id: "12",
-    name: "Fresh Fruit Tart",
-    price: 8,
-    category: "Pastry",
-    ratings: 4.9,
-    numReviews: 25,
-    image:
-      "/images/products/fruit-tart.jpg",
+    "_id": "12",
+    "name": "Fresh Fruit Tart",
+    "price": 8,
+    "category": "Pastry",
+    "description": "Crisp sweet pastry shell filled with Tahitian vanilla pastry cream and topped with seasonal berries.",
+    "flavor": "Vanilla & Fresh Fruit",
+    "ratings": 4.9,
+    "numReviews": 25,
+    "image": "/images/products/fruit-tart.jpg",
+    "stock": 25
   },
   {
-    _id: "13",
-    name: "Vanilla Cupcake",
-    price: 4,
-    category: "Pastry",
-    ratings: 4.7,
-    numReviews: 12,
-    image:
-      "/images/products/cupcake.jpg",
+    "_id": "13",
+    "name": "Vanilla Cupcake",
+    "price": 4,
+    "category": "Pastry",
+    "description": "Moist Madagascan vanilla cupcake with whipped buttercream swirl and edible pearl sprinkles.",
+    "flavor": "Madagascar Vanilla",
+    "ratings": 4.7,
+    "numReviews": 12,
+    "image": "/images/products/cupcake.jpg",
+    "stock": 40
   },
   {
-    _id: "14",
-    name: "Chocolate Danish",
-    price: 5.9,
-    category: "Pastry",
-    ratings: 4.8,
-    numReviews: 15,
-    image:
-      "/images/products/chocolate-danish.jpg",
+    "_id": "14",
+    "name": "Chocolate Danish",
+    "price": 5.9,
+    "category": "Pastry",
+    "description": "Crispy laminated layers folded around rich Belgian chocolate ganache filling.",
+    "flavor": "Dark Chocolate",
+    "ratings": 4.8,
+    "numReviews": 15,
+    "image": "/images/products/chocolate-danish.jpg",
+    "stock": 30
   },
   {
-    _id: "15",
-    name: "Cream Puff",
-    price: 4.8,
-    category: "Pastry",
-    ratings: 4.6,
-    numReviews: 11,
-    image:
-      "/images/products/cream-puff.jpg",
+    "_id": "15",
+    "name": "Cream Puff",
+    "price": 4.8,
+    "category": "Pastry",
+    "description": "Light choux pastry with a crunchy craquelin crust, bursting with diplomat vanilla bean cream.",
+    "flavor": "Vanilla Custard",
+    "ratings": 4.6,
+    "numReviews": 11,
+    "image": "/images/products/cream-puff.jpg",
+    "stock": 35
   },
   {
-    _id: "16",
-    name: "Strawberry Danish",
-    price: 6.2,
-    category: "Pastry",
-    ratings: 4.8,
-    numReviews: 18,
-    image:
-      "/images/products/strawberry-danish.jpg",
+    "_id": "16",
+    "name": "Strawberry Danish",
+    "price": 6.2,
+    "category": "Pastry",
+    "description": "Buttery layered pastry filled with vanilla custard and glazed ripe strawberries.",
+    "flavor": "Strawberry Custard",
+    "ratings": 4.8,
+    "numReviews": 18,
+    "image": "/images/products/strawberry-danish.jpg",
+    "stock": 28
   },
   {
-    _id: "17",
-    name: "Chicken Mushroom Pie",
-    price: 7.5,
-    category: "Savory",
-    ratings: 4.8,
-    numReviews: 20,
-    image:
-      "/images/products/chicken-mushroom-pie.jpg",
+    "_id": "17",
+    "name": "Chicken Mushroom Pie",
+    "price": 7.5,
+    "category": "Savory",
+    "description": "Slow-cooked tender chicken breast and portobello mushrooms in a creamy thyme white sauce.",
+    "flavor": "Chicken & Mushroom",
+    "ratings": 4.8,
+    "numReviews": 20,
+    "image": "/images/products/chicken-mushroom-pie.jpg",
+    "stock": 25
   },
   {
-    _id: "18",
-    name: "Spinach Mushroom Quiche",
-    price: 8.5,
-    category: "Savory",
-    ratings: 4.9,
-    numReviews: 18,
-    image:
-      "/images/products/spinach-quiche.jpg",
+    "_id": "18",
+    "name": "Spinach Mushroom Quiche",
+    "price": 8.5,
+    "category": "Savory",
+    "description": "French savory tart filled with sauteed baby spinach, wild mushrooms, gruyere cheese and egg custard.",
+    "flavor": "Spinach & Gruyere",
+    "ratings": 4.9,
+    "numReviews": 18,
+    "image": "/images/products/spinach-quiche.jpg",
+    "stock": 20
   },
   {
-    _id: "19",
-    name: "Ham & Cheese Croissant",
-    price: 6.5,
-    category: "Savory",
-    ratings: 4.7,
-    numReviews: 14,
-    image:
-      "/images/products/ham-cheese-croissant.jpg",
+    "_id": "19",
+    "name": "Ham & Cheese Croissant",
+    "price": 6.5,
+    "category": "Savory",
+    "description": "Flaky butter croissant stuffed with smoked country ham and melted emmental cheese with bechamel.",
+    "flavor": "Smoked Ham & Emmental",
+    "ratings": 4.7,
+    "numReviews": 14,
+    "image": "/images/products/ham-cheese-croissant.jpg",
+    "stock": 35
   },
   {
-    _id: "20",
-    name: "Classic Sausage Roll",
-    price: 6,
-    category: "Savory",
-    ratings: 4.6,
-    numReviews: 12,
-    image:
-      "/images/products/classic-sausage-roll.jpg",
+    "_id": "20",
+    "name": "Classic Sausage Roll",
+    "price": 6,
+    "category": "Savory",
+    "description": "Seasoned pork mince wrapped in crisp puff pastry with a hint of sage, apple and black pepper.",
+    "flavor": "Pork & Herb",
+    "ratings": 4.6,
+    "numReviews": 12,
+    "image": "/images/products/classic-sausage-roll.jpg",
+    "stock": 30
   },
   {
-    _id: "21",
-    name: "Mini Savory Tart",
-    price: 7,
-    category: "Savory",
-    ratings: 4.7,
-    numReviews: 15,
-    image:
-      "/images/products/mini-savory-tart.jpg",
+    "_id": "21",
+    "name": "Mini Savory Tart",
+    "price": 7,
+    "category": "Savory",
+    "description": "Assorted bite-sized quiches with caramelized onion, goat cheese, and sundried tomato.",
+    "flavor": "Caramelized Onion & Goat Cheese",
+    "ratings": 4.7,
+    "numReviews": 15,
+    "image": "/images/products/mini-savory-tart.jpg",
+    "stock": 25
   },
   {
-    _id: "22",
-    name: "Chicken Puff Pastry",
-    price: 6.8,
-    category: "Savory",
-    ratings: 4.8,
-    numReviews: 16,
-    image:
-      "/images/products/chicken-puff-pastry.jpg",
+    "_id": "22",
+    "name": "Chicken Puff Pastry",
+    "price": 6.8,
+    "category": "Savory",
+    "description": "Golden puff parcel filled with mild curry-spiced chicken, sweet onions and green peas.",
+    "flavor": "Curry Spiced Chicken",
+    "ratings": 4.8,
+    "numReviews": 16,
+    "image": "/images/products/chicken-puff-pastry.jpg",
+    "stock": 28
   },
   {
-    _id: "23",
-    name: "Cheese Garlic Roll",
-    price: 5.5,
-    category: "Savory",
-    ratings: 4.6,
-    numReviews: 10,
-    image:
-      "/images/products/cheese-garlic-roll.jpg",
+    "_id": "23",
+    "name": "Cheese Garlic Roll",
+    "price": 5.5,
+    "category": "Savory",
+    "description": "Soft brioche roll filled with sweet cream cheese and drenched in roasted garlic herb butter.",
+    "flavor": "Garlic Butter Cream Cheese",
+    "ratings": 4.6,
+    "numReviews": 10,
+    "image": "/images/products/cheese-garlic-roll.jpg",
+    "stock": 30
   },
   {
-    _id: "24",
-    name: "Bacon Egg Tart",
-    price: 7.8,
-    category: "Savory",
-    ratings: 4.8,
-    numReviews: 13,
-    image:
-      "/images/products/bacon-egg-tart.jpg",
+    "_id": "24",
+    "name": "Bacon Egg Tart",
+    "price": 7.8,
+    "category": "Savory",
+    "description": "Flaky puff pastry base topped with smoked bacon, fresh cage-free eggs and cheddar cheese.",
+    "flavor": "Bacon & Cheddar",
+    "ratings": 4.8,
+    "numReviews": 13,
+    "image": "/images/products/bacon-egg-tart.jpg",
+    "stock": 22
   },
   {
-    _id: "25",
-    name: "Macaron Gift Box",
-    price: 24,
-    category: "Gift Box",
-    ratings: 4.9,
-    numReviews: 21,
-    image:
-      "/images/products/macaron-box.jpg",
+    "_id": "25",
+    "name": "Macaron Gift Box",
+    "price": 24,
+    "category": "Gift Box",
+    "description": "Luxury box of 12 artisan French macarons in assorted flavors: pistachio, salted caramel, rose, chocolate, vanilla and raspberry.",
+    "flavor": "Assorted 12 Flavors",
+    "ratings": 4.9,
+    "numReviews": 21,
+    "image": "/images/products/macaron-box.jpg",
+    "stock": 20
   },
   {
-    _id: "26",
-    name: "Cookie Gift Box",
-    price: 20,
-    category: "Gift Box",
-    ratings: 4.8,
-    numReviews: 17,
-    image:
-      "/images/products/cookies.jpg",
+    "_id": "26",
+    "name": "Cookie Gift Box",
+    "price": 20,
+    "category": "Gift Box",
+    "description": "Handcrafted butter cookies and sablés assortment including matcha sablé, chocolate diamond and earl grey shortbread.",
+    "flavor": "Butter Sablé & Chocolate",
+    "ratings": 4.8,
+    "numReviews": 17,
+    "image": "/images/products/cookies.jpg",
+    "stock": 25
   },
   {
-    _id: "27",
-    name: "Afternoon Tea Box",
-    price: 28,
-    category: "Gift Box",
-    ratings: 4.9,
-    numReviews: 19,
-    image:
-      "/images/products/afternoon-tea-box.jpg",
+    "_id": "27",
+    "name": "Afternoon Tea Box",
+    "price": 28,
+    "category": "Gift Box",
+    "description": "A delightful tea-time set with mini scones, fruit tarts, macarons, clotted cream and strawberry jam.",
+    "flavor": "Tea Time Assortment",
+    "ratings": 4.9,
+    "numReviews": 19,
+    "image": "/images/products/afternoon-tea-box.jpg",
+    "stock": 18
   },
   {
-    _id: "28",
-    name: "Birthday Treat Box",
-    price: 30,
-    category: "Gift Box",
-    ratings: 4.8,
-    numReviews: 23,
-    image:
-      "/images/products/birthday-treat-box.jpg",
+    "_id": "28",
+    "name": "Birthday Treat Box",
+    "price": 30,
+    "category": "Gift Box",
+    "description": "Celebration box featuring 2 mini bento cakes, 4 decorated cupcakes, candles and a custom greeting card.",
+    "flavor": "Celebration Set",
+    "ratings": 4.8,
+    "numReviews": 23,
+    "image": "/images/products/birthday-treat-box.jpg",
+    "stock": 15
   },
   {
-    _id: "29",
-    name: "Mixed Pastry Box",
-    price: 26,
-    category: "Gift Box",
-    ratings: 4.7,
-    numReviews: 16,
-    image:
-      "/images/products/mixed-pastry-box.jpg",
+    "_id": "29",
+    "name": "Mixed Pastry Box",
+    "price": 26,
+    "category": "Gift Box",
+    "description": "Morning baker's box featuring 6 of our best fresh pastries: croissants, pain au chocolat, cinnamon rolls and danishes.",
+    "flavor": "Pastry Selection",
+    "ratings": 4.7,
+    "numReviews": 16,
+    "image": "/images/products/mixed-pastry-box.jpg",
+    "stock": 20
   },
   {
-    _id: "30",
-    name: "Mini Cake Gift Box",
-    price: 32,
-    category: "Gift Box",
-    ratings: 4.9,
-    numReviews: 20,
-    image:
-      "/images/products/mini-cake-gift-box.jpg",
+    "_id": "30",
+    "name": "Mini Cake Gift Box",
+    "price": 32,
+    "category": "Gift Box",
+    "description": "4 distinct miniature layer cakes: Chocolate Truffle, Strawberry Shortcake, Earl Grey Lavender and Mango Coconut.",
+    "flavor": "4 Mini Flavors",
+    "ratings": 4.9,
+    "numReviews": 20,
+    "image": "/images/products/mini-cake-gift-box.jpg",
+    "stock": 16
   },
   {
-    _id: "31",
-    name: "Sweet Celebration Box",
-    price: 35,
-    category: "Gift Box",
-    ratings: 4.9,
-    numReviews: 25,
-    image:
-      "/images/products/sweet-celebration-box.jpg",
+    "_id": "31",
+    "name": "Sweet Celebration Box",
+    "price": 35,
+    "category": "Gift Box",
+    "description": "Grand assortment of artisanal chocolates, macarons, cake pops and meringue kisses in our signature Sugar Muse gift packaging.",
+    "flavor": "Deluxe Assortment",
+    "ratings": 4.9,
+    "numReviews": 25,
+    "image": "/images/products/sweet-celebration-box.jpg",
+    "stock": 15
   },
   {
-    _id: "32",
-    name: "Sugar Muse Signature Box",
-    price: 38,
-    category: "Gift Box",
-    ratings: 5,
-    numReviews: 29,
-    image:
-      "/images/products/sugar-muse-signature-box.jpg",
-  },
+    "_id": "32",
+    "name": "Sugar Muse Signature Box",
+    "price": 38,
+    "category": "Gift Box",
+    "description": "Our crowning collection: the ultimate curation of Sugar Muse's most beloved artisan creations tied with a silk ribbon.",
+    "flavor": "Chef's Signature Selection",
+    "ratings": 5,
+    "numReviews": 29,
+    "image": "/images/products/sugar-muse-signature-box.jpg",
+    "stock": 12
+  }
 ];
 
 const categories = [
@@ -615,6 +680,48 @@ const HeroBadge = () => (
 );
 
 const Products = () => {
+  const [liveProducts, setLiveProducts] = useState([]);
+
+  useEffect(() => {
+    let isMounted = true;
+    axiosInstance
+      .get("/api/v1/products?limit=all")
+      .then(({ data }) => {
+        if (
+          isMounted &&
+          data &&
+          Array.isArray(data.products) &&
+          data.products.length > 0
+        ) {
+          const mapped = data.products.map((p) => ({
+            _id: p._id,
+            name: p.name,
+            price: p.price,
+            category: p.category,
+            subcategory: p.subcategory || "",
+            description: p.description || "",
+            flavor: p.flavor || "",
+            ratings: p.ratings || 5,
+            numReviews: p.numReviews || 0,
+            image:
+              Array.isArray(p.image) && p.image.length > 0
+                ? p.image[0].url
+                : typeof p.image === "string"
+                ? p.image
+                : "/images/products/strawberry-cake.jpg",
+            stock: p.stock || 20,
+          }));
+          setLiveProducts(mapped);
+        }
+      })
+      .catch((err) => {
+        console.warn("Could not fetch products from MongoDB, using fallback:", err);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
   const [
     searchParams,
     setSearchParams,
@@ -733,9 +840,8 @@ const Products = () => {
 
   const filteredProducts =
     useMemo(() => {
-      let result = [
-        ...products,
-      ];
+      const source = liveProducts.length > 0 ? liveProducts : products;
+      let result = [...source];
 
       if (
         selectedCategory !==
