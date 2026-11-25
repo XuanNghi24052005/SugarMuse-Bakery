@@ -35,6 +35,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem("user");
       localStorage.removeItem("isAuthenticated");
       localStorage.removeItem("adminInfo");
+      localStorage.removeItem("token");
     }
   }, [user]);
 
@@ -64,6 +65,10 @@ export const AuthProvider = ({ children }) => {
           avatar: u.avatar?.url || "/images/sugar-muse-favicon.svg",
           phone: u.phone || "",
         };
+
+        if (data.token) {
+          localStorage.setItem("token", data.token);
+        }
 
         setUser(loggedInUser);
         localStorage.setItem("user", JSON.stringify(loggedInUser));

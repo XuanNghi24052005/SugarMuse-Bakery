@@ -7,12 +7,12 @@
 }
 
 .star {
-  font-size: 1.3rem;
+  font-size: 1.6rem;
   line-height: 1;
   display: inline-block;
   transition: color 0.15s ease, transform 0.15s ease;
-  color: #e0e0e0;
-  pointer-events: none;
+  color: #dcd8d0;
+  cursor: default;
 }
 
 .star.filled {
@@ -24,8 +24,9 @@
 }
 
 .star.clickable {
-  cursor: pointer;
-  pointer-events: auto;
+  cursor: pointer !important;
+  pointer-events: auto !important;
+  padding: 2px;
 }
 
 .star.clickable:hover {

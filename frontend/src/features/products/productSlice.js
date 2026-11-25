@@ -133,7 +133,8 @@ export const createReview =
             {
                 productId,
                 rating,
-                comment
+                comment,
+                name
             },
             {
                 rejectWithValue
@@ -155,7 +156,8 @@ export const createReview =
                     {
                         rating,
                         comment,
-                        productId
+                        productId,
+                        name
                     },
                     config
                 )

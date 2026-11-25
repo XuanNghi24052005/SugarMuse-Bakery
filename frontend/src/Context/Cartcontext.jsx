@@ -28,18 +28,20 @@ export const CartProvider = ({ children }) => {
     );
   }, [cartItems]);
 
-  const addToCart = (product) => {
+  const addToCart = (product, quantity = 1) => {
+    const qty = Math.max(1, Number(quantity) || 1);
     setCartItems((currentItems) => {
+      const pId = String(product._id || product.id || "");
       const existingProduct = currentItems.find(
-        (item) => item._id === product._id
+        (item) => String(item._id || item.id || "") === pId
       );
 
       if (existingProduct) {
         return currentItems.map((item) =>
-          item._id === product._id
+          String(item._id || item.id || "") === pId
             ? {
                 ...item,
-                quantity: item.quantity + 1,
+                quantity: item.quantity + qty,
               }
             : item
         );
@@ -49,7 +51,8 @@ export const CartProvider = ({ children }) => {
         ...currentItems,
         {
           ...product,
-          quantity: 1,
+          _id: pId,
+          quantity: qty,
         },
       ];
     });

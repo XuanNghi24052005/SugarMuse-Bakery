@@ -1,903 +1,1357 @@
-import React, { useEffect, useState } from 'react'
-import '../pageStyles/ProductDetails.css'
-import PageTitle from '../components/PageTitle'
-import Footer from '../components/Footer'
-import Rating from '../components/Rating'
-import FavoriteIcon from '@mui/icons-material/Favorite'
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder'
-import { useDispatch, useSelector } from 'react-redux'
+import React, {
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+
 import {
-    getProductDetails,
-    removeErrors,
-    createReview,
-    removeReviewSuccess,
-    removeReviewError
-} from '../features/products/productSlice'
-import { useParams } from 'react-router-dom'
-import Loader from '../components/Loader'
-import { showToast } from '../utils/showToast'
+  Link,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
+
 import {
-    addItemsToCart,
-    removeMessage,
-    removeErrors as removeCartErrors
-} from '../features/cart/cartSlice'
+  useDispatch,
+  useSelector,
+} from "react-redux";
+
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+
+import "../pageStyles/ProductDetails.css";
+
+import PageTitle from "../components/PageTitle";
+import Footer from "../components/Footer";
+import Rating from "../components/Rating";
+import Loader from "../components/Loader";
+
 import {
-    addToWishlist,
-    removeFromWishlist
-} from '../features/wishlist/wishlistSlice'
+  getProductDetails,
+  removeErrors,
+  createReview,
+  removeReviewSuccess,
+  removeReviewError,
+} from "../features/products/productSlice";
 
-const saverecenlyViewed = (product, routeId) => {
-    if (!product) {
-        return
-    }
+import {
+  addItemsToCart,
+  removeMessage,
+  removeErrors as removeCartErrors,
+} from "../features/cart/cartSlice";
 
-    const productId =
-        product._id ||
-        product.id ||
-        routeId
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../features/wishlist/wishlistSlice";
 
-    if (!productId) {
-        return
-    }
+import {
+  saveRecentlyViewed,
+} from "../utils/recentlyViewed";
 
-    try {
-        const saved =
-            localStorage.getItem(
-                'sugarMuserecenlyViewed'
-            )
+import {
+  showToast,
+} from "../utils/showToast";
 
-        const parsed =
-            saved
-                ? JSON.parse(saved)
-                : []
+import { useCart } from "../Context/Cartcontext";
+import { useWishlist } from "../Context/Wishlistcontext";
+import { useAuth } from "../Context/Authcontext";
 
-        const current =
-            Array.isArray(parsed)
-                ? parsed
-                : []
+const CartIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M3 4h2l2.2 10.2a2 2 0 0 0 2 1.6h7.7a2 2 0 0 0 2-1.6L20 7H6" />
+    <circle cx="9" cy="20" r="1" />
+    <circle cx="18" cy="20" r="1" />
+  </svg>
+);
 
-        const firstImage =
-            Array.isArray(product.image) &&
-            product.image.length > 0
-                ? product.image[0]?.url || ''
-                : typeof product.image === 'string'
-                    ? product.image
-                    : ''
+const TruckIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M3 6h11v10H3z" />
+    <path d="M14 10h4l3 3v3h-7" />
+    <circle cx="7" cy="18" r="2" />
+    <circle cx="17" cy="18" r="2" />
+  </svg>
+);
 
-        const productToSave = {
-            id: productId,
-            name:
-                product.name ||
-                product.title ||
-                'Sugar Muse Treat',
-            price:
-                Number(product.price) || 0,
-            image: firstImage,
-            category:
-                product.category || '',
-            subcategory:
-                product.subcategory || ''
+const ShieldIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M12 3 5 6v5c0 5 3 8 7 10 4-2 7-5 7-10V6l-7-3Z" />
+    <path d="m9 12 2 2 4-4" />
+  </svg>
+);
+
+const LeafIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M20 4c-7 0-13 3-15 9-1 3 1 6 4 6 7 0 10-8 11-15Z" />
+    <path d="M5 20c3-5 7-8 12-11" />
+  </svg>
+);
+
+const CakeIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.7"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M5 11h14v9H5z" />
+    <path d="M5 15h14" />
+    <path d="M4 11h16" />
+    <path d="M12 4v4" />
+    <path d="M10 5c0-1 1-2 2-3 1 1 2 2 2 3a2 2 0 0 1-4 0Z" />
+  </svg>
+);
+
+const HomeIcon = () => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    aria-hidden="true"
+  >
+    <path d="m3 11 9-8 9 8" />
+    <path d="M5 10v10h14V10" />
+    <path d="M9 20v-6h6v6" />
+  </svg>
+);
+
+const StarDisplay = ({
+  value = 0,
+}) => {
+  const rounded =
+    Math.round(
+      Number(value) || 0
+    );
+
+  return (
+    <div
+      className="sugar-product-stars"
+      aria-label={`${value} out of 5 stars`}
+    >
+      {Array.from(
+        {
+          length: 5,
+        },
+        (_, index) => (
+          <span
+            key={index}
+            className={
+              index < rounded
+                ? "filled"
+                : ""
+            }
+          >
+            ★
+          </span>
+        )
+      )}
+    </div>
+  );
+};
+
+const getImages = (
+  product
+) => {
+  if (
+    !product ||
+    !Array.isArray(
+      product.image
+    )
+  ) {
+    return [];
+  }
+
+  return product.image
+    .map(
+      (image) => {
+        if (
+          typeof image ===
+          "string"
+        ) {
+          return {
+            url: image,
+          };
         }
 
-        const withoutCurrent =
-            current.filter(
-                (item) =>
-                    String(item.id) !==
-                    String(productId)
-            )
+        if (
+          image?.url
+        ) {
+          return image;
+        }
 
-        const updated = [
-            productToSave,
-            ...withoutCurrent
-        ].slice(0, 8)
+        return null;
+      }
+    )
+    .filter(Boolean);
+};
 
-        localStorage.setItem(
-            'sugarMuserecenlyViewed',
-            JSON.stringify(updated)
-        )
-    } catch (error) {
-        console.error(
-            'Could not save recently viewed product:',
-            error
-        )
+const formatDate = (
+  value
+) => {
+  if (!value) {
+    return "";
+  }
+
+  const date =
+    new Date(value);
+
+  if (
+    Number.isNaN(
+      date.getTime()
+    )
+  ) {
+    return value;
+  }
+
+  return date.toLocaleDateString(
+    "en-US",
+    {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
     }
-}
+  );
+};
 
 const ProductDetails = () => {
-    const [quantity, setQuantity] = useState(1)
-    const [userRating, setUserRating] = useState(0)
-    const [comment, setComment] = useState('')
-    const [selectedImage, setSelectedImage] = useState(null)
-    const [selectedSize, setSelectedSize] = useState('')
+  const {
+    id,
+  } = useParams();
 
-    const {
-        loading,
-        error,
-        product,
-        reviewSuccess,
-        reviewError,
-        reviewLoading
-    } = useSelector(
-        (state) => state.product
+  const navigate =
+    useNavigate();
+
+  const dispatch =
+    useDispatch();
+
+  const [
+    quantity,
+    setQuantity,
+  ] = useState(1);
+
+  const [
+    selectedImage,
+    setSelectedImage,
+  ] = useState("");
+
+  const [
+    userRating,
+    setUserRating,
+  ] = useState(0);
+
+  const [
+    comment,
+    setComment,
+  ] = useState("");
+
+  const {
+    loading,
+    error,
+    product,
+    reviewSuccess,
+    reviewError,
+    reviewLoading,
+  } = useSelector(
+    (state) =>
+      state.product
+  );
+
+  const { user } = useAuth();
+  const { addToCart } = useCart();
+  const { toggleWishlist, isWishlisted: checkIsWishlisted } = useWishlist();
+
+  const productImages =
+    useMemo(
+      () =>
+        getImages(
+          product
+        ),
+      [product]
+    );
+
+  const reviews =
+    Array.isArray(
+      product?.reviews
     )
+      ? product.reviews
+      : [];
 
-    const {
-        loading: cartLoading,
-        error: cartError,
-        success,
-        message
-    } = useSelector(
-        (state) => state.cart
-    )
+  const currentProductId = product?._id || product?.id || id;
+  const isWishlisted = Boolean(checkIsWishlisted(currentProductId));
 
-    const {
-        isAuthenticated
-    } = useSelector(
-        (state) => state.user
-    )
+  const ratingBreakdown =
+    useMemo(() => {
+      const result = {
+        5: 0,
+        4: 0,
+        3: 0,
+        2: 0,
+        1: 0,
+      };
 
-    const {
-        wishlist
-    } = useSelector(
-        (state) => state.wishlist
-    )
+      reviews.forEach(
+        (review) => {
+          const rating =
+            Math.max(
+              1,
+              Math.min(
+                5,
+                Math.round(
+                  Number(
+                    review.rating
+                  ) || 0
+                )
+              )
+            );
 
-    const dispatch = useDispatch()
+          result[
+            rating
+          ] += 1;
+        }
+      );
 
-    const {
-        id
-    } = useParams()
+      return result;
+    }, [
+      reviews,
+    ]);
 
-    const handleRatingChange = (newRating) => {
-        setUserRating(newRating)
+  useEffect(() => {
+    if (!id) {
+      return;
     }
 
-    const isWishlisted =
-        Boolean(
-            wishlist?.products?.some(
-                (item) => {
-                    const pId =
-                        item.product?._id ||
-                        item.product ||
-                        item._id ||
-                        item
+    dispatch(
+      getProductDetails(
+        id
+      )
+    );
 
-                    return (
-                        pId?.toString() ===
-                        id?.toString()
-                    )
-                }
-            )
-        )
+    return () => {
+      dispatch(
+        removeErrors()
+      );
+    };
+  }, [
+    dispatch,
+    id,
+  ]);
 
-    const handleWishlistToggle = () => {
-        if (!isAuthenticated) {
-            showToast.error(
-                'Please login to add items to wishlist'
-            )
-
-            return
-        }
-
-        if (isWishlisted) {
-            dispatch(
-                removeFromWishlist(id)
-            )
-                .unwrap()
-                .then(() =>
-                    showToast.success(
-                        'Removed from wishlist'
-                    )
-                )
-                .catch((err) =>
-                    showToast.error(
-                        err ||
-                        'Failed to remove from wishlist'
-                    )
-                )
-        } else {
-            dispatch(
-                addToWishlist(id)
-            )
-                .unwrap()
-                .then(() =>
-                    showToast.success(
-                        'Added to wishlist'
-                    )
-                )
-                .catch((err) =>
-                    showToast.error(
-                        err ||
-                        'Failed to add to wishlist'
-                    )
-                )
-        }
+  useEffect(() => {
+    if (
+      productImages.length >
+      0
+    ) {
+      setSelectedImage(
+        productImages[0].url
+      );
+    } else {
+      setSelectedImage(
+        ""
+      );
     }
 
-    useEffect(() => {
-        if (id) {
-            dispatch(
-                getProductDetails(id)
-            )
-        }
+    setQuantity(1);
+  }, [
+    productImages,
+  ]);
 
-        return () => {
-            dispatch(
-                removeErrors()
-            )
-        }
-    }, [
-        dispatch,
-        id
-    ])
-
-    useEffect(() => {
-        if (error) {
-            showToast.error(
-                typeof error === 'string'
-                    ? error
-                    : error.response
-                        ?.data
-                        ?.message ||
-                    error.message ||
-                    'Unable to load product'
-            )
-        }
-
-        if (cartError) {
-            showToast.error(
-                typeof cartError === 'string'
-                    ? cartError
-                    : cartError?.message ||
-                    'Cart error'
-            )
-
-            dispatch(
-                removeCartErrors()
-            )
-        }
-
-        if (reviewError) {
-            showToast.error(
-                typeof reviewError === 'string'
-                    ? reviewError
-                    : reviewError?.message ||
-                    'Unable to submit review'
-            )
-
-            dispatch(
-                removeReviewError()
-            )
-        }
-    }, [
-        dispatch,
-        error,
-        cartError,
-        reviewError
-    ])
-
-    useEffect(() => {
-        if (success) {
-            if (message) {
-                showToast.success(
-                    message
-                )
-            }
-
-            dispatch(
-                removeMessage()
-            )
-        }
-
-        if (reviewSuccess) {
-            showToast.success(
-                'Review submitted successfully!'
-            )
-
-            dispatch(
-                removeReviewSuccess()
-            )
-
-            setUserRating(0)
-
-            setComment('')
-
-            dispatch(
-                getProductDetails(id)
-            )
-        }
-    }, [
-        dispatch,
-        success,
-        message,
-        reviewSuccess,
-        id
-    ])
-
-    useEffect(() => {
-        if (!product) {
-            setSelectedImage(null)
-            return
-        }
-
-        if (
-            Array.isArray(product.image) &&
-            product.image.length > 0
-        ) {
-            setSelectedImage(
-                product.image[0]?.url ||
-                null
-            )
-        } else if (
-            typeof product.image ===
-            'string'
-        ) {
-            setSelectedImage(
-                product.image
-            )
-        } else {
-            setSelectedImage(null)
-        }
-
-        setSelectedSize('1')
-        setQuantity(1)
-    }, [
+  useEffect(() => {
+    if (
+      product?._id
+    ) {
+      saveRecentlyViewed(
         product
-    ])
+      );
+    }
+  }, [
+    product?._id,
+  ]);
 
-    useEffect(() => {
-        if (!product) {
-            return
-        }
+  useEffect(() => {
+    if (
+      cartError
+    ) {
+      showToast.error(
+        typeof cartError ===
+          "string"
+          ? cartError
+          : cartError
+              ?.message ||
+            "Unable to add product to cart"
+      );
 
-        saverecenlyViewed(
-            product,
-            id
-        )
-    }, [
-        product,
-        id
-    ])
-
-    const increaseQuantity = () => {
-        if (!product) {
-            return
-        }
-
-        if (
-            product.stock <=
-            quantity
-        ) {
-            showToast.error(
-                'Only ' +
-                product.stock +
-                ' items available.'
-            )
-
-            return
-        }
-
-        setQuantity(
-            (qty) =>
-                qty + 1
-        )
+      dispatch(
+        removeCartErrors()
+      );
     }
 
-    const decreaseQuantity = () => {
-        if (
-            quantity <= 1
-        ) {
-            showToast.error(
-                'Quantity cannot be less than 1'
-            )
+    if (
+      reviewError
+    ) {
+      showToast.error(
+        typeof reviewError ===
+          "string"
+          ? reviewError
+          : reviewError
+              ?.message ||
+            "Unable to submit review"
+      );
 
-            return
-        }
+      dispatch(
+        removeReviewError()
+      );
+    }
+  }, [
+    dispatch,
+    cartError,
+    reviewError,
+  ]);
 
-        setQuantity(
-            (qty) =>
-                qty - 1
-        )
+  useEffect(() => {
+    if (
+      cartSuccess
+    ) {
+      showToast.success(
+        cartMessage ||
+          "Added to cart"
+      );
+
+      dispatch(
+        removeMessage()
+      );
     }
 
-    const addToCart = () => {
-        if (!product) {
-            return
-        }
+    if (
+      reviewSuccess
+    ) {
+      showToast.success(
+        "Review submitted successfully!"
+      );
 
-        if (
-            !product.stock ||
-            product.stock <= 0
-        ) {
-            showToast.error(
-                'Product is out of stock!'
-            )
+      dispatch(
+        removeReviewSuccess()
+      );
 
-            return
-        }
+      setUserRating(0);
 
-        const fallbackImage =
-            Array.isArray(product.image)
-                ? product.image[0]?.url || ''
-                : typeof product.image === 'string'
-                    ? product.image
-                    : ''
+      setComment("");
 
-        dispatch(
-            addItemsToCart({
-                id,
-                quantity,
-                size: 'OS',
-                stock:
-                    product.stock,
-                image:
-                    selectedImage ||
-                    fallbackImage
-            })
+      dispatch(
+        getProductDetails(
+          id
         )
+      );
     }
+  }, [
+    dispatch,
+    cartSuccess,
+    cartMessage,
+    reviewSuccess,
+    id,
+  ]);
 
-    const handleReviewSubmit = (e) => {
-        e.preventDefault()
+  const increaseQuantity =
+    () => {
+      if (!product) {
+        return;
+      }
 
-        if (!isAuthenticated) {
-            showToast.error(
-                'Please login to submit a review'
-            )
+      if (
+        quantity >=
+        product.stock
+      ) {
+        showToast.error(
+          `Only ${product.stock} items available.`
+        );
 
-            return
-        }
+        return;
+      }
 
-        if (
-            userRating === 0
-        ) {
-            showToast.error(
-                'Please select a rating'
-            )
+      setQuantity(
+        (current) =>
+          current + 1
+      );
+    };
 
-            return
-        }
+  const decreaseQuantity =
+    () => {
+      if (
+        quantity <= 1
+      ) {
+        return;
+      }
 
-        if (
-            !comment.trim()
-        ) {
-            showToast.error(
-                'Please write a review comment.'
-            )
+      setQuantity(
+        (current) =>
+          current - 1
+      );
+    };
 
-            return
-        }
-
-        dispatch(
-            createReview({
-                productId: id,
-                rating:
-                    userRating,
-                comment
-            })
-        )
-    }
-
-    if (loading) {
-        return (
-            <>
-                <Loader />
-
-                <Footer />
-            </>
-        )
-    }
-
-    if (error) {
-        const errorMessage =
-            typeof error === 'string'
-                ? error
-                : error.response
-                    ?.data
-                    ?.message ||
-                error.message ||
-                'Product information could not be loaded.'
-
-        return (
-            <>
-                <PageTitle
-                    title="Product details"
-                />
-
-                <div
-                    style={{
-                        minHeight: '60vh',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        flexDirection: 'column',
-                        gap: '10px',
-                        padding: '40px 20px',
-                        textAlign: 'center'
-                    }}
-                >
-                    <h2>
-                        Unable to load product
-                    </h2>
-
-                    <p>
-                        {errorMessage}
-                    </p>
-                </div>
-
-                <Footer />
-            </>
-        )
-    }
-
+  const handleAddToCart = () => {
     if (!product) {
-        return (
-            <>
-                <PageTitle
-                    title="Product details"
-                />
-
-                <div
-                    style={{
-                        minHeight: '60vh',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}
-                >
-                    <Loader />
-                </div>
-
-                <Footer />
-            </>
-        )
+      return;
     }
 
-    const productImages =
-        Array.isArray(product.image)
-            ? product.image
-            : []
+    if (!product.stock || product.stock <= 0) {
+      showToast.error("Product is out of stock.");
+      return;
+    }
 
-    const mainImage =
-        selectedImage ||
-        productImages[0]?.url ||
-        (
-            typeof product.image ===
-            'string'
-                ? product.image
-                : ''
-        )
+    const pId = product._id || product.id || id;
+    const pImage =
+      selectedImage ||
+      (productImages.length > 0
+        ? productImages[0]?.url
+        : product.image || "/images/products/strawberry-cake.jpg");
+
+    addToCart(
+      {
+        _id: pId,
+        id: pId,
+        name: product.name,
+        price: Number(product.price) || 0,
+        image: pImage,
+        stock: Number(product.stock) || 20,
+        category: product.category || "Cake",
+        flavor: product.flavor || "",
+        description: product.description || "",
+      },
+      quantity
+    );
+
+    showToast.success(`Added ${quantity} ${product.name} to cart!`);
+  };
+
+  const handleWishlistToggle = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (!product) return;
+
+    const pId = product._id || product.id || id;
+    const pImage =
+      selectedImage ||
+      (productImages.length > 0
+        ? productImages[0]?.url
+        : product.image || "/images/products/strawberry-cake.jpg");
+
+    toggleWishlist({
+      _id: pId,
+      id: pId,
+      name: product.name,
+      price: Number(product.price) || 0,
+      image: pImage,
+      category: product.category || "Cake",
+      stock: Number(product.stock) || 20,
+      description: product.description || "",
+    });
+
+    showToast.success(!isWishlisted ? "Added to wishlist! ♡" : "Removed from wishlist");
+  };
+
+  const handleReviewSubmit = async (event) => {
+    event.preventDefault();
+
+    if (userRating === 0) {
+      showToast.error("Please click on the stars to select a rating.");
+      return;
+    }
+
+    if (!comment.trim()) {
+      showToast.error("Please write a review comment.");
+      return;
+    }
+
+    const targetId = product._id || id;
+    const authorName = user?.name || user?.fullName || "Sugar Muse Customer";
+
+    try {
+      const resultAction = await dispatch(
+        createReview({
+          productId: targetId,
+          rating: userRating,
+          comment: comment.trim(),
+          name: authorName,
+        })
+      );
+
+      if (createReview.fulfilled.match(resultAction)) {
+        showToast.success("Thank you! Your review has been submitted.");
+        setComment("");
+        setUserRating(0);
+        dispatch(getProductDetails(id));
+      } else {
+        const errMsg = resultAction.payload || "Could not submit review.";
+        showToast.error(errMsg);
+      }
+    } catch {
+      showToast.error("Failed to submit review.");
+    }
+  };
+
+  if (
+    loading
+  ) {
+    return (
+      <>
+        <div className="sugar-product-loading">
+          <Loader />
+        </div>
+
+        <Footer />
+      </>
+    );
+  }
+
+  if (
+    error ||
+    !product
+  ) {
+    const errorMessage =
+      typeof error ===
+      "string"
+        ? error
+        : error
+            ?.message ||
+          "Product information could not be loaded.";
 
     return (
-        <>
-            <PageTitle
-                title={`${product.name} - ${product.title || ''}`}
-            />
+      <>
+        <PageTitle
+          title="Product Details"
+        />
 
-            <div className="product-details-container">
-                <div className="product-detail-container">
-                    <div className="product-image-container">
+        <main className="sugar-product-error-page">
+          <span>
+            ♡
+          </span>
+
+          <h1>
+            We couldn&apos;t
+            find this treat
+          </h1>
+
+          <p>
+            {
+              errorMessage
+            }
+          </p>
+
+          <Link
+            to="/products"
+          >
+            Back to Shop
+          </Link>
+        </main>
+
+        <Footer />
+      </>
+    );
+  }
+
+  const inStock =
+    Number(
+      product.stock
+    ) > 0;
+
+  const totalReviews =
+    Number(
+      product.numReviews
+    ) || 0;
+
+  const writtenReviewCount =
+    reviews.length;
+
+  return (
+    <>
+      <PageTitle
+        title={
+          product.name
+        }
+      />
+
+      <main className="sugar-product-detail-page">
+        <div className="sugar-product-detail-inner">
+          <nav
+            className="sugar-product-breadcrumb"
+            aria-label="Breadcrumb"
+          >
+            <Link to="/">
+              <HomeIcon />
+
+              Home
+            </Link>
+
+            <span>
+              ›
+            </span>
+
+            <Link
+              to="/products"
+            >
+              Shop
+            </Link>
+
+            {product.category && (
+              <>
+                <span>
+                  ›
+                </span>
+
+                <Link
+                  to={`/products?category=${encodeURIComponent(
+                    product.category
+                  )}`}
+                >
+                  {
+                    product.category
+                  }
+                </Link>
+              </>
+            )}
+
+            <span>
+              ›
+            </span>
+
+            <strong>
+              {
+                product.name
+              }
+            </strong>
+          </nav>
+
+          <section className="sugar-product-main">
+            <div className="sugar-product-gallery">
+              <div className="sugar-product-main-image">
+                {product.featured && (
+                  <span className="sugar-product-featured-badge">
+                    SUGAR MUSE PICK
+                  </span>
+                )}
+
+                <img
+                  src={
+                    selectedImage ||
+                    productImages[0]
+                      ?.url ||
+                    ""
+                  }
+                  alt={
+                    product.name
+                  }
+                />
+
+                <button
+                  type="button"
+                  className={`sugar-product-image-heart ${
+                    isWishlisted
+                      ? "active"
+                      : ""
+                  }`}
+                  onClick={
+                    handleWishlistToggle
+                  }
+                  aria-label={
+                    isWishlisted
+                      ? "Remove from wishlist"
+                      : "Add to wishlist"
+                  }
+                >
+                  <svg
+                    viewBox="0 0 24 24"
+                    fill={isWishlisted ? "currentColor" : "none"}
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ width: "22px", height: "22px", pointerEvents: "none" }}
+                  >
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z" />
+                  </svg>
+                </button>
+              </div>
+
+              {productImages.length >
+                1 && (
+                <div className="sugar-product-thumbnails">
+                  {productImages.map(
+                    (
+                      image,
+                      index
+                    ) => (
+                      <button
+                        type="button"
+                        key={
+                          image._id ||
+                          image.public_id ||
+                          image.url ||
+                          index
+                        }
+                        className={
+                          selectedImage ===
+                          image.url
+                            ? "active"
+                            : ""
+                        }
+                        onClick={() =>
+                          setSelectedImage(
+                            image.url
+                          )
+                        }
+                      >
                         <img
-                            src={
-                                mainImage
-                            }
-                            alt={
-                                product.name
-                            }
-                            className="product-detail-image"
+                          src={
+                            image.url
+                          }
+                          alt={`${product.name} ${index + 1}`}
                         />
-
-                        {productImages.length >
-                            1 && (
-                            <div className="product-thumbnails">
-                                {productImages.map(
-                                    (
-                                        img,
-                                        index
-                                    ) => (
-                                        <img
-                                            src={
-                                                img.url
-                                            }
-                                            alt={`Thumbnail${index + 1}`}
-                                            className={`thumbnail-image ${
-                                                selectedImage ===
-                                                img.url
-                                                    ? 'selected'
-                                                    : ''
-                                            }`}
-                                            key={
-                                                img._id ||
-                                                img.public_id ||
-                                                img.url ||
-                                                index
-                                            }
-                                            onClick={() =>
-                                                setSelectedImage(
-                                                    img.url
-                                                )
-                                            }
-                                        />
-                                    )
-                                )}
-                            </div>
-                        )}
-                    </div>
-
-                    <div className="product-info">
-                        <h2>
-                            {
-                                product.name
-                            }
-                        </h2>
-
-                        {(product.category ||
-                            product.subcategory) && (
-                            <p className="product-category-subtitle">
-                                {
-                                    product.category
-                                }
-
-                                {product.subcategory
-                                    ? ` / ${product.subcategory}`
-                                    : ''}
-                            </p>
-                        )}
-
-                        <p className="product-description">
-                            {
-                                product.description
-                            }
-                        </p>
-
-                        <p className="product-price">
-                            $
-                            {
-                                product.price
-                            }
-                        </p>
-
-                        <div className="product-rating">
-                            <Rating
-                                value={
-                                    product.ratings ||
-                                    0
-                                }
-                                disabled={
-                                    true
-                                }
-                            />
-
-                            <div className="productCardSpan">
-                                (
-                                {product.numReviews ||
-                                    0}{' '}
-                                {product.numReviews ===
-                                1
-                                    ? 'Review'
-                                    : 'Reviews'}
-                                )
-                            </div>
-
-                            <div className="stock-status">
-                                <span
-                                    className={
-                                        product.stock >
-                                        0
-                                            ? 'in-stock'
-                                            : 'out-of-stock'
-                                    }
-                                >
-                                    {product.stock >
-                                    0
-                                        ? `In stock (${product.stock} available)`
-                                        : 'Out Of Stock'}
-                                </span>
-
-                                {product.stock >
-                                    0 && (
-                                    <>
-                                        <div className="quantity-controls">
-                                            <span className="quantity">
-                                                Quantity:{' '}
-                                            </span>
-
-                                            <button
-                                                type="button"
-                                                className="quantity-button"
-                                                onClick={
-                                                    decreaseQuantity
-                                                }
-                                            >
-                                                -
-                                            </button>
-
-                                            <input
-                                                type="text"
-                                                value={
-                                                    quantity
-                                                }
-                                                className="quantity-value"
-                                                readOnly
-                                            />
-
-                                            <button
-                                                type="button"
-                                                className="quantity-button"
-                                                onClick={
-                                                    increaseQuantity
-                                                }
-                                            >
-                                                +
-                                            </button>
-                                        </div>
-
-                                        <div className="cart-action-group">
-                                            <button
-                                                type="button"
-                                                className="add-to-cart-btn"
-                                                disabled={
-                                                    cartLoading
-                                                }
-                                                onClick={
-                                                    addToCart
-                                                }
-                                            >
-                                                {cartLoading
-                                                    ? 'Adding...'
-                                                    : 'Add to Cart'}
-                                            </button>
-
-                                            <button
-                                                type="button"
-                                                className={`details-wishlist-btn ${
-                                                    isWishlisted
-                                                        ? 'active'
-                                                        : ''
-                                                }`}
-                                                onClick={
-                                                    handleWishlistToggle
-                                                }
-                                                title={
-                                                    isWishlisted
-                                                        ? 'Remove from Wishlist'
-                                                        : 'Add to Wishlist'
-                                                }
-                                                aria-label={
-                                                    isWishlisted
-                                                        ? 'Remove from Wishlist'
-                                                        : 'Add to Wishlist'
-                                                }
-                                            >
-                                                {isWishlisted ? (
-                                                    <FavoriteIcon className="wishlist-icon-filled" />
-                                                ) : (
-                                                    <FavoriteBorderIcon className="wishlist-icon-empty" />
-                                                )}
-                                            </button>
-                                        </div>
-                                    </>
-                                )}
-
-                                <form
-                                    className="review-form"
-                                    onSubmit={
-                                        handleReviewSubmit
-                                    }
-                                >
-                                    <h3>
-                                        Write a Review
-                                    </h3>
-
-                                    <Rating
-                                        value={
-                                            userRating
-                                        }
-                                        disabled={
-                                            false
-                                        }
-                                        onRatingChange={
-                                            handleRatingChange
-                                        }
-                                    />
-
-                                    <textarea
-                                        placeholder="Write something about this product here.."
-                                        className="review-input"
-                                        value={
-                                            comment
-                                        }
-                                        onChange={(e) =>
-                                            setComment(
-                                                e.target.value
-                                            )
-                                        }
-                                    />
-
-                                    <button
-                                        className="submit-review-btn"
-                                        type="submit"
-                                        disabled={
-                                            reviewLoading
-                                        }
-                                    >
-                                        {reviewLoading
-                                            ? 'Submitting...'
-                                            : 'Submit Review'}
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
+                      </button>
+                    )
+                  )}
                 </div>
-
-                <div className="reviews-container">
-                    <h3>
-                        Reviews
-                    </h3>
-
-                    {product.reviews &&
-                    product.reviews.length >
-                        0 ? (
-                        <div className="reviews-section">
-                            {product.reviews.map(
-                                (
-                                    review,
-                                    index
-                                ) => (
-                                    <div
-                                        className="review-item"
-                                        key={
-                                            review._id ||
-                                            index
-                                        }
-                                    >
-                                        <div className="review-header">
-                                            <Rating
-                                                value={
-                                                    review.rating
-                                                }
-                                                disabled={
-                                                    true
-                                                }
-                                            />
-
-                                            <p className="review-comment">
-                                                {
-                                                    review.comment
-                                                }
-                                            </p>
-
-                                            <p className="review-name">
-                                                By{' '}
-                                                {
-                                                    review.name
-                                                }
-                                            </p>
-
-                                            <p className="review-createdAt">
-                                                {
-                                                    review.createdAt
-                                                }
-                                            </p>
-                                        </div>
-                                    </div>
-                                )
-                            )}
-                        </div>
-                    ) : (
-                        <p className="no-review">
-                            No reviews yet.
-                            Be the first one
-                            to review!
-                        </p>
-                    )}
-                </div>
+              )}
             </div>
 
-            <Footer />
-        </>
-    )
-}
+            <div className="sugar-product-info">
+              <div className="sugar-product-category-row">
+                <span>
+                  {
+                    product.category
+                  }
+                </span>
 
-export default ProductDetails
+                <i />
+
+                {product.featured && (
+                  <em>
+                    Featured
+                  </em>
+                )}
+              </div>
+
+              <h1>
+                {
+                  product.name
+                }
+              </h1>
+
+              <p className="sugar-product-description">
+                {
+                  product.description
+                }
+              </p>
+
+              {product.flavor && (
+                <div className="sugar-product-flavor">
+                  <span>
+                    FLAVOR
+                  </span>
+
+                  <strong>
+                    {
+                      product.flavor
+                    }
+                  </strong>
+                </div>
+              )}
+
+              <div className="sugar-product-buy-info">
+                <div className="sugar-product-price-row">
+                  <strong className="sugar-product-price">
+                    $
+                    {Number(
+                      product.price
+                    ).toFixed(
+                      2
+                    )}
+                  </strong>
+
+                  <span className="sugar-product-price-divider" />
+
+                  <div className="sugar-product-rating-summary">
+                    <StarDisplay
+                      value={
+                        product.ratings
+                      }
+                    />
+
+                    <span>
+                      (
+                      {
+                        totalReviews
+                      }{" "}
+                      {totalReviews ===
+                      1
+                        ? "Review"
+                        : "Reviews"}
+                      )
+                    </span>
+                  </div>
+                </div>
+
+                <div
+                  className={`sugar-product-stock ${
+                    inStock
+                      ? "in-stock"
+                      : "out-of-stock"
+                  }`}
+                >
+                  <i />
+
+                  {inStock
+                    ? `In stock (${product.stock} available)`
+                    : "Out of stock"}
+                </div>
+              </div>
+
+              {inStock && (
+                <>
+                  <div className="sugar-product-quantity-row">
+                    <strong>
+                      Quantity:
+                    </strong>
+
+                    <div className="sugar-product-quantity-control">
+                      <button
+                        type="button"
+                        onClick={
+                          decreaseQuantity
+                        }
+                        disabled={
+                          quantity <=
+                          1
+                        }
+                      >
+                        −
+                      </button>
+
+                      <span>
+                        {
+                          quantity
+                        }
+                      </span>
+
+                      <button
+                        type="button"
+                        onClick={
+                          increaseQuantity
+                        }
+                        disabled={
+                          quantity >=
+                          product.stock
+                        }
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="sugar-product-actions">
+                    <button
+                      type="button"
+                      className="sugar-product-add-cart"
+                      onClick={
+                        handleAddToCart
+                      }
+                      disabled={
+                        cartLoading
+                      }
+                    >
+                      <CartIcon />
+
+                      <span>
+                        {cartLoading
+                          ? "Adding..."
+                          : "Add to Cart"}
+                      </span>
+                    </button>
+
+                    
+                  </div>
+                </>
+              )}
+
+              <div className="sugar-product-benefits">
+                <div>
+                  <TruckIcon />
+
+                  <span>
+                    <strong>
+                      Fast Delivery
+                    </strong>
+
+                    <small>
+                      Within 2–3 days
+                    </small>
+                  </span>
+                </div>
+
+                <div>
+                  <ShieldIcon />
+
+                  <span>
+                    <strong>
+                      Freshly Baked
+                    </strong>
+
+                    <small>
+                      Every day
+                    </small>
+                  </span>
+                </div>
+
+                <div>
+                  <LeafIcon />
+
+                  <span>
+                    <strong>
+                      Quality Ingredients
+                    </strong>
+
+                    <small>
+                      Selected with care
+                    </small>
+                  </span>
+                </div>
+              </div>
+
+              {(product.ingredients?.length >
+                0 ||
+                product.allergens?.length >
+                  0) && (
+                <div className="sugar-product-extra-info">
+                  {product.ingredients
+                    ?.length >
+                    0 && (
+                    <div>
+                      <span>
+                        INGREDIENTS
+                      </span>
+
+                      <p>
+                        {product.ingredients.join(
+                          ", "
+                        )}
+                      </p>
+                    </div>
+                  )}
+
+                  {product.allergens
+                    ?.length >
+                    0 && (
+                    <div>
+                      <span>
+                        ALLERGENS
+                      </span>
+
+                      <p>
+                        {product.allergens.join(
+                          ", "
+                        )}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+            </div>
+          </section>
+
+          <section className="sugar-product-reviews">
+            <div className="sugar-review-title">
+              <span />
+
+              <div>
+                <CakeIcon />
+
+                <h2>
+                  Reviews
+                </h2>
+              </div>
+
+              <span />
+            </div>
+
+            <div className="sugar-review-top">
+              <div className="sugar-rating-overview">
+                <div className="sugar-rating-score">
+                  <strong>
+                    {Number(
+                      product.ratings ||
+                        0
+                    ).toFixed(
+                      1
+                    )}
+                  </strong>
+
+                  <StarDisplay
+                    value={
+                      product.ratings
+                    }
+                  />
+
+                  <span>
+                    {
+                      totalReviews
+                    }{" "}
+                    {totalReviews ===
+                    1
+                      ? "Review"
+                      : "Reviews"}
+                  </span>
+                </div>
+
+                <div className="sugar-rating-breakdown">
+                  {writtenReviewCount >
+                  0 ? (
+                    [
+                      5,
+                      4,
+                      3,
+                      2,
+                      1,
+                    ].map(
+                      (
+                        rating
+                      ) => {
+                        const count =
+                          ratingBreakdown[
+                            rating
+                          ];
+
+                        const percentage =
+                          writtenReviewCount >
+                          0
+                            ? (count /
+                                writtenReviewCount) *
+                              100
+                            : 0;
+
+                        return (
+                          <div
+                            className="sugar-rating-row"
+                            key={
+                              rating
+                            }
+                          >
+                            <span>
+                              {
+                                rating
+                              }{" "}
+                              ★
+                            </span>
+
+                            <div>
+                              <i
+                                style={{
+                                  width:
+                                    `${percentage}%`,
+                                }}
+                              />
+                            </div>
+
+                            <strong>
+                              {
+                                count
+                              }
+                            </strong>
+                          </div>
+                        );
+                      }
+                    )
+                  ) : (
+                    <div className="sugar-rating-no-breakdown">
+                      <strong>
+                        Customer rating
+                      </strong>
+
+                      <p>
+                        Individual
+                        written reviews
+                        will appear here
+                        as customers
+                        share their
+                        experience.
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <form
+                className="sugar-review-form"
+                onSubmit={
+                  handleReviewSubmit
+                }
+              >
+                <span className="sugar-review-eyebrow">
+                  SHARE YOUR EXPERIENCE
+                </span>
+
+                <h3>
+                  Write a Review
+                </h3>
+
+                <div className="sugar-review-rating-input">
+                  <Rating
+                    value={
+                      userRating
+                    }
+                    disabled={
+                      false
+                    }
+                    onRatingChange={
+                      setUserRating
+                    }
+                  />
+                </div>
+
+                <textarea
+                  value={
+                    comment
+                  }
+                  onChange={(
+                    event
+                  ) =>
+                    setComment(
+                      event
+                        .target
+                        .value
+                    )
+                  }
+                  placeholder="Share your thoughts about this product..."
+                />
+
+                <button
+                  type="submit"
+                  disabled={
+                    reviewLoading
+                  }
+                >
+                  {reviewLoading
+                    ? "Submitting..."
+                    : "Submit Review"}
+                </button>
+              </form>
+            </div>
+
+            {reviews.length >
+            0 ? (
+              <div className="sugar-review-list">
+                {reviews.map(
+                  (
+                    review,
+                    index
+                  ) => (
+                    <article
+                      key={
+                        review._id ||
+                        index
+                      }
+                    >
+                      <div className="sugar-review-avatar">
+                        {(
+                          review.name?.[0] ||
+                          "S"
+                        ).toUpperCase()}
+                      </div>
+
+                      <div className="sugar-review-content">
+                        <div className="sugar-review-header">
+                          <div>
+                            <strong>
+                              {review.name ||
+                                "Sugar Muse Customer"}
+                            </strong>
+
+                            <StarDisplay
+                              value={
+                                review.rating
+                              }
+                            />
+                          </div>
+
+                          <span>
+                            {formatDate(
+                              review.createdAt
+                            )}
+                          </span>
+                        </div>
+
+                        <p>
+                          {
+                            review.comment
+                          }
+                        </p>
+                      </div>
+                    </article>
+                  )
+                )}
+              </div>
+            ) : (
+              <div className="sugar-review-empty">
+                <span>
+                  ♡
+                </span>
+
+                <h3>
+                  Be the first to
+                  share some love
+                </h3>
+
+                <p>
+                  No written reviews
+                  have been submitted
+                  for this treat yet.
+                </p>
+              </div>
+            )}
+          </section>
+        </div>
+      </main>
+
+      <Footer />
+    </>
+  );
+};
+
+export default ProductDetails;

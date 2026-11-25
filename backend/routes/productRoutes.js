@@ -15,6 +15,7 @@ import {
 import {
   roleBasedAuth,
   verifyUserAuth,
+  optionalUserAuth,
 } from "../middleware/verifyUserAuth.js";
 
 const router = express.Router();
@@ -63,7 +64,7 @@ router
 router
   .route("/product/review/:id")
   .put(
-    verifyUserAuth,
+    optionalUserAuth,
     createReview
   );
 

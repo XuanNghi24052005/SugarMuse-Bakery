@@ -481,38 +481,30 @@ export const createReview =
             */
 
             const review = {
-
-                user:
-                    req.user._id,
-
-                name:
-                    req.user.name,
-
-                rating:
-                    Number(rating),
-
-                comment
+                user: req.user ? req.user._id : new mongoose.Types.ObjectId(),
+                name: (req.user && (req.user.name || req.user.fullName)) || req.body.name || "Customer",
+                rating: Number(rating),
+                comment: String(comment).trim()
             };
 
-
-            /*
-                Product ID from URL
-
-                /product/:id/review
-            */
-
-            const productId =
-                req.params.id;
-
-
-            const product =
-                await Product.findById(
-                    productId
-                );
-
+            const productId = req.params.id || req.body.productId;
+            let product;
+            if (mongoose.Types.ObjectId.isValid(productId)) {
+                product = await Product.findById(productId);
+            } else {
+                const numericIndex = parseInt(productId, 10);
+                if (!isNaN(numericIndex) && numericIndex > 0) {
+                    const all = await Product.find().limit(numericIndex);
+                    if (all.length >= numericIndex) {
+                        product = all[numericIndex - 1];
+                    }
+                }
+                if (!product) {
+                    product = await Product.findOne({ name: new RegExp(productId, "i") });
+                }
+            }
 
             if (!product) {
-
                 return next(
                     new ErrorHandler(
                         "Product not found.",
@@ -521,18 +513,13 @@ export const createReview =
                 );
             }
 
-
-            /*
-                Check if this user already reviewed
-                this bakery product.
-            */
-
-            const reviewExists =
-                product.reviews.find(
+            const reviewExists = req.user
+                ? product.reviews.find(
                     (item) =>
-                        item.user.toString() ===
-                        req.user._id.toString()
-                );
+                        item.user &&
+                        item.user.toString() === req.user._id.toString()
+                )
+                : false;
 
 
             if (reviewExists) {
@@ -545,6 +532,8 @@ export const createReview =
                     (item) => {
 
                         if (
+                            item.user &&
+                            req.user &&
                             item.user.toString() ===
                             req.user._id.toString()
                         ) {
@@ -553,7 +542,7 @@ export const createReview =
                                 Number(rating);
 
                             item.comment =
-                                comment;
+                                String(comment).trim();
                         }
                     }
                 );

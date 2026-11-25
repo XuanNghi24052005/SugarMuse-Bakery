@@ -41,6 +41,28 @@ export const verifyUserAuth = handleAsyncError(async (req, res, next) => {
   next();
 });
 
+// Optional User Authentication (attaches user if present, but doesn't block guests)
+export const optionalUserAuth = handleAsyncError(async (req, res, next) => {
+  const token =
+    req.cookies.token ||
+    (req.headers.authorization &&
+      req.headers.authorization.startsWith("Bearer") &&
+      req.headers.authorization.split(" ")[1]);
+
+  if (token) {
+    try {
+      const decodedData = jwt.verify(token, process.env.JWT_SECRET_KEY);
+      const user = await User.findById(decodedData.id);
+      if (user) {
+        req.user = user;
+      }
+    } catch {
+      // ignore
+    }
+  }
+  next();
+});
+
 // 2. Verify Dedicated Admin Authentication (for /admin portal)
 export const verifyAdminAuth = handleAsyncError(async (req, res, next) => {
   const token =
