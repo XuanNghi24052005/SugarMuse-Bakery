@@ -16,6 +16,7 @@ import {
 import {
   useAuth,
 } from "../Context/Authcontext";
+import axiosInstance from "../utils/axiosInstance";
 
 import "../pageStyles/Checkout.css";
 
@@ -150,6 +151,17 @@ const Checkout = () => {
     note: "",
   });
 
+  const [couponCode, setCouponCode] = useState("");
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponError, setCouponError] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState(() => {
+    try {
+      return JSON.parse(sessionStorage.getItem("appliedCoupon")) || null;
+    } catch {
+      return null;
+    }
+  });
+
   useEffect(() => {
     if (!isAuthenticated) {
       navigate("/login");
@@ -227,21 +239,64 @@ const Checkout = () => {
   const subtotal =
     Number(cartTotal) || 0;
 
-  const shippingFee =
-    subtotal === 0 ||
-    subtotal >= 60
-      ? 0
-      : 4;
+  const discountAmount = useMemo(() => {
+    if (!appliedCoupon) return 0;
+    if (appliedCoupon.type === "percent") {
+      return Number(((subtotal * appliedCoupon.value) / 100).toFixed(2));
+    }
+    if (appliedCoupon.type === "fixed") {
+      return Math.min(subtotal, Number(appliedCoupon.value) || 0);
+    }
+    return 0;
+  }, [appliedCoupon, subtotal]);
+
+  const isFreeShipping = appliedCoupon?.type === "freeship" || subtotal >= 60;
+  const shippingFee = subtotal === 0 ? 0 : (isFreeShipping ? 0 : 4);
 
   const total = useMemo(
-    () =>
-      subtotal +
-      shippingFee,
-    [
-      subtotal,
-      shippingFee,
-    ]
+    () => Math.max(0, subtotal - discountAmount + shippingFee),
+    [subtotal, discountAmount, shippingFee]
   );
+
+  const handleApplyCoupon = async (event) => {
+    if (event) event.preventDefault();
+    const code = couponCode.trim().toUpperCase();
+    if (!code) return;
+    setCouponLoading(true);
+    setCouponError("");
+
+    try {
+      const { data } = await axiosInstance.post("/api/v1/coupon/apply", {
+        code,
+        subTotal: subtotal,
+      });
+
+      if (data.success && data.coupon) {
+        const cp = {
+          code: data.coupon.code,
+          type: data.coupon.discountType,
+          value: data.coupon.value,
+          label: data.coupon.label,
+        };
+        setAppliedCoupon(cp);
+        sessionStorage.setItem("appliedCoupon", JSON.stringify(cp));
+        setCouponCode("");
+        setCouponError("");
+      }
+    } catch (err) {
+      setCouponError(
+        err.response?.data?.message || "Invalid coupon code."
+      );
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    sessionStorage.removeItem("appliedCoupon");
+    setCouponError("");
+  };
 
   const handleChange = (
     event
@@ -837,6 +892,55 @@ const Checkout = () => {
 
           <div className="checkout-summary-divider" />
 
+          {/* Promo / Voucher Code Section */}
+          {!appliedCoupon ? (
+            <div>
+              <div className="checkout-coupon-box">
+                <input
+                  type="text"
+                  placeholder="Enter Voucher Code..."
+                  className="checkout-coupon-input"
+                  value={couponCode}
+                  onChange={(e) => {
+                    setCouponCode(e.target.value);
+                    setCouponError("");
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      handleApplyCoupon(e);
+                    }
+                  }}
+                />
+                <button
+                  type="button"
+                  className="checkout-coupon-btn"
+                  onClick={handleApplyCoupon}
+                  disabled={couponLoading || !couponCode.trim()}
+                >
+                  {couponLoading ? "..." : "Apply"}
+                </button>
+              </div>
+              {couponError && (
+                <div className="checkout-coupon-error">{couponError}</div>
+              )}
+            </div>
+          ) : (
+            <div className="checkout-applied-coupon">
+              <div className="checkout-applied-info">
+                <span className="checkout-coupon-tag">{appliedCoupon.code}</span>
+                <span>{appliedCoupon.label || "Applied"}</span>
+              </div>
+              <button
+                type="button"
+                className="checkout-remove-coupon"
+                onClick={handleRemoveCoupon}
+              >
+                Remove
+              </button>
+            </div>
+          )}
+
           <div className="checkout-summary-row">
             <span>
               Subtotal
@@ -849,6 +953,17 @@ const Checkout = () => {
               )}
             </strong>
           </div>
+
+          {appliedCoupon && discountAmount > 0 && (
+            <div className="checkout-summary-row checkout-summary-discount">
+              <span>
+                Discount ({appliedCoupon.label || appliedCoupon.code})
+              </span>
+              <strong>
+                -${discountAmount.toFixed(2)}
+              </strong>
+            </div>
+          )}
 
           <div className="checkout-summary-row">
             <span>

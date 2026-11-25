@@ -86,10 +86,10 @@ const AccountWishlist = () => {
       </div>
 
       <div className="account-wishlist-grid">
-        {wishlistItems.map((product) => (
+        {wishlistItems.map((product, index) => (
           <article
             className="account-wishlist-card"
-            key={product.id}
+            key={product.id || product._id || product.name || index}
           >
             <div className="account-wishlist-image-wrap">
               <img

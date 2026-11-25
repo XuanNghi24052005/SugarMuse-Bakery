@@ -1,172 +1,257 @@
-const STORAGE_KEY = 'sugarMuserecentlyViewed'
-const MAX_ITEMS = 8
+const STORAGE_KEY =
+  "sugarMuseRecentlyViewed";
 
-const getProductImage = (product) => {
-  if (!product) {
-    return ''
-  }
+const MAX_ITEMS = 8;
 
-  if (typeof product.image === 'string') {
-    return product.image
-  }
-
-  if (
-    Array.isArray(product.image) &&
-    product.image.length > 0
-  ) {
-    return (
-      product.image[0]?.url ||
-      product.image[0] ||
-      ''
-    )
-  }
-
-  if (
-    Array.isArray(product.images) &&
-    product.images.length > 0
-  ) {
-    return (
-      product.images[0]?.url ||
-      product.images[0] ||
-      ''
-    )
-  }
-
-  return ''
-}
-
-export const getrecentlyViewed = () => {
-  try {
-    const saved =
-      localStorage.getItem(
-        STORAGE_KEY
-      )
-
-    if (!saved) {
-      return []
-    }
-
-    const parsed =
-      JSON.parse(saved)
-
-    return Array.isArray(parsed)
-      ? parsed
-      : []
-  } catch {
-    return []
-  }
-}
-
-export const saverecentlyViewed = (
+const getProductImage = (
   product
 ) => {
   if (!product) {
-    return
+    return "";
   }
 
-  const id =
-    product._id ||
-    product.id
-
-  if (!id) {
-    return
+  if (
+    typeof product.image ===
+    "string"
+  ) {
+    return product.image;
   }
 
-  const item = {
-    id: String(id),
+  if (
+    Array.isArray(
+      product.image
+    ) &&
+    product.image.length > 0
+  ) {
+    const firstImage =
+      product.image[0];
 
-    name:
-      product.name ||
-      product.title ||
-      'Sugar Muse Treat',
+    if (
+      typeof firstImage ===
+      "string"
+    ) {
+      return firstImage;
+    }
 
-    price:
-      Number(
-        product.price
-      ) || 0,
-
-    image:
-      getProductImage(
-        product
-      ),
-
-    category:
-      product.category ||
-      '',
-
-    subcategory:
-      product.subcategory ||
-      '',
-
-    ratings:
-      Number(
-        product.ratings
-      ) || 0,
-
-    numReviews:
-      Number(
-        product.numReviews
-      ) || 0
+    return (
+      firstImage?.url ||
+      ""
+    );
   }
 
-  const current =
-    getrecenlyViewed()
+  if (
+    Array.isArray(
+      product.images
+    ) &&
+    product.images.length > 0
+  ) {
+    const firstImage =
+      product.images[0];
 
-  const filtered =
-    current.filter(
-      (savedProduct) =>
-        String(
-          savedProduct.id
-        ) !==
-        String(id)
-    )
+    if (
+      typeof firstImage ===
+      "string"
+    ) {
+      return firstImage;
+    }
 
-  const updated = [
-    item,
-    ...filtered
-  ].slice(
-    0,
-    MAX_ITEMS
-  )
+    return (
+      firstImage?.url ||
+      ""
+    );
+  }
 
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(
-      updated
-    )
-  )
+  return "";
+};
 
-  return updated
-}
-
-export const removerecentlyViewed = (
-  id
-) => {
-  const current =
-    getrecentlyViewed()
-
-  const updated =
-    current.filter(
-      (product) =>
-        String(
-          product.id
-        ) !==
-        String(id)
-    )
-
-  localStorage.setItem(
-    STORAGE_KEY,
-    JSON.stringify(
-      updated
-    )
-  )
-
-  return updated
-}
-
-export const clearrecentlyViewed =
+export const getRecentlyViewed =
   () => {
-    localStorage.removeItem(
-      STORAGE_KEY
-    )
-  }
+    try {
+      const saved =
+        localStorage.getItem(
+          STORAGE_KEY
+        );
+
+      if (!saved) {
+        return [];
+      }
+
+      const parsed =
+        JSON.parse(saved);
+
+      return Array.isArray(
+        parsed
+      )
+        ? parsed
+        : [];
+    } catch (error) {
+      console.error(
+        "Unable to read recently viewed products:",
+        error
+      );
+
+      return [];
+    }
+  };
+
+export const saveRecentlyViewed =
+  (product) => {
+    if (!product) {
+      return [];
+    }
+
+    const productId =
+      product._id ||
+      product.id;
+
+    if (!productId) {
+      return [];
+    }
+
+    try {
+      const current =
+        getRecentlyViewed();
+
+      const item = {
+        id:
+          String(
+            productId
+          ),
+
+        name:
+          product.name ||
+          product.title ||
+          "Sugar Muse Treat",
+
+        price:
+          Number(
+            product.price
+          ) || 0,
+
+        image:
+          getProductImage(
+            product
+          ),
+
+        category:
+          product.category ||
+          "",
+
+        subcategory:
+          product.subcategory ||
+          "",
+
+        flavor:
+          product.flavor ||
+          "",
+
+        ratings:
+          Number(
+            product.ratings
+          ) || 0,
+
+        numReviews:
+          Number(
+            product.numReviews
+          ) || 0,
+
+        slug:
+          product.slug ||
+          "",
+      };
+
+      const filtered =
+        current.filter(
+          (savedProduct) =>
+            String(
+              savedProduct.id
+            ) !==
+            String(
+              productId
+            )
+        );
+
+      const updated = [
+        item,
+        ...filtered,
+      ].slice(
+        0,
+        MAX_ITEMS
+      );
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(
+          updated
+        )
+      );
+
+      return updated;
+    } catch (error) {
+      console.error(
+        "Unable to save recently viewed product:",
+        error
+      );
+
+      return [];
+    }
+  };
+
+export const removeRecentlyViewed =
+  (productId) => {
+    try {
+      const current =
+        getRecentlyViewed();
+
+      const updated =
+        current.filter(
+          (product) =>
+            String(
+              product.id
+            ) !==
+            String(
+              productId
+            )
+        );
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify(
+          updated
+        )
+      );
+
+      return updated;
+    } catch (error) {
+      console.error(
+        "Unable to remove recently viewed product:",
+        error
+      );
+
+      return [];
+    }
+  };
+
+export const clearRecentlyViewed =
+  () => {
+    try {
+      localStorage.removeItem(
+        STORAGE_KEY
+      );
+
+      return [];
+    } catch (error) {
+      console.error(
+        "Unable to clear recently viewed products:",
+        error
+      );
+
+      return [];
+    }
+  };
+
+// Export aliases for case-insensitivity
+export const saverecentlyViewed = saveRecentlyViewed;
+export const getrecentlyViewed = getRecentlyViewed;
+export const removerecentlyViewed = removeRecentlyViewed;
+export const clearrecentlyViewed = clearRecentlyViewed;

@@ -4,7 +4,8 @@ import handleAsyncError from '../middleware/handleAsyncError.js'
 
 // Apply and validate coupon 
 export const applyCoupon = handleAsyncError(async (req, res, next) => {
-  const { code, subTotal = 0, total } = req.body
+  const { code } = req.body
+  const subTotal = Number(req.body.subTotal ?? req.body.subtotal ?? req.body.total ?? 0)
 
   if (!code) {
     return next(new ErrorHandler("Please provide a coupon code.", 400))

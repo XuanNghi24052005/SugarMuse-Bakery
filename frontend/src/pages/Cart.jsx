@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useMemo } from "react";
 import {
   Link,
   useNavigate,
@@ -6,6 +6,7 @@ import {
 
 import { useCart } from "../Context/Cartcontext";
 import { useAuth } from "../Context/Authcontext";
+import axiosInstance from "../utils/axiosInstance";
 
 const Cart = () => {
   const {
@@ -22,6 +23,73 @@ const Cart = () => {
   } = useAuth();
 
   const navigate = useNavigate();
+
+  const [couponCode, setCouponCode] = useState("");
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponError, setCouponError] = useState("");
+  const [appliedCoupon, setAppliedCoupon] = useState(() => {
+    try {
+      return JSON.parse(sessionStorage.getItem("appliedCoupon")) || null;
+    } catch {
+      return null;
+    }
+  });
+
+  const subtotal = Number(cartTotal) || 0;
+
+  const discountAmount = useMemo(() => {
+    if (!appliedCoupon) return 0;
+    if (appliedCoupon.type === "percent") {
+      return Number(((subtotal * appliedCoupon.value) / 100).toFixed(2));
+    }
+    if (appliedCoupon.type === "fixed") {
+      return Math.min(subtotal, Number(appliedCoupon.value) || 0);
+    }
+    return 0;
+  }, [appliedCoupon, subtotal]);
+
+  const finalTotal = useMemo(
+    () => Math.max(0, subtotal - discountAmount),
+    [subtotal, discountAmount]
+  );
+
+  const handleApplyCoupon = async (e) => {
+    if (e) e.preventDefault();
+    const code = couponCode.trim().toUpperCase();
+    if (!code) return;
+    setCouponLoading(true);
+    setCouponError("");
+
+    try {
+      const { data } = await axiosInstance.post("/api/v1/coupon/apply", {
+        code,
+        subTotal: subtotal,
+      });
+
+      if (data.success && data.coupon) {
+        const cp = {
+          code: data.coupon.code,
+          type: data.coupon.discountType,
+          value: data.coupon.value,
+          label: data.coupon.label,
+        };
+        setAppliedCoupon(cp);
+        sessionStorage.setItem("appliedCoupon", JSON.stringify(cp));
+        setCouponCode("");
+        setCouponError("");
+      }
+    } catch (err) {
+      setCouponError(err.response?.data?.message || "Invalid coupon code.");
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    sessionStorage.removeItem("appliedCoupon");
+    setCouponError("");
+  };
 
   const handleCheckout = () => {
     if (!isAuthenticated) {
@@ -400,6 +468,113 @@ const Cart = () => {
               Your Order
             </h2>
 
+            {/* Voucher Box */}
+            {!appliedCoupon ? (
+              <div style={{ margin: "0 0 20px" }}>
+                <div style={{ display: "flex", gap: "8px" }}>
+                  <input
+                    type="text"
+                    placeholder="Voucher Code..."
+                    value={couponCode}
+                    onChange={(e) => {
+                      setCouponCode(e.target.value);
+                      setCouponError("");
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        e.preventDefault();
+                        handleApplyCoupon(e);
+                      }
+                    }}
+                    style={{
+                      flex: 1,
+                      minWidth: 0,
+                      height: "40px",
+                      padding: "0 14px",
+                      border: "1px solid #e3beb5",
+                      borderRadius: "20px",
+                      background: "#ffffff",
+                      color: "#57231c",
+                      fontSize: "12px",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.05em",
+                      outline: "none",
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={handleApplyCoupon}
+                    disabled={couponLoading || !couponCode.trim()}
+                    style={{
+                      height: "40px",
+                      padding: "0 16px",
+                      border: "none",
+                      borderRadius: "20px",
+                      background: "#c95f5c",
+                      color: "#ffffff",
+                      fontSize: "11px",
+                      fontWeight: "800",
+                      cursor: "pointer",
+                    }}
+                  >
+                    {couponLoading ? "..." : "Apply"}
+                  </button>
+                </div>
+                {couponError && (
+                  <div style={{ margin: "6px 0 0", color: "#c95f5c", fontSize: "11px", fontWeight: "600" }}>
+                    {couponError}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div
+                style={{
+                  margin: "0 0 20px",
+                  padding: "10px 14px",
+                  borderRadius: "14px",
+                  background: "rgba(115, 132, 53, 0.12)",
+                  border: "1px solid rgba(115, 132, 53, 0.3)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <div>
+                  <span
+                    style={{
+                      background: "#738435",
+                      color: "#ffffff",
+                      padding: "2px 7px",
+                      borderRadius: "6px",
+                      fontSize: "10px",
+                      fontWeight: "700",
+                      marginRight: "6px",
+                    }}
+                  >
+                    {appliedCoupon.code}
+                  </span>
+                  <span style={{ color: "#4a5c18", fontSize: "12px", fontWeight: "700" }}>
+                    {appliedCoupon.label || "Voucher Applied"}
+                  </span>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleRemoveCoupon}
+                  style={{
+                    background: "transparent",
+                    border: "none",
+                    color: "#c95f5c",
+                    fontSize: "11px",
+                    fontWeight: "700",
+                    cursor: "pointer",
+                    textDecoration: "underline",
+                  }}
+                >
+                  Remove
+                </button>
+              </div>
+            )}
+
             <div
               style={{
                 paddingBottom: "17px",
@@ -423,9 +598,29 @@ const Cart = () => {
                   fontSize: "14px",
                 }}
               >
-                ${Number(cartTotal).toFixed(2)}
+                ${subtotal.toFixed(2)}
               </strong>
             </div>
+
+            {appliedCoupon && discountAmount > 0 && (
+              <div
+                style={{
+                  padding: "15px 0",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  gap: "20px",
+                  borderBottom: "1px solid #e3beb5",
+                  color: "#4a5c18",
+                }}
+              >
+                <span style={{ fontSize: "13px", fontWeight: "700" }}>
+                  Discount ({appliedCoupon.label || appliedCoupon.code})
+                </span>
+                <strong style={{ fontSize: "14px", color: "#4a5c18" }}>
+                  -${discountAmount.toFixed(2)}
+                </strong>
+              </div>
+            )}
 
             <div
               style={{
@@ -452,7 +647,7 @@ const Cart = () => {
                   textAlign: "right",
                 }}
               >
-                Calculated at checkout
+                {appliedCoupon?.type === "freeship" ? "Free (Voucher)" : "Calculated at checkout"}
               </span>
             </div>
 
@@ -483,7 +678,7 @@ const Cart = () => {
                   fontWeight: "400",
                 }}
               >
-                ${Number(cartTotal).toFixed(2)}
+                ${finalTotal.toFixed(2)}
               </strong>
             </div>
 
