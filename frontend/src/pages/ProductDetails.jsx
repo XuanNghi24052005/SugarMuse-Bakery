@@ -33,16 +33,7 @@ import {
   removeReviewError,
 } from "../features/products/productSlice";
 
-import {
-  addItemsToCart,
-  removeMessage,
-  removeErrors as removeCartErrors,
-} from "../features/cart/cartSlice";
 
-import {
-  addToWishlist,
-  removeFromWishlist,
-} from "../features/wishlist/wishlistSlice";
 
 import {
   saveRecentlyViewed,
@@ -406,87 +397,25 @@ const ProductDetails = () => {
   ]);
 
   useEffect(() => {
-    if (
-      cartError
-    ) {
+    if (reviewError) {
       showToast.error(
-        typeof cartError ===
-          "string"
-          ? cartError
-          : cartError
-              ?.message ||
-            "Unable to add product to cart"
-      );
-
-      dispatch(
-        removeCartErrors()
-      );
-    }
-
-    if (
-      reviewError
-    ) {
-      showToast.error(
-        typeof reviewError ===
-          "string"
+        typeof reviewError === "string"
           ? reviewError
-          : reviewError
-              ?.message ||
-            "Unable to submit review"
+          : reviewError?.message || "Unable to submit review"
       );
-
-      dispatch(
-        removeReviewError()
-      );
+      dispatch(removeReviewError());
     }
-  }, [
-    dispatch,
-    cartError,
-    reviewError,
-  ]);
+  }, [dispatch, reviewError]);
 
   useEffect(() => {
-    if (
-      cartSuccess
-    ) {
-      showToast.success(
-        cartMessage ||
-          "Added to cart"
-      );
-
-      dispatch(
-        removeMessage()
-      );
-    }
-
-    if (
-      reviewSuccess
-    ) {
-      showToast.success(
-        "Review submitted successfully!"
-      );
-
-      dispatch(
-        removeReviewSuccess()
-      );
-
+    if (reviewSuccess) {
+      showToast.success("Review submitted successfully!");
+      dispatch(removeReviewSuccess());
       setUserRating(0);
-
       setComment("");
-
-      dispatch(
-        getProductDetails(
-          id
-        )
-      );
+      dispatch(getProductDetails(id));
     }
-  }, [
-    dispatch,
-    cartSuccess,
-    cartMessage,
-    reviewSuccess,
-    id,
-  ]);
+  }, [dispatch, reviewSuccess, id]);
 
   const increaseQuantity =
     () => {
@@ -990,20 +919,10 @@ const ProductDetails = () => {
                     <button
                       type="button"
                       className="sugar-product-add-cart"
-                      onClick={
-                        handleAddToCart
-                      }
-                      disabled={
-                        cartLoading
-                      }
+                      onClick={handleAddToCart}
                     >
                       <CartIcon />
-
-                      <span>
-                        {cartLoading
-                          ? "Adding..."
-                          : "Add to Cart"}
-                      </span>
+                      <span>Add to Cart</span>
                     </button>
 
                     
