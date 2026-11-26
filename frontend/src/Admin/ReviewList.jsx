@@ -1,16 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import '../AdminStyles/ReviewList.css'
-import { Delete, Visibility, Close } from '@mui/icons-material'
+import { Delete, Visibility, Close, Star, StarBorder } from '@mui/icons-material'
 import { useDispatch, useSelector } from 'react-redux'
-import { clearMessage, deleteReview, fetchAdminProducts, fetchProductReviews, removeErrors, removeSuccess } from '../features/admin/adminSlice'
+import {
+    clearMessage,
+    deleteReview,
+    fetchAdminProducts,
+    fetchProductReviews,
+    removeErrors,
+    removeSuccess
+} from '../features/admin/adminSlice'
 import { showToast } from '../utils/showToast'
 import Loader from '../components/Loader'
 
 const ReviewList = () => {
-    const { products, loading, error, reviews, success, message } = useSelector(state => state.admin)
+    const { products = [], loading, error, reviews = [], success, message } = useSelector(state => state.admin)
     const [selectedProduct, setSelectedProduct] = useState(null)
     const [selectedProductObj, setSelectedProductObj] = useState(null)
-    const [viewMode, setViewMode] = useState('byProduct') // 'byProduct' or 'allReviews'
+    const [viewMode, setViewMode] = useState('byProduct') // 'byProduct' | 'allReviews'
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -18,11 +25,16 @@ const ReviewList = () => {
     }, [dispatch])
 
     const handleViewReviews = (product) => {
+        if (selectedProduct === product._id) {
+            // Toggle off if already opened
+            setSelectedProduct(null)
+            setSelectedProductObj(null)
+            return
+        }
         setSelectedProduct(product._id)
         setSelectedProductObj(product)
         dispatch(fetchProductReviews({ productId: product._id }))
 
-        // Auto-scroll to review details section
         setTimeout(() => {
             const section = document.getElementById('reviews-details-section')
             if (section) {
@@ -36,7 +48,7 @@ const ReviewList = () => {
             showToast.error("Invalid review or product ID.")
             return
         }
-        const confirm = window.confirm("Are you sure you want to delete this review?")
+        const confirm = window.confirm("Are you sure you want to permanently delete this customer review?")
         if (confirm) {
             dispatch(deleteReview({ reviewId, productId }))
         }
@@ -48,7 +60,7 @@ const ReviewList = () => {
             dispatch(removeErrors())
         }
         if (success) {
-            showToast.success(message || "Operation successful!")
+            showToast.success(message || "Review deleted successfully!")
             dispatch(removeSuccess())
             dispatch(clearMessage())
             if (selectedProduct) {
@@ -58,8 +70,49 @@ const ReviewList = () => {
         }
     }, [dispatch, error, success, message, selectedProduct])
 
-    // Flatten all reviews for "All Reviews" tab
-    const allAggregatedReviews = React.useMemo(() => {
+    // Format review date cleanly
+    const formatReviewDate = (dateStr) => {
+        if (!dateStr) return 'Recently'
+        try {
+            const d = new Date(dateStr)
+            if (isNaN(d.getTime())) return 'Recently'
+            return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+        } catch {
+            return 'Recently'
+        }
+    }
+
+    // Helper for category badge class
+    const getCategoryClass = (category) => {
+        if (!category) return 'default'
+        const cat = category.toLowerCase().trim()
+        if (cat.includes('cake')) return 'cake'
+        if (cat.includes('pastry')) return 'pastry'
+        if (cat.includes('savory')) return 'savory'
+        if (cat.includes('gift')) return 'gift-box'
+        if (cat.includes('combo')) return 'combo'
+        return 'default'
+    }
+
+    // Render 5-star rating nicely
+    const renderStars = (rating) => {
+        const val = Math.min(5, Math.max(0, Math.round(rating) || 0))
+        return (
+            <div className="reviews-rating-stars">
+                {[1, 2, 3, 4, 5].map((star) => (
+                    star <= val ? (
+                        <Star key={star} style={{ fontSize: 16, color: '#f59e0b' }} />
+                    ) : (
+                        <StarBorder key={star} style={{ fontSize: 16, color: '#d4c0ba' }} />
+                    )
+                ))}
+                <span className="reviews-rating-num">{(rating || 0).toFixed(1)}</span>
+            </div>
+        )
+    }
+
+    // Flatten all reviews across all products for "All Reviews" tab
+    const allAggregatedReviews = useMemo(() => {
         if (!products || !Array.isArray(products)) return []
         const list = []
         products.forEach(p => {
@@ -69,7 +122,8 @@ const ReviewList = () => {
                         ...r,
                         productId: p._id,
                         productName: p.name,
-                        productImage: p.image?.[0]?.url || ''
+                        productCategory: p.category,
+                        productImage: p.image?.[0]?.url || p.images?.[0]?.url || '/images/sugar-muse-favicon.svg'
                     })
                 })
             }
@@ -77,230 +131,307 @@ const ReviewList = () => {
         return list
     }, [products])
 
-    if (!products || products.length === 0) {
-        return (
-            <div className="reviews-list-container">
-                <h1 className="reviews-list-title">Product Reviews</h1>
-                <p style={{ textAlign: "center", color: "#8c6e67", margin: "20px 0" }}>
-                    No products in database yet. Add cakes to see customer reviews.
-                </p>
-            </div>
-        )
-    }
-
     return (
-        <>
-            {loading && !products.length ? (<Loader />) : (
-                <div className="reviews-list-container">
-                    <div className="reviews-list-header">
-                        <div>
-                            <h1 className="reviews-list-title">Customer Reviews Management</h1>
-                            <p style={{ margin: "4px 0 0", color: "#775953", fontSize: "14px" }}>
-                                View and manage all bakery product ratings and customer feedback.
-                            </p>
-                        </div>
-                        <div className="reviews-tabs">
-                            <button
-                                type="button"
-                                className={`reviews-tab-btn ${viewMode === 'byProduct' ? 'active' : ''}`}
-                                onClick={() => setViewMode('byProduct')}
-                            >
-                                By Product ({products.length})
-                            </button>
-                            <button
-                                type="button"
-                                className={`reviews-tab-btn ${viewMode === 'allReviews' ? 'active' : ''}`}
-                                onClick={() => setViewMode('allReviews')}
-                            >
-                                All Reviews ({allAggregatedReviews.length})
-                            </button>
-                        </div>
-                    </div>
+        <div className="reviews-list-container">
+            {/* Header */}
+            <div className="reviews-list-header">
+                <div>
+                    <span className="reviews-eyebrow">CUSTOMER FEEDBACK</span>
+                    <h1 className="reviews-list-title">Reviews Management</h1>
+                    <p className="reviews-list-subtitle">
+                        Monitor ratings, read guest feedback, and manage reviews across all bakery products.
+                    </p>
+                </div>
+                <div className="reviews-tabs">
+                    <button
+                        type="button"
+                        className={`reviews-tab-btn ${viewMode === 'byProduct' ? 'active' : ''}`}
+                        onClick={() => setViewMode('byProduct')}
+                    >
+                        <span>By Product</span>
+                        <span className="reviews-tab-count">{products.length}</span>
+                    </button>
+                    <button
+                        type="button"
+                        className={`reviews-tab-btn ${viewMode === 'allReviews' ? 'active' : ''}`}
+                        onClick={() => setViewMode('allReviews')}
+                    >
+                        <span>All Reviews</span>
+                        <span className="reviews-tab-count">{allAggregatedReviews.length}</span>
+                    </button>
+                </div>
+            </div>
 
-                    {viewMode === 'byProduct' ? (
-                        <>
-                            <table className="reviews-table">
-                                <thead>
-                                    <tr>
-                                        <th style={{ width: '50px' }}>No</th>
-                                        <th>Product Name</th>
-                                        <th style={{ width: '90px' }}>Image</th>
-                                        <th style={{ width: '130px', textAlign: 'center' }}>Total Reviews</th>
-                                        <th style={{ width: '160px', textAlign: 'center' }}>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {products.map((product, index) => {
-                                        const isSelected = selectedProduct === product._id
-                                        const count = product.reviews?.length || product.numReviews || 0
-                                        return (
-                                            <tr
-                                                key={product._id}
-                                                style={isSelected ? { backgroundColor: '#fff4f2', outline: '2px solid #e8a59f' } : {}}
-                                            >
-                                                <td>{index + 1}</td>
-                                                <td>
-                                                    <strong>{product.name}</strong>
-                                                    {product.category && (
-                                                        <span style={{ display: 'block', fontSize: '12px', color: '#888' }}>
-                                                            {product.category}
-                                                        </span>
-                                                    )}
-                                                </td>
-                                                <td>
-                                                    <img
-                                                        src={product.image?.[0]?.url || product.image || '/images/products/strawberry-cake.jpg'}
-                                                        alt={product.name}
-                                                        className='product-image'
-                                                    />
-                                                </td>
-                                                <td style={{ textAlign: 'center', fontWeight: '700', fontSize: '15px' }}>
-                                                    {count > 0 ? (
-                                                        <span style={{ color: '#d96560' }}>{count}</span>
-                                                    ) : (
-                                                        <span style={{ color: '#aaa' }}>0</span>
-                                                    )}
-                                                </td>
-                                                <td style={{ textAlign: 'center' }}>
-                                                    {count > 0 ? (
-                                                        <button
-                                                            type="button"
-                                                            className="action-btn view-btn"
-                                                            onClick={() => handleViewReviews(product)}
-                                                        >
-                                                            <Visibility fontSize="small" /> View ({count})
-                                                        </button>
-                                                    ) : (
-                                                        <span className="no-reviews-text">No Reviews</span>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        )
-                                    })}
-                                </tbody>
-                            </table>
+            {loading && !products.length ? (
+                <div style={{ padding: '60px 0', textAlign: 'center' }}>
+                    <Loader />
+                </div>
+            ) : viewMode === 'byProduct' ? (
+                <>
+                    {/* Products Table */}
+                    <div className="reviews-table-card">
+                        <table className="reviews-table">
+                            <thead>
+                                <tr>
+                                    <th style={{ width: '50px', textAlign: 'center' }}>No</th>
+                                    <th>Product</th>
+                                    <th style={{ width: '130px' }}>Category</th>
+                                    <th style={{ width: '160px' }}>Average Rating</th>
+                                    <th style={{ width: '130px', textAlign: 'center' }}>Reviews</th>
+                                    <th style={{ width: '180px', textAlign: 'center' }}>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {products.map((product, index) => {
+                                    const isSelected = selectedProduct === product._id
+                                    const count = product.reviews?.length || product.numOfReviews || product.numReviews || 0
+                                    const avgRating = product.ratings || (count > 0 && product.reviews ? (product.reviews.reduce((acc, r) => acc + (r.rating || 5), 0) / count) : 5)
+                                    const imgUrl = product.image?.[0]?.url || product.images?.[0]?.url || product.image || '/images/sugar-muse-favicon.svg'
 
-                            {selectedProduct && (
-                                <div id="reviews-details-section" className="reviews-details">
-                                    <div className="reviews-details-header">
-                                        <div>
-                                            <span className="reviews-details-badge">PRODUCT FEEDBACK</span>
-                                            <h2>Reviews for: {selectedProductObj?.name || 'Selected Cake'}</h2>
-                                        </div>
-                                        <button
-                                            type="button"
-                                            className="action-btn close-reviews-btn"
-                                            onClick={() => {
-                                                setSelectedProduct(null)
-                                                setSelectedProductObj(null)
-                                            }}
+                                    return (
+                                        <tr
+                                            key={product._id}
+                                            className={isSelected ? 'selected-row' : ''}
                                         >
-                                            <Close fontSize="small" /> Close
-                                        </button>
-                                    </div>
-
-                                    {reviews && reviews.length > 0 ? (
-                                        <table className="reviews-table">
-                                            <thead>
-                                                <tr>
-                                                    <th style={{ width: '50px' }}>No</th>
-                                                    <th style={{ width: '160px' }}>Reviewer</th>
-                                                    <th style={{ width: '130px' }}>Rating</th>
-                                                    <th>Customer Comment</th>
-                                                    <th style={{ width: '90px', textAlign: 'center' }}>Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {reviews.map((review, index) => (
-                                                    <tr key={review._id || index}>
-                                                        <td>{index + 1}</td>
-                                                        <td><strong>{review.name || 'Customer'}</strong></td>
-                                                        <td>
-                                                            <span style={{ color: '#ffb400', fontSize: '15px' }}>
-                                                                {'★'.repeat(Math.round(review.rating) || 5)}
-                                                                {'☆'.repeat(Math.max(0, 5 - (Math.round(review.rating) || 5)))}
-                                                            </span>
-                                                            <span style={{ marginLeft: '4px', fontSize: '12px', color: '#777' }}>
-                                                                ({review.rating})
-                                                            </span>
-                                                        </td>
-                                                        <td style={{ color: '#444', lineHeight: '1.5' }}>
-                                                            "{review.comment}"
-                                                        </td>
-                                                        <td style={{ textAlign: 'center' }}>
-                                                            <button
-                                                                type="button"
-                                                                onClick={() => handleDeleteReviews(review._id, selectedProduct)}
-                                                                className="action-btn delete-btn"
-                                                                title="Delete Review"
-                                                            >
-                                                                <Delete fontSize="small" />
-                                                            </button>
-                                                        </td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
-                                    ) : (
-                                        <p className="no-reviews-msg">No reviews found for this product.</p>
-                                    )}
-                                </div>
-                            )}
-                        </>
-                    ) : (
-                        /* All Reviews Tab */
-                        <div style={{ marginTop: '20px' }}>
-                            {allAggregatedReviews.length > 0 ? (
-                                <table className="reviews-table">
-                                    <thead>
-                                        <tr>
-                                            <th style={{ width: '50px' }}>No</th>
-                                            <th style={{ width: '200px' }}>Product</th>
-                                            <th style={{ width: '140px' }}>Reviewer</th>
-                                            <th style={{ width: '120px' }}>Rating</th>
-                                            <th>Comment</th>
-                                            <th style={{ width: '90px', textAlign: 'center' }}>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {allAggregatedReviews.map((item, index) => (
-                                            <tr key={item._id || index}>
-                                                <td>{index + 1}</td>
-                                                <td>
-                                                    <strong>{item.productName}</strong>
-                                                </td>
-                                                <td>{item.name || 'Customer'}</td>
-                                                <td>
-                                                    <span style={{ color: '#ffb400', fontSize: '15px' }}>
-                                                        {'★'.repeat(Math.round(item.rating) || 5)}
-                                                        {'☆'.repeat(Math.max(0, 5 - (Math.round(item.rating) || 5)))}
+                                            <td style={{ textAlign: 'center', color: '#8c6e67', fontWeight: '600' }}>
+                                                {index + 1}
+                                            </td>
+                                            <td>
+                                                <div className="reviews-product-cell">
+                                                    <img
+                                                        src={imgUrl}
+                                                        alt={product.name}
+                                                        className="reviews-product-thumb"
+                                                        onError={(e) => {
+                                                            e.target.onerror = null
+                                                            e.target.src = '/images/sugar-muse-favicon.svg'
+                                                        }}
+                                                    />
+                                                    <div className="reviews-product-meta">
+                                                        <span className="reviews-product-name">{product.name}</span>
+                                                        <span className="reviews-product-cat-hint">{product.category || 'Bakery Item'}</span>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span className={`reviews-cat-badge ${getCategoryClass(product.category)}`}>
+                                                    {product.category || 'Cake'}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                {count > 0 ? (
+                                                    renderStars(avgRating)
+                                                ) : (
+                                                    <span style={{ color: '#a89490', fontSize: '12px', fontStyle: 'italic' }}>
+                                                        No ratings yet
                                                     </span>
-                                                </td>
-                                                <td style={{ color: '#444', lineHeight: '1.5' }}>
-                                                    "{item.comment}"
-                                                </td>
-                                                <td style={{ textAlign: 'center' }}>
+                                                )}
+                                            </td>
+                                            <td style={{ textAlign: 'center' }}>
+                                                <span className={`reviews-count-badge ${count > 0 ? 'has-reviews' : 'no-reviews'}`}>
+                                                    {count} {count === 1 ? 'review' : 'reviews'}
+                                                </span>
+                                            </td>
+                                            <td style={{ textAlign: 'center' }}>
+                                                {count > 0 ? (
                                                     <button
                                                         type="button"
-                                                        onClick={() => handleDeleteReviews(item._id, item.productId)}
-                                                        className="action-btn delete-btn"
-                                                        title="Delete Review"
+                                                        className={`review-view-btn ${isSelected ? 'is-active' : ''}`}
+                                                        onClick={() => handleViewReviews(product)}
+                                                        title="View customer reviews"
                                                     >
-                                                        <Delete fontSize="small" />
+                                                        <Visibility style={{ fontSize: 16 }} />
+                                                        <span>{isSelected ? 'Viewing' : 'View'} ({count})</span>
                                                     </button>
-                                                </td>
+                                                ) : (
+                                                    <span className="review-empty-badge">0 Reviews</span>
+                                                )}
+                                            </td>
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* Selected Product Review Details View */}
+                    {selectedProduct && (
+                        <div id="reviews-details-section" className="reviews-details-card">
+                            <div className="reviews-details-top">
+                                <div className="reviews-details-product-meta">
+                                    <img
+                                        src={selectedProductObj?.image?.[0]?.url || selectedProductObj?.images?.[0]?.url || '/images/sugar-muse-favicon.svg'}
+                                        alt={selectedProductObj?.name}
+                                        className="reviews-details-product-img"
+                                    />
+                                    <div className="reviews-details-title-wrap">
+                                        <span className="reviews-details-badge">PRODUCT FEEDBACK</span>
+                                        <h3 className="reviews-details-title">{selectedProductObj?.name}</h3>
+                                        <div className="reviews-details-score-row">
+                                            <span className="reviews-details-score-pill">
+                                                ★ {(selectedProductObj?.ratings || 5).toFixed(1)} / 5.0
+                                            </span>
+                                            <span style={{ fontSize: '13px', color: '#8c6e67' }}>
+                                                Total {reviews?.length || 0} customer {reviews?.length === 1 ? 'review' : 'reviews'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <button
+                                    type="button"
+                                    className="review-close-btn"
+                                    onClick={() => {
+                                        setSelectedProduct(null)
+                                        setSelectedProductObj(null)
+                                    }}
+                                >
+                                    <Close style={{ fontSize: 16 }} />
+                                    <span>Close</span>
+                                </button>
+                            </div>
+
+                            {reviews && reviews.length > 0 ? (
+                                <div className="reviews-table-card">
+                                    <table className="reviews-table">
+                                        <thead>
+                                            <tr>
+                                                <th style={{ width: '50px', textAlign: 'center' }}>No</th>
+                                                <th style={{ width: '220px' }}>Reviewer</th>
+                                                <th style={{ width: '160px' }}>Rating</th>
+                                                <th>Customer Comment</th>
+                                                <th style={{ width: '80px', textAlign: 'center' }}>Action</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {reviews.map((rev, idx) => (
+                                                <tr key={rev._id || idx}>
+                                                    <td style={{ textAlign: 'center', color: '#8c6e67', fontWeight: '600' }}>
+                                                        {idx + 1}
+                                                    </td>
+                                                    <td>
+                                                        <div className="reviews-reviewer-cell">
+                                                            <div className="reviews-avatar-circle">
+                                                                {(rev.name || 'C').charAt(0).toUpperCase()}
+                                                            </div>
+                                                            <div className="reviews-reviewer-info">
+                                                                <span className="reviews-reviewer-name">{rev.name || 'Valued Customer'}</span>
+                                                                <span className="reviews-date-text">{formatReviewDate(rev.createdAt)}</span>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        {renderStars(rev.rating)}
+                                                    </td>
+                                                    <td>
+                                                        <div className="reviews-comment-box">
+                                                            "{rev.comment}"
+                                                        </div>
+                                                    </td>
+                                                    <td style={{ textAlign: 'center' }}>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => handleDeleteReviews(rev._id, selectedProduct)}
+                                                            className="review-delete-btn"
+                                                            title="Delete this review"
+                                                        >
+                                                            <Delete style={{ fontSize: 17 }} />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             ) : (
-                                <p className="no-reviews-msg">No reviews found across all products yet.</p>
+                                <div className="reviews-empty-state">
+                                    <h4>No Customer Reviews Yet</h4>
+                                    <p>Customers haven't submitted reviews for this cake item yet.</p>
+                                </div>
                             )}
+                        </div>
+                    )}
+                </>
+            ) : (
+                /* All Reviews Tab */
+                <div className="reviews-table-card">
+                    {allAggregatedReviews.length > 0 ? (
+                        <table className="reviews-table">
+                            <thead>
+                                <tr>
+                                    <th style={{ width: '50px', textAlign: 'center' }}>No</th>
+                                    <th style={{ width: '240px' }}>Product</th>
+                                    <th style={{ width: '200px' }}>Reviewer</th>
+                                    <th style={{ width: '150px' }}>Rating</th>
+                                    <th>Feedback Comment</th>
+                                    <th style={{ width: '80px', textAlign: 'center' }}>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {allAggregatedReviews.map((item, idx) => (
+                                    <tr key={item._id || idx}>
+                                        <td style={{ textAlign: 'center', color: '#8c6e67', fontWeight: '600' }}>
+                                            {idx + 1}
+                                        </td>
+                                        <td>
+                                            <div className="reviews-product-cell">
+                                                <img
+                                                    src={item.productImage}
+                                                    alt={item.productName}
+                                                    className="reviews-product-thumb"
+                                                    style={{ width: 44, height: 44, minWidth: 44 }}
+                                                    onError={(e) => {
+                                                        e.target.onerror = null
+                                                        e.target.src = '/images/sugar-muse-favicon.svg'
+                                                    }}
+                                                />
+                                                <div className="reviews-product-meta">
+                                                    <span className="reviews-product-name">{item.productName}</span>
+                                                    <span className="reviews-product-cat-hint">{item.productCategory || 'Cake'}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div className="reviews-reviewer-cell">
+                                                <div className="reviews-avatar-circle" style={{ width: 34, height: 34, minWidth: 34, fontSize: 13 }}>
+                                                    {(item.name || 'C').charAt(0).toUpperCase()}
+                                                </div>
+                                                <div className="reviews-reviewer-info">
+                                                    <span className="reviews-reviewer-name">{item.name || 'Customer'}</span>
+                                                    <span className="reviews-date-text">{formatReviewDate(item.createdAt)}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            {renderStars(item.rating)}
+                                        </td>
+                                        <td>
+                                            <div className="reviews-comment-box">
+                                                "{item.comment}"
+                                            </div>
+                                        </td>
+                                        <td style={{ textAlign: 'center' }}>
+                                            <button
+                                                type="button"
+                                                onClick={() => handleDeleteReviews(item._id, item.productId)}
+                                                className="review-delete-btn"
+                                                title="Delete this review"
+                                            >
+                                                <Delete style={{ fontSize: 17 }} />
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <div className="reviews-empty-state">
+                            <h4>No Reviews in Database</h4>
+                            <p>Customers have not submitted any reviews yet.</p>
                         </div>
                     )}
                 </div>
             )}
-        </>
+        </div>
     )
 }
 
