@@ -4,14 +4,22 @@ import { Delete, Edit } from '@mui/icons-material'
 import Loader from '../components/Loader'
 import { useDispatch, useSelector } from 'react-redux'
 import { clearMessage, deleteOrder, fetchAllOrders, removeErrors, removeSuccess } from '../features/admin/adminSlice'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { showToast } from '../utils/showToast'
 const OrdersList = () => {
     const { orders, loading, error, success, message } = useSelector(state => state.admin)
-    const [searchQuery, setSearchQuery] = useState('')
+    const [searchParams] = useSearchParams()
+    const searchFromUrl = searchParams.get('search') || ''
+    const [searchQuery, setSearchQuery] = useState(searchFromUrl)
     const [statusFilter, setStatusFilter] = useState('All')
 
     const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (searchFromUrl) {
+            setSearchQuery(searchFromUrl)
+        }
+    }, [searchFromUrl])
 
 
     const handleDelete = (orderId) => {

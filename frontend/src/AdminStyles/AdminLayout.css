@@ -511,128 +511,431 @@
 }
 
 .admin-topbar-search {
-  width: 260px;
+  width: 280px;
   height: 42px;
-
-  padding:
-    0 14px;
-
-  border:
-    1px solid
-    var(
-      --admin-border
-    );
-
+  position: relative;
+  padding: 0 14px;
+  border: 1px solid var(--admin-border);
   border-radius: 999px;
-
   display: flex;
   align-items: center;
-
   gap: 9px;
+  background: #ffffff;
+  transition: all 0.2s ease;
+}
 
-  background:
-    #ffffff;
+.admin-topbar-search:focus-within {
+  border-color: #d86863;
+  box-shadow: 0 0 0 3px rgba(216, 104, 99, 0.15);
 }
 
 .admin-topbar-search svg {
   width: 17px;
   height: 17px;
-
   flex: 0 0 auto;
-
-  stroke:
-    #a17b74;
-
+  stroke: #a17b74;
   stroke-width: 1.7;
-
-  stroke-linecap:
-    round;
-
-  stroke-linejoin:
-    round;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .admin-topbar-search input {
   width: 100%;
-
   border: 0;
   outline: 0;
+  background: transparent;
+  color: var(--admin-text);
+  font-size: 13px;
+}
 
-  background:
-    transparent;
+.admin-topbar-search-clear {
+  border: none;
+  background: transparent;
+  color: #a0827b;
+  cursor: pointer;
+  padding: 2px 6px;
+  font-size: 13px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-  color:
-    var(
-      --admin-text
-    );
+.admin-topbar-search-clear:hover {
+  color: #57231c;
+  background: #f7ebe8;
+}
 
+/* Search Dropdown / Spotlight */
+.admin-search-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 360px;
+  max-height: 420px;
+  background: #ffffff;
+  border: 1.5px solid #efddd8;
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(89, 33, 27, 0.12);
+  z-index: 1000;
+  overflow-y: auto;
+  animation: fadeInAdminDrop 0.2s ease;
+}
+
+@keyframes fadeInAdminDrop {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.admin-search-group-title {
+  padding: 10px 16px 4px;
   font-size: 11px;
+  font-weight: 800;
+  color: #a0827b;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  background: #fffbfb;
+  border-bottom: 1px solid #f6eee9;
+}
+
+.admin-search-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #f9f2ef;
+  text-decoration: none;
+  color: #57231c;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.admin-search-item:hover {
+  background: #fff6f4;
+}
+
+.admin-search-thumb {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid #ebdcd8;
+  flex-shrink: 0;
+}
+
+.admin-search-item-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-search-item-title {
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #57231c;
+}
+
+.admin-search-item-sub {
+  font-size: 11.5px;
+  color: #8c6e67;
+  display: flex;
+  gap: 8px;
+}
+
+.admin-search-item-price {
+  font-weight: 700;
+  color: #d86863;
+}
+
+.admin-search-empty {
+  padding: 24px 16px;
+  text-align: center;
+  color: #8c6e67;
+  font-size: 13px;
+}
+
+.admin-search-footer {
+  padding: 10px 16px;
+  background: #fff8f6;
+  border-top: 1px solid #ebdcd8;
+  text-align: center;
+  font-size: 12px;
+  color: #d86863;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.admin-search-footer:hover {
+  background: #fdf0ed;
+}
+
+/* Notification Button & Dropdown */
+.admin-notification-wrap {
+  position: relative;
 }
 
 .admin-notification-button {
   width: 42px;
   height: 42px;
-
   position: relative;
-
-  border:
-    1px solid
-    var(
-      --admin-border
-    );
-
+  border: 1px solid var(--admin-border);
   border-radius: 50%;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
-  background:
-    #ffffff;
-
-  color:
-    var(
-      --admin-text
-    );
-
+  background: #ffffff;
+  color: var(--admin-text);
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.admin-notification-button:hover,
+.admin-notification-button.is-active {
+  border-color: #d86863;
+  background: #fffaf8;
+  color: #57231c;
 }
 
 .admin-notification-button svg {
   width: 18px;
   height: 18px;
-
-  stroke:
-    currentColor;
-
+  stroke: currentColor;
   stroke-width: 1.7;
-
-  stroke-linecap:
-    round;
-
-  stroke-linejoin:
-    round;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
-.admin-notification-button > span {
-  width: 7px;
-  height: 7px;
-
+.admin-notification-badge {
   position: absolute;
+  top: -2px;
+  right: -2px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: #d86863;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 6px rgba(216, 104, 99, 0.4);
+}
 
-  top: 7px;
-  right: 7px;
+.admin-notification-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 360px;
+  max-height: 480px;
+  background: #ffffff;
+  border: 1.5px solid #efddd8;
+  border-radius: 18px;
+  box-shadow: 0 14px 40px rgba(89, 33, 27, 0.12);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fadeInAdminDrop 0.2s ease;
+}
 
-  border:
-    2px solid
-    #ffffff;
+.admin-notif-header {
+  padding: 14px 18px;
+  background: #fff8f6;
+  border-bottom: 1.5px solid #ebdcd8;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 
+.admin-notif-header h4 {
+  margin: 0;
+  font-family: Georgia, serif;
+  font-size: 17px;
+  color: #57231c;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-notif-unread-pill {
+  font-size: 11px;
+  font-weight: 700;
+  background: #fde8e5;
+  color: #c95751;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.admin-notif-mark-read-btn {
+  background: transparent;
+  border: none;
+  color: #d86863;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.15s ease;
+}
+
+.admin-notif-mark-read-btn:hover {
+  background: #fdf0ed;
+  text-decoration: underline;
+}
+
+.admin-notif-list {
+  overflow-y: auto;
+  max-height: 350px;
+  flex: 1;
+}
+
+.admin-notif-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 18px;
+  border-bottom: 1px solid #f6eee9;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  position: relative;
+}
+
+.admin-notif-item:hover {
+  background: #fffaf8;
+}
+
+.admin-notif-item.unread {
+  background: #fff8f7;
+  border-left: 3px solid #d86863;
+}
+
+.admin-notif-icon-box {
+  width: 34px;
+  height: 34px;
+  min-width: 34px;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  background: #fde8e5;
+  color: #c95751;
+}
 
-  background:
-    var(
-      --admin-accent
-    );
+.admin-notif-icon-box.order {
+  background: #fde8e5;
+  color: #c95751;
+}
+
+.admin-notif-icon-box.review {
+  background: #fef0db;
+  color: #b07223;
+}
+
+.admin-notif-icon-box.system {
+  background: #eef3ec;
+  color: #4e7c4f;
+}
+
+.admin-notif-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-notif-title {
+  margin: 0 0 3px 0;
+  font-size: 13px;
+  font-weight: 700;
+  color: #57231c;
+  line-height: 1.35;
+}
+
+.admin-notif-msg {
+  margin: 0 0 4px 0;
+  font-size: 12px;
+  color: #76544e;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.admin-notif-time {
+  font-size: 11px;
+  color: #a89490;
+}
+
+.admin-notif-del-btn {
+  background: transparent;
+  border: none;
+  color: #c2aba5;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  font-size: 12px;
+  opacity: 0.7;
+  transition: all 0.15s ease;
+}
+
+.admin-notif-del-btn:hover {
+  color: #dc2626;
+  opacity: 1;
+  background: #fee2e2;
+}
+
+.admin-notif-empty {
+  padding: 36px 20px;
+  text-align: center;
+  color: #8c6e67;
+}
+
+.admin-notif-empty-icon {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.admin-notif-empty h5 {
+  margin: 0 0 4px 0;
+  font-size: 15px;
+  color: #57231c;
+  font-family: Georgia, serif;
+}
+
+.admin-notif-empty p {
+  margin: 0;
+  font-size: 12px;
+  color: #9d7d76;
+}
+
+.admin-notif-footer {
+  padding: 11px 18px;
+  background: #fff8f6;
+  border-top: 1.5px solid #ebdcd8;
+  text-align: center;
+}
+
+.admin-notif-footer a {
+  color: #57231c;
+  font-size: 12.5px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.admin-notif-footer a:hover {
+  color: #d86863;
 }
 
 .admin-topbar-profile {

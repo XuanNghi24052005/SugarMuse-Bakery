@@ -16,6 +16,8 @@ import {
   useAuth,
 } from "../Context/Authcontext";
 
+import NotificationMenu from "./NotificationMenu";
+
 import "../pageStyles/Navbar.css";
 
 const SearchIcon = () => (
@@ -252,6 +254,8 @@ const Navbar = () => {
         </form>
 
         <div className="nav-actions">
+          {isAuthenticated && <NotificationMenu />}
+
           <Link
             to={
               isAuthenticated

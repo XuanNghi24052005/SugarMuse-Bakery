@@ -4,7 +4,7 @@ import axios from "../../utils/axiosInstance"
 export const fetchNotifications = createAsyncThunk("notification/fetchNotifications", async (_, { rejectWithValue }) => {
   try {
     const { data } = await axios.get("/api/v1/notifications")
-    return data.notifications
+    return data.notifications || []
   } catch (error) {
     return rejectWithValue(error.response?.data?.message || "Failed to fetch notifications")
   }
@@ -16,6 +16,15 @@ export const markNotificationAsRead = createAsyncThunk("notification/markNotific
     return data.notification
   } catch (error) {
     return rejectWithValue(error.response?.data?.message || "Failed to mark notification as read")
+  }
+})
+
+export const markAllNotificationsAsRead = createAsyncThunk("notification/markAllNotificationsAsRead", async (_, { rejectWithValue }) => {
+  try {
+    const { data } = await axios.put("/api/v1/notifications/read-all")
+    return data
+  } catch (error) {
+    return rejectWithValue(error.response?.data?.message || "Failed to mark all as read")
   }
 })
 
@@ -64,6 +73,10 @@ const notificationSlice = createSlice({
         if (index !== -1) {
           state.notifications[index] = action.payload
         }
+      })
+      // markAllNotificationsAsRead
+      .addCase(markAllNotificationsAsRead.fulfilled, (state) => {
+        state.notifications = state.notifications.map((n) => ({ ...n, isRead: true }))
       })
       // deleteNotification
       .addCase(deleteNotification.fulfilled, (state, action) => {

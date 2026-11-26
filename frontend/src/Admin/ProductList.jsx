@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useMemo } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
   deleteProduct,
@@ -30,6 +30,13 @@ const TrashIcon = () => (
   </svg>
 );
 
+const SearchIcon = () => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ width: 16, height: 16, color: "#8c6e67" }}>
+    <circle cx="11" cy="11" r="7" />
+    <path d="m20 20-3.5-3.5" />
+  </svg>
+);
+
 const ProductList = () => {
   const { products = [], loading, error, deleting = {} } = useSelector(
     (state) => state.admin
@@ -37,9 +44,18 @@ const ProductList = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [searchParams, setSearchParams] = useSearchParams();
+  const searchFromUrl = searchParams.get("search") || "";
+  const [searchTerm, setSearchTerm] = useState(searchFromUrl);
+
   useEffect(() => {
     dispatch(fetchAdminProducts());
   }, [dispatch]);
+
+  // Sync search term with URL query
+  useEffect(() => {
+    setSearchTerm(searchFromUrl);
+  }, [searchFromUrl]);
 
   useEffect(() => {
     if (error) {
@@ -61,6 +77,37 @@ const ProductList = () => {
         });
     }
   };
+
+  const handleSearchChange = (e) => {
+    const val = e.target.value;
+    setSearchTerm(val);
+    if (val.trim()) {
+      setSearchParams({ search: val.trim() });
+    } else {
+      setSearchParams({});
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchTerm("");
+    setSearchParams({});
+  };
+
+  // Filter products by name, category, subcategory, flavor, or ID
+  const filteredProducts = useMemo(() => {
+    if (!products || !Array.isArray(products)) return [];
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) return products;
+
+    return products.filter((p) => {
+      const nameMatch = p.name?.toLowerCase().includes(term);
+      const catMatch = p.category?.toLowerCase().includes(term);
+      const subMatch = p.subcategory?.toLowerCase().includes(term);
+      const flavorMatch = p.flavor?.toLowerCase().includes(term);
+      const idMatch = p._id?.toLowerCase().includes(term);
+      return nameMatch || catMatch || subMatch || flavorMatch || idMatch;
+    });
+  }, [products, searchTerm]);
 
   return (
     <div className="bakery-product-list-page">
@@ -94,100 +141,162 @@ const ProductList = () => {
           </Link>
         </div>
       ) : (
-        <div className="bakery-table-card">
-          <table className="bakery-data-table">
-            <thead>
-              <tr>
-                <th style={{ width: "60px" }}>No</th>
-                <th style={{ width: "90px" }}>Image</th>
-                <th>Product Name</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th>Stock</th>
-                <th>Rating</th>
-                <th style={{ textAlign: "right" }}>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product, index) => {
-                const imgUrl =
-                  product.image?.[0]?.url ||
-                  product.images?.[0]?.url ||
-                  "/images/sugar-muse-favicon.svg";
+        <>
+          {/* Toolbar: In-page filter & product count stats */}
+          <div className="bakery-toolbar">
+            <div className="bakery-search-box">
+              <SearchIcon />
+              <input
+                type="text"
+                placeholder="Filter by name, category, ID..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+              {searchTerm && (
+                <button
+                  type="button"
+                  className="bakery-search-clear"
+                  onClick={handleClearSearch}
+                  title="Clear search filter"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
+            <div className="bakery-toolbar-stats">
+              <span>
+                Total: <strong>{products.length}</strong> cakes
+              </span>
+              {searchTerm && (
+                <span>
+                  {" "}
+                  | Matching: <strong>{filteredProducts.length}</strong>
+                </span>
+              )}
+            </div>
+          </div>
 
-                return (
-                  <tr key={product._id}>
-                    <td>
-                      <span className="index-pill">{index + 1}</span>
-                    </td>
-                    <td>
-                      <img
-                        src={imgUrl}
-                        alt={product.name}
-                        className="bakery-table-thumb"
-                      />
-                    </td>
-                    <td>
-                      <div className="product-name-cell">
-                        <strong>{product.name}</strong>
-                        {product.subcategory && (
-                          <small>{product.subcategory}</small>
-                        )}
-                      </div>
-                    </td>
-                    <td>
-                      <span className={`category-tag ${(product.category || "").toLowerCase()}`}>
-                        {product.category || "Bakery"}
-                      </span>
-                    </td>
-                    <td>
-                      <strong className="price-tag">
-                        ${Number(product.price || 0).toFixed(2)}
-                      </strong>
-                    </td>
-                    <td>
-                      <span
-                        className={`stock-pill ${
-                          product.stock > 0 ? "in-stock" : "out-of-stock"
-                        }`}
-                      >
-                        {product.stock > 0
-                          ? `${product.stock} available`
-                          : "Out of Stock"}
-                      </span>
-                    </td>
-                    <td>
-                      <span className="rating-pill">
-                        ⭐ {Number(product.ratings || 5).toFixed(1)}
-                        <small>({product.numReviews || 0})</small>
-                      </span>
-                    </td>
-                    <td style={{ textAlign: "right" }}>
-                      <div className="actions-wrap">
-                        <Link
-                          to={`/admin/product/${product._id}`}
-                          className="action-btn edit"
-                          title="Edit Cake"
-                        >
-                          <EditIcon />
-                        </Link>
-                        <button
-                          type="button"
-                          className="action-btn delete"
-                          disabled={deleting[product._id]}
-                          onClick={() => handleDelete(product._id)}
-                          title="Delete Cake"
-                        >
-                          <TrashIcon />
-                        </button>
-                      </div>
-                    </td>
+          {filteredProducts.length === 0 ? (
+            <div className="bakery-empty-card">
+              <div className="bakery-empty-icon">🔍</div>
+              <h3>No Bakery Products Found</h3>
+              <p>
+                No cakes or pastries matched your search query "
+                <strong>{searchTerm}</strong>".
+              </p>
+              <button
+                type="button"
+                className="bakery-add-btn"
+                onClick={handleClearSearch}
+              >
+                Clear Search Filter
+              </button>
+            </div>
+          ) : (
+            <div className="bakery-table-card">
+              <table className="bakery-data-table">
+                <thead>
+                  <tr>
+                    <th style={{ width: "60px" }}>No</th>
+                    <th style={{ width: "90px" }}>Image</th>
+                    <th>Product Name</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Stock</th>
+                    <th>Rating</th>
+                    <th style={{ textAlign: "right" }}>Actions</th>
                   </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
+                </thead>
+                <tbody>
+                  {filteredProducts.map((product, index) => {
+                    const imgUrl =
+                      product.image?.[0]?.url ||
+                      product.images?.[0]?.url ||
+                      "/images/sugar-muse-favicon.svg";
+
+                    return (
+                      <tr key={product._id}>
+                        <td>
+                          <span className="index-pill">{index + 1}</span>
+                        </td>
+                        <td>
+                          <img
+                            src={imgUrl}
+                            alt={product.name}
+                            className="bakery-table-thumb"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = "/images/sugar-muse-favicon.svg";
+                            }}
+                          />
+                        </td>
+                        <td>
+                          <div className="product-name-cell">
+                            <strong>{product.name}</strong>
+                            {product.subcategory && (
+                              <small>{product.subcategory}</small>
+                            )}
+                          </div>
+                        </td>
+                        <td>
+                          <span
+                            className={`category-tag ${(
+                              product.category || ""
+                            ).toLowerCase()}`}
+                          >
+                            {product.category || "Bakery"}
+                          </span>
+                        </td>
+                        <td>
+                          <strong className="price-tag">
+                            ${Number(product.price || 0).toFixed(2)}
+                          </strong>
+                        </td>
+                        <td>
+                          <span
+                            className={`stock-pill ${
+                              product.stock > 0 ? "in-stock" : "out-of-stock"
+                            }`}
+                          >
+                            {product.stock > 0
+                              ? `${product.stock} available`
+                              : "Out of Stock"}
+                          </span>
+                        </td>
+                        <td>
+                          <span className="rating-pill">
+                            ⭐ {Number(product.ratings || 5).toFixed(1)}
+                            <small>({product.numReviews || 0})</small>
+                          </span>
+                        </td>
+                        <td style={{ textAlign: "right" }}>
+                          <div className="actions-wrap">
+                            <Link
+                              to={`/admin/product/${product._id}`}
+                              className="action-btn edit"
+                              title="Edit Cake"
+                            >
+                              <EditIcon />
+                            </Link>
+                            <button
+                              type="button"
+                              className="action-btn delete"
+                              disabled={deleting[product._id]}
+                              onClick={() => handleDelete(product._id)}
+                              title="Delete Cake"
+                            >
+                              <TrashIcon />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

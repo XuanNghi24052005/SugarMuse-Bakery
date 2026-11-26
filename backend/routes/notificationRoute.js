@@ -2,6 +2,7 @@ import express from "express"
 import {
     getMyNotifications,
     markNotificationAsRead,
+    markAllNotificationsAsRead,
     deleteNotification
 } from "../controller/notificationController.js"
 import { verifyUserAuth } from "../middleware/verifyUserAuth.js"
@@ -9,6 +10,7 @@ import { verifyUserAuth } from "../middleware/verifyUserAuth.js"
 const router = express.Router()
 
 router.route("/notifications").get(verifyUserAuth, getMyNotifications)
+router.route("/notifications/read-all").put(verifyUserAuth, markAllNotificationsAsRead)
 router.route("/notification/:id/read").put(verifyUserAuth, markNotificationAsRead)
 router.route("/notification/:id").delete(verifyUserAuth, deleteNotification)
 

@@ -8,6 +8,7 @@ import Admin from "../models/adminModel.js";
 export const verifyUserAuth = handleAsyncError(async (req, res, next) => {
   const token =
     req.cookies.token ||
+    req.cookies.adminToken ||
     (req.headers.authorization &&
       req.headers.authorization.startsWith("Bearer") &&
       req.headers.authorization.split(" ")[1]);
@@ -30,7 +31,15 @@ export const verifyUserAuth = handleAsyncError(async (req, res, next) => {
     );
   }
 
-  const user = await User.findById(decodedData.id);
+  let user = await User.findById(decodedData.id);
+  if (!user) {
+    const admin = await Admin.findById(decodedData.id);
+    if (admin) {
+      user = admin;
+      req.admin = admin;
+    }
+  }
+
   if (!user) {
     return next(
       new ErrorHandler("User belonging to this token no longer exists", 401)
