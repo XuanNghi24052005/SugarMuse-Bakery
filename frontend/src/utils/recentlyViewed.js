@@ -164,16 +164,12 @@ export const saveRecentlyViewed =
           "",
       };
 
-      const filtered =
-        current.filter(
-          (savedProduct) =>
-            String(
-              savedProduct.id
-            ) !==
-            String(
-              productId
-            )
-        );
+      const targetName = (product.name || product.title || "").trim().toLowerCase();
+      const filtered = current.filter((savedProduct) => {
+        const sameId = String(savedProduct.id) === String(productId);
+        const sameName = Boolean(targetName && (savedProduct.name || "").trim().toLowerCase() === targetName);
+        return !sameId && !sameName;
+      });
 
       const updated = [
         item,
