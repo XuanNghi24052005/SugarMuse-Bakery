@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import "../pageStyles/Home.css";
 import { useCart } from "../Context/Cartcontext";
 import { useWishlist } from "../Context/Wishlistcontext";
+import { showToast } from "../utils/showToast";
 import axiosInstance from "../utils/axiosInstance";
 
 const ArrowIcon = () => (
@@ -133,7 +134,7 @@ const Home = () => {
 
   const handleAddToCart = (product) => {
     addToCart(product);
-    navigate("/cart");
+    showToast.success(`Added ${product.name} to cart!`);
   };
 
   return (

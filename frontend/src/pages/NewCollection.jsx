@@ -2,43 +2,66 @@ import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 
 import { useCart } from "../Context/Cartcontext";
+import { showToast } from "../utils/showToast";
 import "../pageStyles/NewCollection.css";
 
 const strawberryShortcake = {
   _id: "collection-1",
+  id: "collection-1",
   name: "Strawberry Shortcake",
   price: 28,
+  stock: 25,
+  category: "Cake",
+  flavor: "Strawberry Vanilla",
   image: "/images/products/strawberry-shortcake.jpg",
+  description: "Soft vanilla sponge, fresh Hokkaido whipped cream and hand-picked strawberries.",
 };
 
 const strawberryRoll = {
   _id: "collection-2",
+  id: "collection-2",
   name: "Strawberry Roll",
   price: 22,
+  stock: 20,
+  category: "Pastry",
+  flavor: "Strawberry Cream",
   image: "/images/products/strawberry-roll.jpg",
+  description: "Light strawberry sponge wrapped around fresh whipped cream and berries.",
 };
 
 const editProducts = [
   {
     _id: "collection-3",
+    id: "collection-3",
     name: "Strawberry Tart",
     price: 18,
+    stock: 15,
+    category: "Pastry",
+    flavor: "Strawberry Vanilla",
     image: "/images/products/strawberry-tart.jpg",
-    description: "Buttery tart, vanilla cream and fresh strawberries.",
+    description: "Buttery tart crust, rich vanilla bean pastry cream and glazed fresh strawberries.",
   },
   {
     _id: "collection-4",
+    id: "collection-4",
     name: "Strawberry Macaron Box",
     price: 24,
+    stock: 18,
+    category: "Gift Box",
+    flavor: "Strawberry White Chocolate",
     image: "/images/products/strawberry-macaron-box.jpg",
-    description: "Delicate strawberry macarons made for gifting.",
+    description: "Delicate Parisian strawberry macarons made for gifting.",
   },
   {
     _id: "collection-5",
+    id: "collection-5",
     name: "Strawberry Mini Cake",
     price: 20,
+    stock: 12,
+    category: "Cake",
+    flavor: "Strawberry Chiffon",
     image: "/images/products/strawberry-mini-cake.jpg",
-    description: "A petite celebration cake with strawberry cream.",
+    description: "A petite celebration cake with fresh strawberry cream and edible flowers.",
   },
 ];
 
@@ -47,8 +70,17 @@ const NewCollection = () => {
   const navigate = useNavigate();
 
   const handleAddToCart = (product) => {
-    addToCart(product);
-    navigate("/cart");
+    addToCart(
+      {
+        ...product,
+        _id: product._id || product.id,
+        id: product._id || product.id,
+        stock: product.stock || 25,
+        price: Number(product.price) || 0,
+      },
+      1
+    );
+    showToast.success(`Added ${product.name} to cart!`);
   };
 
   const handleViewDetails = (product) => {

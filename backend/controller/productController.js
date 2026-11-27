@@ -238,13 +238,13 @@ export const getSingleProduct = handleAsyncError(
             };
             const item = seasonalMap[paramId];
             if (item) {
-                product = await Product.findOne({ name: new RegExp(item.name, "i") });
-                if (!product) {
-                    product = await Product.findOne({ name: new RegExp("Strawberry", "i") });
-                }
-                if (!product) {
+                const exactDbProd = await Product.findOne({ name: item.name });
+                if (exactDbProd) {
+                    product = exactDbProd;
+                } else {
                     product = {
                         _id: paramId,
+                        id: paramId,
                         name: item.name,
                         price: item.price,
                         category: item.category,
@@ -254,13 +254,15 @@ export const getSingleProduct = handleAsyncError(
                         numReviews: 1,
                         reviews: [
                             {
+                                _id: "rev-" + paramId,
                                 name: "Sugar Muse Guest",
                                 rating: 5,
-                                comment: "One of the most exquisite strawberry bakes I have ever tasted! Perfectly balanced sweetness and fresh cream.",
+                                comment: "One of the most exquisite seasonal strawberry bakes I have ever tasted! Perfectly balanced sweetness and fresh cream.",
                                 createdAt: new Date()
                             }
                         ],
                         image: [{ public_id: paramId, url: item.image }],
+                        images: [{ public_id: paramId, url: item.image }],
                         description: item.description
                     };
                 }

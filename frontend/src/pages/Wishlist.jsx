@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useCart } from "../Context/Cartcontext";
 import { useWishlist } from "../Context/Wishlistcontext";
+import { showToast } from "../utils/showToast";
 
 import "../pageStyles/Wishlist.css";
 
@@ -66,7 +67,7 @@ const Wishlist = () => {
 
   const handleAddToCart = (product) => {
     addToCart(product);
-    navigate("/cart");
+    showToast.success(`Added ${product.name} to cart!`);
   };
 
   return (

@@ -258,7 +258,13 @@ const Cart = () => {
                   }}
                 >
                   <img
-                    src={item.image}
+                    src={
+                      typeof item.image === "string" && item.image
+                        ? item.image
+                        : item.image?.[0]?.url ||
+                          item.image?.url ||
+                          "/images/products/strawberry-cake.jpg"
+                    }
                     alt={item.name}
                     style={{
                       width: "100%",
@@ -370,8 +376,8 @@ const Cart = () => {
                   >
                     $
                     {(
-                      Number(item.price) *
-                      item.quantity
+                      (Number(item.price) || 0) *
+                      (Number(item.quantity) || 1)
                     ).toFixed(2)}
                   </strong>
 

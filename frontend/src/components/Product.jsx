@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 
 import { useCart } from "../Context/Cartcontext";
 import { useWishlist } from "../Context/Wishlistcontext";
+import { showToast } from "../utils/showToast";
 
 const HeartIcon = ({ filled }) => (
   <svg
@@ -45,9 +46,30 @@ const Product = ({ product }) => {
 
   const liked = isWishlisted(product._id);
 
-  const handleAddToCart = () => {
-    addToCart(product);
-    navigate("/cart");
+  const handleAddToCart = (e) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    const pImage =
+      typeof product.image === "string" && product.image
+        ? product.image
+        : Array.isArray(product.image) && product.image[0]?.url
+        ? product.image[0].url
+        : "/images/products/strawberry-cake.jpg";
+
+    addToCart(
+      {
+        ...product,
+        _id: product._id || product.id,
+        id: product._id || product.id,
+        image: pImage,
+        stock: product.stock !== undefined ? Number(product.stock) : 25,
+        price: Number(product.price) || 0,
+      },
+      1
+    );
+    showToast.success(`Added ${product.name} to cart!`);
   };
 
   return (

@@ -359,7 +359,12 @@ const ProductDetails = () => {
   );
 
   const seasonalProduct = (id && seasonalCollectionMap[id]) || null;
-  const product = reduxProduct || seasonalProduct;
+  const product =
+    (reduxProduct && (reduxProduct._id === id || reduxProduct.id === id)
+      ? reduxProduct
+      : null) ||
+    seasonalProduct ||
+    reduxProduct;
 
   const { user } = useAuth();
   const { addToCart } = useCart();
@@ -493,12 +498,15 @@ const ProductDetails = () => {
         return;
       }
 
+      const rawStock = product?.stock;
+      const availableStock =
+        rawStock !== undefined && rawStock !== null ? Number(rawStock) : 25;
+
       if (
-        quantity >=
-        product.stock
+        quantity >= availableStock
       ) {
         showToast.error(
-          `Only ${product.stock} items available.`
+          `Only ${availableStock} items available.`
         );
 
         return;
@@ -529,8 +537,12 @@ const ProductDetails = () => {
       return;
     }
 
-    if (!product.stock || product.stock <= 0) {
-      showToast.error("Product is out of stock.");
+    const rawStock = product?.stock;
+    const availableStock =
+      rawStock !== undefined && rawStock !== null ? Number(rawStock) : 25;
+
+    if (availableStock <= 0) {
+      showToast.error("This product is currently out of stock.");
       return;
     }
 
@@ -539,7 +551,10 @@ const ProductDetails = () => {
       selectedImage ||
       (productImages.length > 0
         ? productImages[0]?.url
-        : product.image || "/images/products/strawberry-cake.jpg");
+        : (typeof product.image === "string"
+            ? product.image
+            : product.image?.[0]?.url) ||
+          "/images/products/strawberry-cake.jpg");
 
     addToCart(
       {
@@ -548,7 +563,7 @@ const ProductDetails = () => {
         name: product.name,
         price: Number(product.price) || 0,
         image: pImage,
-        stock: Number(product.stock) || 20,
+        stock: availableStock,
         category: product.category || "Cake",
         flavor: product.flavor || "",
         description: product.description || "",
@@ -556,7 +571,7 @@ const ProductDetails = () => {
       quantity
     );
 
-    showToast.success(`Added ${quantity} ${product.name} to cart!`);
+    showToast.success(`Added ${quantity} × ${product.name} to cart!`);
   };
 
   const handleWishlistToggle = (e) => {
@@ -686,10 +701,12 @@ const ProductDetails = () => {
     );
   }
 
-  const inStock =
-    Number(
-      product.stock
-    ) > 0;
+  const availableStock =
+    product?.stock !== undefined && product?.stock !== null
+      ? Number(product.stock)
+      : 25;
+
+  const inStock = availableStock > 0;
 
   const totalReviews =
     Number(
@@ -937,7 +954,7 @@ const ProductDetails = () => {
                   <i />
 
                   {inStock
-                    ? `In stock (${product.stock} available)`
+                    ? `In stock (${availableStock} available)`
                     : "Out of stock"}
                 </div>
               </div>
@@ -976,7 +993,7 @@ const ProductDetails = () => {
                         }
                         disabled={
                           quantity >=
-                          product.stock
+                          availableStock
                         }
                       >
                         +

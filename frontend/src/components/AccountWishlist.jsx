@@ -2,6 +2,7 @@ import React from "react";
 
 import { useWishlist } from "../Context/Wishlistcontext";
 import { useCart } from "../Context/Cartcontext";
+import { showToast } from "../utils/showToast";
 
 const AccountWishlist = () => {
   const {
@@ -16,6 +17,7 @@ const AccountWishlist = () => {
 
   const handleAddToCart = (product) => {
     addToCart(product);
+    showToast.success(`Added ${product.name} to cart!`);
   };
 
   const handleRemove = (product) => {
