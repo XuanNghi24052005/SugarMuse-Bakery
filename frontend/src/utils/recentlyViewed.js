@@ -67,10 +67,14 @@ const getProductImage = (
 export const getRecentlyViewed =
   () => {
     try {
-      const saved =
+      let saved =
         localStorage.getItem(
           STORAGE_KEY
         );
+
+      if (!saved) {
+        saved = localStorage.getItem("sugarMuserecentlyViewed");
+      }
 
       if (!saved) {
         return [];

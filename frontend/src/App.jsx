@@ -63,7 +63,7 @@ function App() {
 
         <Route
           path="/recently-viewed"
-          element={<recentlyViewed />}
+          element={<RecentlyViewed />}
         />  
 
         <Route

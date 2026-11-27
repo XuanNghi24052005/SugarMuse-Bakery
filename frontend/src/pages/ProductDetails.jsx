@@ -385,16 +385,10 @@ const ProductDetails = () => {
   ]);
 
   useEffect(() => {
-    if (
-      product?._id
-    ) {
-      saveRecentlyViewed(
-        product
-      );
+    if (product && (product._id || product.id)) {
+      saveRecentlyViewed(product);
     }
-  }, [
-    product?._id,
-  ]);
+  }, [product]);
 
   useEffect(() => {
     if (reviewError) {
