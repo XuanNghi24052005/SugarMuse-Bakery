@@ -224,11 +224,50 @@ export const getAllProducts = handleAsyncError(
 export const getSingleProduct = handleAsyncError(
     async (req, res, next) => {
         let product;
-        if (mongoose.Types.ObjectId.isValid(req.params.id)) {
-            product = await Product.findById(req.params.id);
+        const paramId = req.params.id;
+
+        if (mongoose.Types.ObjectId.isValid(paramId)) {
+            product = await Product.findById(paramId);
+        } else if (paramId && paramId.startsWith("collection-")) {
+            const seasonalMap = {
+                "collection-1": { name: "Strawberry Shortcake", price: 28, category: "Cake", flavor: "Strawberry Vanilla", image: "/images/products/strawberry-shortcake.jpg", description: "Soft vanilla sponge, fresh Hokkaido whipped cream and hand-picked strawberries." },
+                "collection-2": { name: "Strawberry Roll", price: 22, category: "Pastry", flavor: "Strawberry Cream", image: "/images/products/strawberry-roll.jpg", description: "Light strawberry sponge wrapped around fresh whipped cream and berries." },
+                "collection-3": { name: "Strawberry Tart", price: 18, category: "Pastry", flavor: "Strawberry Vanilla", image: "/images/products/strawberry-tart.jpg", description: "Buttery tart crust, rich vanilla bean pastry cream and glazed fresh strawberries." },
+                "collection-4": { name: "Strawberry Macaron Box", price: 24, category: "Gift Box", flavor: "Strawberry White Chocolate", image: "/images/products/strawberry-macaron-box.jpg", description: "Delicate Parisian strawberry macarons made for gifting." },
+                "collection-5": { name: "Strawberry Mini Cake", price: 20, category: "Cake", flavor: "Strawberry Chiffon", image: "/images/products/strawberry-mini-cake.jpg", description: "A petite celebration cake with fresh strawberry cream and edible flowers." },
+            };
+            const item = seasonalMap[paramId];
+            if (item) {
+                product = await Product.findOne({ name: new RegExp(item.name, "i") });
+                if (!product) {
+                    product = await Product.findOne({ name: new RegExp("Strawberry", "i") });
+                }
+                if (!product) {
+                    product = {
+                        _id: paramId,
+                        name: item.name,
+                        price: item.price,
+                        category: item.category,
+                        flavor: item.flavor,
+                        stock: 25,
+                        ratings: 5.0,
+                        numReviews: 1,
+                        reviews: [
+                            {
+                                name: "Sugar Muse Guest",
+                                rating: 5,
+                                comment: "One of the most exquisite strawberry bakes I have ever tasted! Perfectly balanced sweetness and fresh cream.",
+                                createdAt: new Date()
+                            }
+                        ],
+                        image: [{ public_id: paramId, url: item.image }],
+                        description: item.description
+                    };
+                }
+            }
         } else {
             // Support numeric index (e.g., /product/1 -> 1st product) or name match
-            const numericIndex = parseInt(req.params.id, 10);
+            const numericIndex = parseInt(paramId, 10);
             if (!isNaN(numericIndex) && numericIndex > 0) {
                 const all = await Product.find().limit(numericIndex);
                 if (all.length >= numericIndex) {
@@ -236,7 +275,7 @@ export const getSingleProduct = handleAsyncError(
                 }
             }
             if (!product) {
-                product = await Product.findOne({ name: new RegExp(req.params.id, "i") });
+                product = await Product.findOne({ name: new RegExp(paramId, "i") });
             }
         }
 

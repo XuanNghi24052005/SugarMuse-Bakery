@@ -1,5 +1,5 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { useCart } from "../Context/Cartcontext";
 import "../pageStyles/NewCollection.css";
@@ -51,6 +51,10 @@ const NewCollection = () => {
     navigate("/cart");
   };
 
+  const handleViewDetails = (product) => {
+    navigate(`/product/${product._id || product.id}`);
+  };
+
   return (
     <main className="new-collection-page">
       <section className="collection-hero">
@@ -85,8 +89,14 @@ const NewCollection = () => {
         className="collection-content-shell"
         id="collection-story"
       >
+        {/* Feature 01 */}
         <section className="collection-feature">
-          <div className="collection-feature-image">
+          <div
+            className="collection-feature-image"
+            style={{ cursor: "pointer" }}
+            onClick={() => handleViewDetails(strawberryShortcake)}
+            title={`View details of ${strawberryShortcake.name}`}
+          >
             <img
               src={strawberryShortcake.image}
               alt={strawberryShortcake.name}
@@ -96,7 +106,11 @@ const NewCollection = () => {
           <div className="collection-feature-copy">
             <span>01</span>
 
-            <h2>
+            <h2
+              style={{ cursor: "pointer" }}
+              onClick={() => handleViewDetails(strawberryShortcake)}
+              title={`View details of ${strawberryShortcake.name}`}
+            >
               Strawberry
               <em>Shortcake</em>
             </h2>
@@ -113,6 +127,7 @@ const NewCollection = () => {
             <button
               type="button"
               className="collection-detail-link"
+              onClick={() => handleViewDetails(strawberryShortcake)}
             >
               View Details →
             </button>
@@ -129,11 +144,16 @@ const NewCollection = () => {
           </div>
         </section>
 
+        {/* Feature 02 */}
         <section className="collection-feature collection-feature-two">
           <div className="collection-feature-copy">
             <span>02</span>
 
-            <h2>
+            <h2
+              style={{ cursor: "pointer" }}
+              onClick={() => handleViewDetails(strawberryRoll)}
+              title={`View details of ${strawberryRoll.name}`}
+            >
               Strawberry
               <em>Roll</em>
             </h2>
@@ -150,6 +170,7 @@ const NewCollection = () => {
             <button
               type="button"
               className="collection-detail-link"
+              onClick={() => handleViewDetails(strawberryRoll)}
             >
               View Details →
             </button>
@@ -165,7 +186,12 @@ const NewCollection = () => {
             </button>
           </div>
 
-          <div className="collection-feature-image">
+          <div
+            className="collection-feature-image"
+            style={{ cursor: "pointer" }}
+            onClick={() => handleViewDetails(strawberryRoll)}
+            title={`View details of ${strawberryRoll.name}`}
+          >
             <img
               src={strawberryRoll.image}
               alt={strawberryRoll.name}
@@ -173,6 +199,7 @@ const NewCollection = () => {
           </div>
         </section>
 
+        {/* The Edit Grid */}
         <section className="collection-edit-section">
           <div className="collection-edit-heading">
             <span>THE EDIT</span>
@@ -185,14 +212,25 @@ const NewCollection = () => {
                 className="collection-edit-item"
                 key={product._id}
               >
-                <div className="collection-edit-image">
+                <div
+                  className="collection-edit-image"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleViewDetails(product)}
+                  title={`View details of ${product.name}`}
+                >
                   <img
                     src={product.image}
                     alt={product.name}
                   />
                 </div>
 
-                <h3>{product.name}</h3>
+                <h3
+                  style={{ cursor: "pointer" }}
+                  onClick={() => handleViewDetails(product)}
+                  title={`View details of ${product.name}`}
+                >
+                  {product.name}
+                </h3>
 
                 <p>{product.description}</p>
 
@@ -200,20 +238,30 @@ const NewCollection = () => {
                   ${product.price.toFixed(2)}
                 </strong>
 
-                <button
-                  type="button"
-                  className="collection-add-cart"
-                  onClick={() =>
-                    handleAddToCart(product)
-                  }
-                >
-                  Add to Cart +
-                </button>
+                <div style={{ display: "flex", gap: "10px", alignItems: "center", marginTop: "12px", flexWrap: "wrap" }}>
+                  <button
+                    type="button"
+                    className="collection-detail-link"
+                    onClick={() => handleViewDetails(product)}
+                  >
+                    View Details →
+                  </button>
+                  <button
+                    type="button"
+                    className="collection-add-cart"
+                    onClick={() =>
+                      handleAddToCart(product)
+                    }
+                  >
+                    Add to Cart +
+                  </button>
+                </div>
               </article>
             ))}
           </div>
         </section>
 
+        {/* Next Collection Banner */}
         <section className="next-collection">
           <div className="next-collection-copy">
             <span>NEXT COLLECTION</span>

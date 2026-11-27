@@ -242,6 +242,79 @@ const formatDate = (
   );
 };
 
+const seasonalCollectionMap = {
+  "collection-1": {
+    _id: "collection-1",
+    id: "collection-1",
+    name: "Strawberry Shortcake",
+    price: 28,
+    category: "Cake",
+    flavor: "Strawberry Vanilla",
+    stock: 25,
+    ratings: 5.0,
+    numReviews: 1,
+    image: [{ public_id: "collection-1", url: "/images/products/strawberry-shortcake.jpg" }],
+    description: "Soft vanilla sponge, fresh Hokkaido whipped cream and hand-picked strawberries.",
+    reviews: [{ name: "Sugar Muse Guest", rating: 5, comment: "Exquisite strawberry shortcake! Perfectly balanced sweetness and fresh cream.", createdAt: new Date() }]
+  },
+  "collection-2": {
+    _id: "collection-2",
+    id: "collection-2",
+    name: "Strawberry Roll",
+    price: 22,
+    category: "Pastry",
+    flavor: "Strawberry Cream",
+    stock: 20,
+    ratings: 5.0,
+    numReviews: 1,
+    image: [{ public_id: "collection-2", url: "/images/products/strawberry-roll.jpg" }],
+    description: "Light strawberry sponge wrapped around fresh whipped cream and berries.",
+    reviews: [{ name: "Pastry Lover", rating: 5, comment: "Soft and fluffy cake roll with generous fresh cream.", createdAt: new Date() }]
+  },
+  "collection-3": {
+    _id: "collection-3",
+    id: "collection-3",
+    name: "Strawberry Tart",
+    price: 18,
+    category: "Pastry",
+    flavor: "Strawberry Vanilla",
+    stock: 15,
+    ratings: 5.0,
+    numReviews: 1,
+    image: [{ public_id: "collection-3", url: "/images/products/strawberry-tart.jpg" }],
+    description: "Buttery tart crust, rich vanilla bean pastry cream and glazed fresh strawberries.",
+    reviews: [{ name: "Berry Fan", rating: 5, comment: "Crispy tart shell and sweet, juicy strawberries.", createdAt: new Date() }]
+  },
+  "collection-4": {
+    _id: "collection-4",
+    id: "collection-4",
+    name: "Strawberry Macaron Box",
+    price: 24,
+    category: "Gift Box",
+    flavor: "Strawberry White Chocolate",
+    stock: 18,
+    ratings: 5.0,
+    numReviews: 1,
+    image: [{ public_id: "collection-4", url: "/images/products/strawberry-macaron-box.jpg" }],
+    description: "Delicate Parisian strawberry macarons made for gifting.",
+    reviews: [{ name: "Gift Buyer", rating: 5, comment: "Beautiful presentation and wonderful strawberry ganache.", createdAt: new Date() }]
+  },
+  "collection-5": {
+    _id: "collection-5",
+    id: "collection-5",
+    name: "Strawberry Mini Cake",
+    price: 20,
+    category: "Cake",
+    flavor: "Strawberry Chiffon",
+    stock: 12,
+    ratings: 5.0,
+    numReviews: 1,
+    image: [{ public_id: "collection-5", url: "/images/products/strawberry-mini-cake.jpg" }],
+    description: "A petite celebration cake with fresh strawberry cream and edible flowers.",
+    reviews: [{ name: "Celebration Host", rating: 5, comment: "Cutest mini cake ever! Tastes as wonderful as it looks.", createdAt: new Date() }]
+  }
+};
+
 const ProductDetails = () => {
   const {
     id,
@@ -276,7 +349,7 @@ const ProductDetails = () => {
   const {
     loading,
     error,
-    product,
+    product: reduxProduct,
     reviewSuccess,
     reviewError,
     reviewLoading,
@@ -284,6 +357,9 @@ const ProductDetails = () => {
     (state) =>
       state.product
   );
+
+  const seasonalProduct = (id && seasonalCollectionMap[id]) || null;
+  const product = reduxProduct || seasonalProduct;
 
   const { user } = useAuth();
   const { addToCart } = useCart();
@@ -552,7 +628,7 @@ const ProductDetails = () => {
   };
 
   if (
-    loading
+    loading && !seasonalProduct
   ) {
     return (
       <>
@@ -566,8 +642,7 @@ const ProductDetails = () => {
   }
 
   if (
-    error ||
-    !product
+    (error || !product) && !seasonalProduct
   ) {
     const errorMessage =
       typeof error ===
